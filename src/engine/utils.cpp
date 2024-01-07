@@ -12,7 +12,9 @@ namespace Utils {
         for (const auto & entry : std::filesystem::directory_iterator(path)){
 
             if (entry.is_directory()){
-                getFilesInFolder(entry.path());
+                for (auto other : getFilesInFolder(entry.path())){
+                    output.push_back(other);
+                }
             }else {
                 output.push_back(entry.path().string());
             }
