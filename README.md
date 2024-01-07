@@ -13,12 +13,7 @@ I guess we just don't want the added headache. CMake is complex and sometimes fe
 
 So that being said, we hope that this repository finds you well and wholeheartedly enjoying the *simple things in life* (i.e. video games programming).
 
-### Current Compatibility
-| OS          | Default Compiler |  Last Manual Build  |                   Compile Status                     |
-| ----------- | ---------------- | ------------------- | ---------------------------------------------------- |
-| **macOS**   | Clang++          | `Big Sur 11.0.1`    | ![macOS Status](../../workflows/macOS/badge.svg)     |
-| **Linux**   | G++              | `Ubuntu 20.04 LTS`  | ![Linux Status](../../workflows/Ubuntu/badge.svg)    |
-| **Windows** | MinGW (G++)      | `Windows 10 19041`  | ![Windows Status](../../workflows/Windows/badge.svg) |
+
 
 ## Getting Started
 
