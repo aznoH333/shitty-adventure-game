@@ -1,0 +1,227 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/main.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/singletonManager.o",
+      "src/engine/singletonManager.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/singletonManager.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/singletonManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/utilFunctions.o",
+      "src/engine/utilFunctions.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/utilFunctions.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/utilFunctions.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/drawing/drawingFunctions.o",
+      "src/engine/drawing/drawingFunctions.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/drawing/drawingFunctions.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/drawing/drawingFunctions.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/drawing/drawingManager.o",
+      "src/engine/drawing/drawingManager.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/drawing/drawingManager.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/drawing/drawingManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/objects/object.o",
+      "src/engine/objects/object.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/objects/object.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/objects/object.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/objects/objectFunctions.o",
+      "src/engine/objects/objectFunctions.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/objects/objectFunctions.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/objects/objectFunctions.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/objects/objectManager.o",
+      "src/engine/objects/objectManager.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/objects/objectManager.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/objects/objectManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/scenes/Scene.o",
+      "src/engine/scenes/Scene.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/scenes/Scene.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/scenes/Scene.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/scenes/sceneFunctions.o",
+      "src/engine/scenes/sceneFunctions.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/scenes/sceneFunctions.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/scenes/sceneFunctions.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/scenes/sceneManager.o",
+      "src/engine/scenes/sceneManager.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/scenes/sceneManager.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/scenes/sceneManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/sounds/soundFunctions.o",
+      "src/engine/sounds/soundFunctions.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/sounds/soundFunctions.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/sounds/soundFunctions.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/sounds/soundManager.o",
+      "src/engine/sounds/soundManager.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/sounds/soundManager.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/sounds/soundManager.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/world/worldFunctions.o",
+      "src/engine/world/worldFunctions.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/world/worldFunctions.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/world/worldFunctions.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I",
+      "include",
+      "-o",
+      "bin/engine/world/worldManager.o",
+      "src/engine/world/worldManager.cpp"
+    ],
+    "directory": "/mnt/sdb1/Dev/cpp/dystopia-game-2",
+    "file": "/mnt/sdb1/Dev/cpp/dystopia-game-2/src/engine/world/worldManager.cpp",
+    "output": "/mnt/sdb1/Dev/cpp/dystopia-game-2/bin/engine/world/worldManager.o"
+  }
+]

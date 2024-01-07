@@ -1,30 +1,33 @@
 #include <raylib-cpp.hpp>
-#include "sprites/SpriteManager.h"
-#include "gameObjects/GameObjectManager.h"
+#include "engine/drawing.h"
+
+
+
+
+const int windowWidth = 1280;
+const int windowHeight = 720;
 
 int main() {
     
     // Initialization
-    const int screenWidth = 1280;
-    const int screenHeight = 720;
+    raylib::Window w(windowWidth, windowHeight, "shitty adventure game");
 
-    raylib::Window w(screenWidth, screenHeight, "aznoH's RayLib 2D game template");
+    Drawing::init("./assets/", 10, windowWidth, windowHeight);
+    
+
     
     SetTargetFPS(60);
     while (!w.ShouldClose())
     {
-        BeginDrawing();
+        // main loop        
+        Drawing::get()->render();
+        Drawing::get()->drawTexture("player_1", {100, 100}, false, 1, 0, WHITE, 0);
         
-        ClearBackground({237, 147, 99, 255});
-        
-        
-        GameObjectManager::getInstance()->update();
-        
-        EndDrawing();
     }
     
-    GameObjectManager::getInstance()->dispose();
-    SpriteManager::getInstance()->dispose();
+    Drawing::get()->dispose();
+    
+
 
     return 0;
 }
