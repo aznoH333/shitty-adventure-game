@@ -17,6 +17,11 @@ struct RenderData{
 };
 
 
+enum DrawingLayers{
+    LAYER_WORLD = 0,
+    LAYER_PLAYER,
+};
+
 
 class Drawing{
 
