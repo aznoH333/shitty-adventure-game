@@ -18,8 +18,9 @@ void Drawing::init(std::string assetsFolder, int renderLayerCount, int screenWid
 
     Drawing::instance->loadAllTexturesFromDirectory(std::filesystem::path{assetsFolder + "sprites/"});
 
-    Drawing::instance->camera = Camera2D{{((float)screenWidth) / 2.0f, ((float) screenHeight) / 2.0f}};
+    Drawing::instance->camera = Camera2D{{((float)screenWidth) / 2.0f - 32.0f, ((float) screenHeight) / 2.0f - 32.0f}, {0,0}, 0, DEFAULT_CAMERA_ZOOM};
     Drawing::instance->renderLayerCount = renderLayerCount;
+    
 
 
     for (int i = 0; i < renderLayerCount; i++){
@@ -105,15 +106,17 @@ void Drawing::drawTexture(std::string sprite, Vector2 pos, bool flipSprite, floa
 }
 
 void Drawing::render(){
+
      // draw to texture
     BeginTextureMode(targetTexture);
+        BeginMode2D(camera);
         ClearBackground(BLACK);
         
         for (int i = 0; i < renderLayerCount; i++){
             renderLayer(renderQueue[i]);
         }
 
-
+        EndMode2D();
     EndTextureMode();
 
     // draw texture
@@ -122,5 +125,14 @@ void Drawing::render(){
                            (Rectangle){ (GetScreenWidth() - ((float)gameScreenWidth*screenScale))*0.5f, (GetScreenHeight() - ((float)gameScreenHeight*screenScale))*0.5f,
                            (float)gameScreenWidth*screenScale, (float)gameScreenHeight*screenScale }, (Vector2){ 0, 0 }, 0.0f, WHITE);
     EndDrawing();
+
+
 }
 
+
+
+
+// --== Misc functions ==--
+Camera2D& Drawing::getCamera(){
+    return camera;
+}

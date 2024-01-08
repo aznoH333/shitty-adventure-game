@@ -7,6 +7,8 @@
 #include <raylib-cpp.hpp>
 
 
+const float DEFAULT_CAMERA_ZOOM = 3.0f;
+
 struct RenderData{
     Texture2D* texture;
     Vector2 pos;
@@ -19,7 +21,9 @@ struct RenderData{
 
 enum DrawingLayers{
     LAYER_WORLD = 0,
+    LAYER_OBJECT,
     LAYER_PLAYER,
+
 };
 
 
@@ -53,6 +57,7 @@ class Drawing{
         static void init(std::string assetsFolder, int renderLayerCount, int screenWidth, int screenHeight);
         void dispose();
         void render();
+        Camera2D& getCamera();
         void drawTexture(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color, int layer);
 
 

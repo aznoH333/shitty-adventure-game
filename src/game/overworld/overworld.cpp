@@ -15,14 +15,22 @@ Overworld* Overworld::get(){
     return instance;
 }
 
+Overworld::Overworld(){
+    player = new OverworldPlayer({0,0});
+    terrain = new OverworldTerrain();
+}
+
 void Overworld::dispose(){
+    delete player;
+    delete terrain;
     delete instance;
+    
 }
 
 
 
 // --== logic ==--
 void Overworld::update(){
-    terrain.update();
-    player.update();
+    terrain->update();
+    player->update();
 }
