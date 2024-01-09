@@ -11,6 +11,14 @@ const int LOADED_CHUNK_COUNT = 9;
 
 
 struct OverworldPosition{
+    bool operator==(const OverworldPosition &other) const {
+        return x == other.x && y == other.y;
+    }
+
+    bool operator<(const OverworldPosition &other) const {
+        return x < other.x || (x == other.x && y < other.y);
+    }
+
     int x;
     int y;
 };
@@ -49,16 +57,32 @@ const OverworldTile tileLookupTable[] = {
     {"placeholders_4", true}
 };
 
+class NoiseMap{
+    private:
+        std::map<OverworldPosition, float> noise;
+        int noiseSeed;
+        int noiseResolution;
+        Utils::SeededGenerator* generator;
+
+        void generateNoiseValue(OverworldPosition position);
+    public:
+        float getNoiseValue(OverworldPosition& position);
+        NoiseMap(int noiseSeed, int noiseResolution);
+        ~NoiseMap();
+};
+
 
 class OverworldTerrain{
     private:
         OverworldChunk* loadedChunks[LOADED_CHUNK_COUNT];
+        NoiseMap* noiseMap;
         
         
         void draw();
         void drawChunk(OverworldChunk* chunk);
 
         OverworldChunk* generateChunk(ChunkCoordinates position);
+        int generateTile(OverworldPosition tilePosition);
 
     public:
         void update();
@@ -67,5 +91,7 @@ class OverworldTerrain{
 
 
 };
+
+
 
 #endif

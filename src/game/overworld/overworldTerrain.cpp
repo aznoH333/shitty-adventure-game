@@ -3,12 +3,13 @@
 
 OverworldTerrain::OverworldTerrain(){
     
+    // dumbass tried to generate the chunks before the noise
+    noiseMap = new NoiseMap(1020, 2);
+    
     // init some garbage data
     for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
-
         loadedChunks[i] = generateChunk({i % 3,i/3});
     }
-
 
 }
 
@@ -17,6 +18,8 @@ OverworldTerrain::~OverworldTerrain(){
     for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
         delete loadedChunks[i];
     }
+
+    delete noiseMap;
 }
 
 
@@ -39,7 +42,7 @@ OverworldChunk* OverworldTerrain::generateChunk(ChunkCoordinates position){
 
     for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
         for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
-            output->tiles[x][y] = GetRandomValue(0, 3);
+            output->tiles[x][y] = generateTile({position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y});
         }
     }
 
@@ -48,7 +51,16 @@ OverworldChunk* OverworldTerrain::generateChunk(ChunkCoordinates position){
         output->worldObjects.push_back(OverworldObject{"placeholders_6", {position.x * OVERWORLD_CHUNK_SIZE + GetRandomValue(0, OVERWORLD_CHUNK_SIZE), position.y * OVERWORLD_CHUNK_SIZE + GetRandomValue(0, OVERWORLD_CHUNK_SIZE)}});
     }
 
+
     return output;
+
+}
+
+int OverworldTerrain::generateTile(OverworldPosition position){
+    if (noiseMap->getNoiseValue(position) > 0.5){
+        return 0;
+    }
+    return 2;
 
 }
 
@@ -73,7 +85,6 @@ void OverworldTerrain::drawChunk(OverworldChunk* chunk){
     }
 
     // draw objects
-
     for (OverworldObject object : chunk->worldObjects){
         Drawing::get()->drawTexture(object.sprite, {object.position.x * OVERWORLD_TILE_SIZE, object.position.y * OVERWORLD_TILE_SIZE}, false, 1, 0, WHITE, LAYER_OBJECT);
     }
