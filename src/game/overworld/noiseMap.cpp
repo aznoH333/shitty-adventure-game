@@ -30,12 +30,12 @@ float NoiseMap::getNoiseValue(OverworldPosition& position){
     float bottomLeftValue = noise[{noiseX, noiseY + 1}];
     float bottomRightValue = noise[{noiseX + 1, noiseY + 1}];
 
-    float a = Utils::interpolate(topLeftValue, topRightValue,  (float) (position.x % noiseResolution) / noiseResolution);
-    float b = Utils::interpolate(bottomLeftValue, bottomRightValue,  (float) (position.x % noiseResolution) / noiseResolution);
+    float a = Utils::interpolate(topLeftValue, topRightValue,  Utils::smoothstep((float) (position.x % noiseResolution) / noiseResolution));
+    float b = Utils::interpolate(bottomLeftValue, bottomRightValue,  Utils::smoothstep((float) (position.x % noiseResolution) / noiseResolution));
 
 
     
-    return Utils::interpolate(a, b,  (float) (position.y % noiseResolution) / noiseResolution);
+    return Utils::interpolate(a, b,  Utils::smoothstep((float) (position.y % noiseResolution) / noiseResolution));
     
 }
 

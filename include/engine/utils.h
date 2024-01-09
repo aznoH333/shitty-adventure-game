@@ -12,6 +12,7 @@ namespace Utils{
     std::vector<std::string> getFilesInFolder(std::filesystem::path path);
 
     float interpolate(float a, float b, float w);
+    float smoothstep(float value);
     float getRandomFloat();
     float getRandomFloat(float min, float max);
 

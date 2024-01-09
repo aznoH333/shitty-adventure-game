@@ -30,6 +30,13 @@ namespace Utils {
         return (b - a) * w + a;
     }
 
+    float smoothstep(float value){
+        float x = value * value;
+        float y = 1.0f - (1.0f - value) * (1.0f - value);
+        
+        return interpolate(x, y, value);
+    }
+
     // --== generic random ==--
     std::random_device rd;
     std::mt19937 generator(rd());
