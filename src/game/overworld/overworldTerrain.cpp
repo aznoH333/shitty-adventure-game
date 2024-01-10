@@ -4,7 +4,8 @@
 OverworldTerrain::OverworldTerrain(){
     
     // dumbass tried to generate the chunks before the noise
-    noiseMap = new NoiseMap(1020, 2);
+    noiseMap = new ValueNoiseMap(1020);
+    mountainNoiseMap = new SpotNoiseMap(960);
     
     // init some garbage data
     for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
@@ -20,6 +21,7 @@ OverworldTerrain::~OverworldTerrain(){
     }
 
     delete noiseMap;
+    delete mountainNoiseMap;
 }
 
 
@@ -57,10 +59,19 @@ OverworldChunk* OverworldTerrain::generateChunk(ChunkCoordinates position){
 }
 
 int OverworldTerrain::generateTile(OverworldPosition position){
-    if (noiseMap->getNoiseValue(position) > 0.5){
+    float noiseValue = noiseMap->getNoiseValue(position, terrainNoiseResolution);
+    float spotValue = mountainNoiseMap->getNoiseValue(position, 6, 16);
+    float t = std::max(noiseValue, spotValue);
+    
+    if (t > 0.7){
+        return 2;
+    }else if (t > 0.4){
         return 0;
+    }else if (t > 0.2){
+        return 1;
+    }else {
+        return 3;
     }
-    return 2;
 
 }
 

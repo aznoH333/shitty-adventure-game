@@ -4,18 +4,18 @@
 
 
 
-void NoiseMap::generateNoiseValue(OverworldPosition position){
+void ValueNoiseMap::generateNoiseValue(OverworldPosition position){
     if (noise.find(position) == noise.end()){
         noise[position] = generator->getRandomFloat();
     }
 }
 
-float NoiseMap::getNoiseValue(OverworldPosition& position){
+float ValueNoiseMap::getNoiseValue(OverworldPosition& position, int resolution){
     
 
     
-    int noiseX = position.x / noiseResolution;
-    int noiseY = position.y / noiseResolution;
+    int noiseX = position.x / resolution;
+    int noiseY = position.y / resolution;
 
 
 
@@ -30,21 +30,22 @@ float NoiseMap::getNoiseValue(OverworldPosition& position){
     float bottomLeftValue = noise[{noiseX, noiseY + 1}];
     float bottomRightValue = noise[{noiseX + 1, noiseY + 1}];
 
-    float a = Utils::interpolate(topLeftValue, topRightValue,  Utils::smoothstep((float) (position.x % noiseResolution) / noiseResolution));
-    float b = Utils::interpolate(bottomLeftValue, bottomRightValue,  Utils::smoothstep((float) (position.x % noiseResolution) / noiseResolution));
+    float a = Utils::interpolate(topLeftValue, topRightValue,  Utils::smoothstep((float) (position.x % resolution) / resolution));
+    float b = Utils::interpolate(bottomLeftValue, bottomRightValue,  Utils::smoothstep((float) (position.x % resolution) / resolution));
 
 
     
-    return Utils::interpolate(a, b,  Utils::smoothstep((float) (position.y % noiseResolution) / noiseResolution));
+    return Utils::interpolate(a, b,  Utils::smoothstep((float) (position.y % resolution) / resolution));
     
 }
 
-NoiseMap::NoiseMap(int noiseSeed, int noiseResolution){
+
+
+ValueNoiseMap::ValueNoiseMap(int noiseSeed){
     this->noiseSeed = noiseSeed;
-    this->noiseResolution = noiseResolution;
     generator = new Utils::SeededGenerator(noiseSeed);
 }
 
-NoiseMap::~NoiseMap(){
+ValueNoiseMap::~ValueNoiseMap(){
     delete generator;
 }

@@ -37,6 +37,14 @@ namespace Utils {
         return interpolate(x, y, value);
     }
 
+
+    float pythagoras(float x1, float y1, float x2, float y2){
+        float a = std::pow(std::abs(x1 - x2), 2);
+        float b = std::pow(std::abs(y1 - y2), 2);
+
+        return std::sqrt(a + b);
+    }
+
     // --== generic random ==--
     std::random_device rd;
     std::mt19937 generator(rd());
@@ -64,6 +72,10 @@ namespace Utils {
 
     float SeededGenerator::getRandomFloat(float min, float max){
         return getRandomFloat() * (max - min) + min;
+    }
+
+    int SeededGenerator::getRandomInt(int min, int max){
+        return getRandomFloat(min, max);
     }
 
     SeededGenerator::~SeededGenerator(){

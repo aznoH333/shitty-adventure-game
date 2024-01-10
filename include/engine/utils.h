@@ -15,6 +15,7 @@ namespace Utils{
     float smoothstep(float value);
     float getRandomFloat();
     float getRandomFloat(float min, float max);
+    float pythagoras(float x1, float y1, float x2, float y2);
 
 
     class SeededGenerator{
@@ -27,6 +28,7 @@ namespace Utils{
             ~SeededGenerator();
             float getRandomFloat();
             float getRandomFloat(float min, float max);
+            int getRandomInt(int min, int max);
     };
 
 }
