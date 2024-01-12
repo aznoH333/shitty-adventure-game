@@ -9,121 +9,137 @@ const float OVERWORLD_TILE_SIZE = 32.0f;
 const int OVERWORLD_CHUNK_SIZE = 16;
 const int LOADED_CHUNK_COUNT = 9;
 
-
-// terrain variables
-const int terrainNoiseResolution = 4;
+namespace TerrainGeneration{
 
 
-struct OverworldPosition{
-    bool operator==(const OverworldPosition &other) const {
-        return x == other.x && y == other.y;
-    }
-
-    bool operator<(const OverworldPosition &other) const {
-        return x < other.x || (x == other.x && y < other.y);
-    }
-
-    int x;
-    int y;
-};
-
-struct ChunkCoordinates{
-
-    bool operator==(const ChunkCoordinates &other) const {
-        return x == other.x && y == other.y;
-    }
-
-    bool operator<(const ChunkCoordinates &other) const {
-        return x < other.x || (x == other.x && y < other.y);
-    }
-
-    int x;
-    int y;
-};
+    // terrain variables
+    const int terrainNoiseResolution = 4;
 
 
+    struct OverworldPosition{
+        bool operator==(const OverworldPosition &other) const {
+            return x == other.x && y == other.y;
+        }
 
-struct OverworldTile{
-    std::string sprite;
-    bool blocksMovement;
-};
+        bool operator<(const OverworldPosition &other) const {
+            return x < other.x || (x == other.x && y < other.y);
+        }
 
+        int x;
+        int y;
+    };
 
-// tree, castle, dungeon, village ect
-struct OverworldObject{
-    std::string sprite;
-    OverworldPosition position;
-};
+    struct ChunkCoordinates{
 
+        bool operator==(const ChunkCoordinates &other) const {
+            return x == other.x && y == other.y;
+        }
 
-struct OverworldChunk{
-    ChunkCoordinates coordinates;
-    int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE];
-    std::vector<OverworldObject> worldObjects;
-};
+        bool operator<(const ChunkCoordinates &other) const {
+            return x < other.x || (x == other.x && y < other.y);
+        }
 
-
-const OverworldTile tileLookupTable[] = {
-    {"placeholders_1", false},
-    {"placeholders_2", false},
-    {"placeholders_3", true},
-    {"placeholders_4", true}
-};
+        int x;
+        int y;
+    };
 
 
 
-class ValueNoiseMap{
-    private:
-        std::map<OverworldPosition, float> noise;
-        int noiseSeed;
-        Utils::SeededGenerator* generator;
-        void generateNoiseValue(OverworldPosition position);
-    public:
-        float getNoiseValue(OverworldPosition& position, int resolution);
-        ValueNoiseMap(int noiseSeed);
-        ~ValueNoiseMap();
-};
-
-struct NoiseSpot {
-    OverworldPosition position;
-    float radius;
-};
+    struct OverworldTile{
+        std::string sprite;
+        bool blocksMovement;
+    };
 
 
-class SpotNoiseMap{
-    private:
-        std::map<ChunkCoordinates, NoiseSpot> noise; 
-        int noiseSeed;
-        Utils::SeededGenerator* generator;
-        void generateNoiseValue(ChunkCoordinates position);
-    public:
-        float getNoiseValue(OverworldPosition& position, float minNoiseRadius, float maxNoiseRadius);
-        SpotNoiseMap(int noiseSeed);
-        ~SpotNoiseMap();
-};
+    // tree, castle, dungeon, village ect
+    struct OverworldObject{
+        std::string sprite;
+        OverworldPosition position;
+    };
 
 
-class OverworldTerrain{
-    private:
-        OverworldChunk* loadedChunks[LOADED_CHUNK_COUNT];
-        ValueNoiseMap* noiseMap;
-        SpotNoiseMap* mountainNoiseMap;
-        
-        
-        void draw();
-        void drawChunk(OverworldChunk* chunk);
-
-        OverworldChunk* generateChunk(ChunkCoordinates position);
-        int generateTile(OverworldPosition tilePosition);
-
-    public:
-        void update();
-        ~OverworldTerrain();
-        OverworldTerrain();
 
 
-};
+    struct OverworldChunk{
+        ChunkCoordinates coordinates;
+        int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE];
+        std::vector<OverworldObject> worldObjects;
+    };
 
 
+    const OverworldTile tileLookupTable[] = {
+        {"placeholders_1", false}, // grass
+        {"placeholders_2", false}, // sand
+        {"placeholders_3", true},  // mountain
+        {"placeholders_4", true}   // water
+    };
+
+
+
+    class ValueNoiseMap{
+        private:
+            std::map<OverworldPosition, float> noise;
+            int noiseSeed;
+            Utils::SeededGenerator* generator;
+            void generateNoiseValue(OverworldPosition position);
+        public:
+            float getNoiseValue(OverworldPosition& position, int resolution);
+            ValueNoiseMap(int noiseSeed);
+            ~ValueNoiseMap();
+    };
+
+    struct NoiseSpot {
+        OverworldPosition position;
+        float radius;
+    };
+
+
+    class SpotNoiseMap{
+        private:
+            std::map<ChunkCoordinates, NoiseSpot> noise; 
+            int noiseSeed;
+            Utils::SeededGenerator* generator;
+            void generateNoiseValue(ChunkCoordinates position);
+        public:
+            float getNoiseValue(OverworldPosition& position, float minNoiseRadius, float maxNoiseRadius);
+            SpotNoiseMap(int noiseSeed);
+            ~SpotNoiseMap();
+    };
+
+
+    enum PatternGenrationType{
+        PATTERN_WATER,
+    };
+
+
+    struct PatternGenerationObject{
+        OverworldPosition position;
+        PatternGenrationType patern;
+    };
+
+
+    class OverworldTerrain{
+        private:
+            OverworldChunk* loadedChunks[LOADED_CHUNK_COUNT];
+            ValueNoiseMap* noiseMap;
+            SpotNoiseMap* mountainNoiseMap;
+            
+            
+            void draw();
+            void drawChunk(OverworldChunk* chunk);
+
+            OverworldChunk* generateChunk(ChunkCoordinates position);
+            int generateTile(OverworldPosition tilePosition, OverworldPosition inChunkPosition, std::vector<PatternGenerationObject>& patterns);
+            void applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], PatternGenerationObject& pattern);
+
+        public:
+            void update();
+            ~OverworldTerrain();
+            OverworldTerrain();
+
+
+    };
+
+}
 
 #endif

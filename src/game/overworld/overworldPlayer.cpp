@@ -2,7 +2,7 @@
 
 
 
-OverworldPlayer::OverworldPlayer(OverworldPosition position){
+OverworldPlayer::OverworldPlayer(TerrainGeneration::OverworldPosition position){
     this->position = position;
     this->subPosition = {0,0};
 }

@@ -17,7 +17,7 @@ Overworld* Overworld::get(){
 
 Overworld::Overworld(){
     player = new OverworldPlayer({0,0});
-    terrain = new OverworldTerrain();
+    terrain = new TerrainGeneration::OverworldTerrain();
 }
 
 void Overworld::dispose(){

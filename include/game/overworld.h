@@ -13,10 +13,10 @@
 class OverworldPlayer{
     private:
         Vector2 subPosition;
-        OverworldPosition position;
+        TerrainGeneration::OverworldPosition position;
 
     public:
-        OverworldPlayer(OverworldPosition position);
+        OverworldPlayer(TerrainGeneration::OverworldPosition position);
         void update();
 };
 
@@ -24,7 +24,7 @@ class Overworld{
     private:
         static Overworld* instance;
 
-        OverworldTerrain* terrain;
+        TerrainGeneration::OverworldTerrain* terrain;
         OverworldPlayer* player;
 
         Overworld();
