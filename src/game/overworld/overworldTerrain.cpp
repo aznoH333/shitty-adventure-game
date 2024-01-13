@@ -51,16 +51,34 @@ namespace TerrainGeneration {
         output->coordinates = position;
         output->worldObjects = {};
 
-        std::vector<PatternGenerationObject> patterns = {};
-
+        // generate tiles based on height map
         for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
-                output->tiles[x][y] = generateTile({position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y}, {x, y}, patterns);
+                
+                OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
+                
+                float noiseValue = noiseMap->getNoiseValue(tilePosition, terrainNoiseResolution);
+                float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16);
+                float terrainHeightValue = std::max(noiseValue, spotValue);
+                
+                
+                // add generation
+                output->tiles[x][y] = generateTile(terrainHeightValue);
             }
         }
+
+
+        // generate patterns
+        for (int x = -1; x <= 1; x++){
+            for (int y = -1; y <= 1; y++){
+                addGenerationPatternsForChunk(output->patterns, {position.x + x, position.y + y});
+            }
+        }
+        
+
         // patterns
-        for (PatternGenerationObject& p : patterns){
-            applyPattern(output->tiles, p);
+        for (PatternGenerationObject& p : output->patterns){
+            applyPattern(output->tiles, p, position);
         }
 
 
@@ -74,13 +92,40 @@ namespace TerrainGeneration {
 
     }
 
+    void OverworldTerrain::addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position){
+        for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
+            for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
+                OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
+                
+                float noiseValue = noiseMap->getNoiseValue(tilePosition, terrainNoiseResolution);
+                float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16);
+                float terrainHeightValue = std::max(noiseValue, spotValue);
+                
+                addGenerationPattern(patterns, terrainHeightValue, tilePosition);
+
+            }
+        }
+    }
 
 
-    int OverworldTerrain::generateTile(OverworldPosition position, OverworldPosition inChunkPosition, std::vector<PatternGenerationObject>& patterns){
+
+    void OverworldTerrain::addGenerationPattern(std::vector<PatternGenerationObject>& patterns, float terrainHeightValue, OverworldPosition position){
         
-        float noiseValue = noiseMap->getNoiseValue(position, terrainNoiseResolution);
-        float spotValue = mountainNoiseMap->getNoiseValue(position, 6, 16);
-        float terrainHeightValue = std::max(noiseValue, spotValue);
+        
+
+        // water generation
+        if (terrainHeightValue < 0.3){
+            patterns.push_back({
+                position,
+                PATTERN_WATER,
+            });
+        }
+        
+    }
+
+    int OverworldTerrain::generateTile(float terrainHeightValue){
+        
+        
         
         // mountain generation
         if (terrainHeightValue > 0.7){
@@ -89,16 +134,12 @@ namespace TerrainGeneration {
         /* else if (terrainHeightValue > 0.6){
             return stone value
         }*/
+        /* else if (terrainHeightValue < 0.4){
+            return dead grass value
+        }*/
 
 
-
-        // water generation
-        if (terrainHeightValue < 0.2){
-            patterns.push_back({
-                inChunkPosition,
-                PATTERN_WATER,
-            });
-        }
+        
 
         return 0;
     }
@@ -112,8 +153,12 @@ namespace TerrainGeneration {
         }
     }
 
-    void OverworldTerrain::applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], PatternGenerationObject& pattern){
+    void OverworldTerrain::applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition){
         OverworldPosition& pos = pattern.position;
+        pos.x -= chunkPosition.x * OVERWORLD_CHUNK_SIZE;
+        pos.y -= chunkPosition.y * OVERWORLD_CHUNK_SIZE;
+        
+        
         switch (pattern.patern) {
             case PATTERN_WATER:
                 tryWatterPattern(tiles, 3, pos.x, pos.y);

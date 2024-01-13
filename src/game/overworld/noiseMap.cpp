@@ -7,7 +7,7 @@ namespace TerrainGeneration {
 
     void ValueNoiseMap::generateNoiseValue(OverworldPosition position){
         if (noise.find(position) == noise.end()){
-            noise[position] = generator->getRandomFloat();
+            noise[position] = Utils::getPseudoRandomFloat(Utils::hashVector(position.x, position.y));
         }
     }
 

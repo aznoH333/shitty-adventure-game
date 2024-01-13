@@ -18,6 +18,15 @@ namespace Utils{
     float pythagoras(float x1, float y1, float x2, float y2);
 
 
+    // psuedo random
+    int getPseudoRandomInt(int min, int max, int base);
+    float getPseudoRandomFloat(int base);
+    float getPseudoRandomFloat(float min, float max, int base);
+
+    // hashing
+    int hashInt(int input);
+    int hashVector(int value1, int value2);
+
     class SeededGenerator{
         private:
             std::random_device rd;

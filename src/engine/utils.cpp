@@ -83,6 +83,51 @@ namespace Utils {
         delete distribution;
     }
 
+    // pseudo random
+    const int PSEUDO_RANDOM_MAX = 4000;
+
+    int hashInt(int input){
+        input = ((input >> 16) ^ input) * 0x119de1f3;
+        input = ((input >> 16) ^ input) * 0x119de1f3;
+        input = (input >> 16) ^ input;
+        return input;
+    }
+
+    int hashVector(int value1, int value2){
+        return hashInt(hashInt(value1) + value2);
+    }
+
+
+    int getPseudoRandomInt(int min, int max, int base){
+        int hashed = hashInt(base);
+        return (hashed % (max - min)) + min;
+    }
+
+    
+
+
+    float getPseudoRandomFloat(int base){
+        int baseInt = getPseudoRandomInt(0, PSEUDO_RANDOM_MAX, base);
+        
+        /*baseInt = baseInt & 0b10000000111111111111111111111111;
+        baseInt = baseInt | 0b00111100000000000000000000000000;
+
+        
+            baseInt = baseInt & 0b10000000011111111111111111111111;
+            baseInt = baseInt | 0b00111111000000000000000000000000;
+        
+        float res = (*(float*)(&baseInt));
+        //float res = 0.baseInt;
+        return res;*/
+
+        return (float)baseInt / PSEUDO_RANDOM_MAX;
+    }
+
+    float getPseudoRandomFloat(float min, float max, int base){
+        return getPseudoRandomFloat(base) * (max - min) + min;
+    }
+
+
 
 }
 
