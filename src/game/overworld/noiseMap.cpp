@@ -1,4 +1,4 @@
-#include "game/overworldTerrain.h"
+#include "game/overworld/valueNoise.h"
 
 
 
@@ -7,7 +7,7 @@ namespace TerrainGeneration {
 
     void ValueNoiseMap::generateNoiseValue(OverworldPosition position){
         if (noise.find(position) == noise.end()){
-            noise[position] = Utils::getPseudoRandomFloat(Utils::hashVector(position.x, position.y));
+            noise[position] = Utils::getPseudoRandomFloat(Utils::hashVector(position.x, position.y) + Utils::hashInt(noiseSeed));
         }
     }
 
@@ -44,11 +44,9 @@ namespace TerrainGeneration {
 
     ValueNoiseMap::ValueNoiseMap(int noiseSeed){
         this->noiseSeed = noiseSeed;
-        generator = new Utils::SeededGenerator(noiseSeed);
     }
 
     ValueNoiseMap::~ValueNoiseMap(){
-        delete generator;
     }
 
 }

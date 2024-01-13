@@ -1,4 +1,4 @@
-#include "game/overworldTerrain.h"
+#include "game/overworld/spotNoise.h"
 
 
 
@@ -8,22 +8,20 @@ namespace TerrainGeneration {
 
     void SpotNoiseMap::generateNoiseValue(ChunkCoordinates position){
         if (noise.find(position) == noise.end()){
-            OverworldPosition spotPosition = {generator->getRandomInt(0, OVERWORLD_CHUNK_SIZE) + (position.x * OVERWORLD_CHUNK_SIZE), generator->getRandomInt(0, OVERWORLD_CHUNK_SIZE)  + (position.y * OVERWORLD_CHUNK_SIZE)};
+            OverworldPosition spotPosition = {Utils::getPseudoRandomInt(0, OVERWORLD_CHUNK_SIZE, noiseSeed) + (position.x * OVERWORLD_CHUNK_SIZE), Utils::getPseudoRandomInt(0, OVERWORLD_CHUNK_SIZE, noiseSeed)  + (position.y * OVERWORLD_CHUNK_SIZE)};
             
-            
-            
-            noise[position] = {spotPosition, generator->getRandomFloat()};
+            noise[position] = {spotPosition, Utils::getPseudoRandomFloat(Utils::hashVector(position.x, position.y) + noiseSeed)};
         }
     }
 
 
 
-    float SpotNoiseMap::getNoiseValue(OverworldPosition& position, float minNoiseRadius, float maxNoiseRadius){
+    float SpotNoiseMap::getNoiseValue(OverworldPosition& position, float minNoiseRadius, float maxNoiseRadius, int resolution){
         
         float e = maxNoiseRadius - minNoiseRadius;
         
-        int noiseX = position.x / OVERWORLD_CHUNK_SIZE;
-        int noiseY = position.y / OVERWORLD_CHUNK_SIZE;
+        int noiseX = position.x / resolution;
+        int noiseY = position.y / resolution;
 
         float value = 0;
         for (int i = noiseX - 1; i <= noiseX + 1; i++){
@@ -47,11 +45,9 @@ namespace TerrainGeneration {
 
     SpotNoiseMap::SpotNoiseMap(int noiseSeed){
         this->noiseSeed = noiseSeed;
-        generator = new Utils::SeededGenerator(noiseSeed);
     }
 
     SpotNoiseMap::~SpotNoiseMap(){
-        delete generator;
     }
 
 }

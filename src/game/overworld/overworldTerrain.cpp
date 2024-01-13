@@ -1,4 +1,4 @@
-#include "game/overworldTerrain.h"
+#include "game/overworld/overworldTerrain.h"
 
 
 namespace TerrainGeneration {
@@ -60,7 +60,7 @@ namespace TerrainGeneration {
                 OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
                 
                 float noiseValue = noiseMap->getNoiseValue(tilePosition, terrainNoiseResolution);
-                float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16);
+                float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16, 16);
                 float terrainHeightValue = std::max(noiseValue, spotValue);
                 
                 
@@ -100,7 +100,7 @@ namespace TerrainGeneration {
                 OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
                 
                 float noiseValue = noiseMap->getNoiseValue(tilePosition, terrainNoiseResolution);
-                float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16);
+                float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16, 16);
                 float terrainHeightValue = std::max(noiseValue, spotValue);
                 
                 addGenerationPattern(patterns, terrainHeightValue, tilePosition, biome);
