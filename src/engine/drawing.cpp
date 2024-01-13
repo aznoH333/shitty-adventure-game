@@ -21,8 +21,6 @@ void Drawing::init(std::string assetsFolder, int renderLayerCount, int screenWid
     Drawing::instance->camera = Camera2D{{((float)screenWidth) / 2.0f - 32.0f, ((float) screenHeight) / 2.0f - 32.0f}, {0,0}, 0, DEFAULT_CAMERA_ZOOM};
     Drawing::instance->renderLayerCount = renderLayerCount;
     
-
-
     for (int i = 0; i < renderLayerCount; i++){
         Drawing::instance->renderQueue.emplace(i, std::queue<RenderData>());
     }
@@ -60,19 +58,9 @@ void Drawing::loadAllTexturesFromDirectory(std::string spritesPath){
     std::vector<std::string> texturePaths = Utils::getFilesInFolder(spritesPath);
 
     for (auto a : texturePaths){
-        
         loadTexture(a);
     }
-    
-
 }
-
-
-
-
-
-
-
 
 // --== rendering ==--
 void renderTexture(RenderData& data){
@@ -98,7 +86,6 @@ void renderLayer(std::queue<RenderData>& layer){
         layer.pop();
     }
 }
-
 
 
 void Drawing::drawTexture(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color, int layer){
@@ -128,9 +115,6 @@ void Drawing::render(){
 
 
 }
-
-
-
 
 // --== Misc functions ==--
 Camera2D& Drawing::getCamera(){

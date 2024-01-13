@@ -9,6 +9,8 @@ namespace TerrainGeneration {
         // dumbass tried to generate the chunks before the noise
         noiseMap = new ValueNoiseMap(1020);
         mountainNoiseMap = new SpotNoiseMap(960);
+        treeNoiseMap = new ValueNoiseMap(3547);
+        structureNoiseMap = new SpotNoiseMap(1984);
         
         // init some garbage data
         for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
@@ -25,6 +27,8 @@ namespace TerrainGeneration {
 
         delete noiseMap;
         delete mountainNoiseMap;
+        delete treeNoiseMap;
+        delete structureNoiseMap;
     }
 
 
@@ -80,13 +84,7 @@ namespace TerrainGeneration {
 
         // patterns
         for (PatternGenerationObject& p : output->patterns){
-            applyPattern(output->tiles, p, position, biome);
-        }
-
-
-        // generate some garbage objects
-        for (int i = 0; i < 3; i++){
-            output->worldObjects.push_back(OverworldObject{"placeholders_6", {position.x * OVERWORLD_CHUNK_SIZE + GetRandomValue(0, OVERWORLD_CHUNK_SIZE), position.y * OVERWORLD_CHUNK_SIZE + GetRandomValue(0, OVERWORLD_CHUNK_SIZE)}});
+            applyPattern(output->tiles, output->worldObjects, p, position, biome);
         }
 
 
@@ -102,8 +100,12 @@ namespace TerrainGeneration {
                 float noiseValue = noiseMap->getNoiseValue(tilePosition, terrainNoiseResolution);
                 float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16, 16);
                 float terrainHeightValue = std::max(noiseValue, spotValue);
+
+
+                float treeGenerationValue = treeNoiseMap->getNoiseValue(tilePosition, treeNoiseResolution) - structureNoiseMap->getNoiseValue(tilePosition, 2, 3, 16);
+                float structureValue = structureNoiseMap->getNoiseValue(tilePosition, 1, 1, 16);
                 
-                addGenerationPattern(patterns, terrainHeightValue, tilePosition, biome);
+                addGenerationPattern(patterns, terrainHeightValue, treeGenerationValue, structureValue, tilePosition, biome);
 
             }
         }
@@ -111,16 +113,27 @@ namespace TerrainGeneration {
 
 
 
-    void OverworldTerrain::addGenerationPattern(std::vector<PatternGenerationObject>& patterns, float terrainHeightValue, OverworldPosition position, const TerrainBiome& biome){
+    void OverworldTerrain::addGenerationPattern(std::vector<PatternGenerationObject>& patterns, float terrainHeightValue, float treeGenerationValue, float structureGenerationValue, OverworldPosition position, const TerrainBiome& biome){
         
+        // structures
+        if (structureGenerationValue > 0.9){
+            patterns.push_back({position, PATTERN_DUNGEON});
+            return;
+        }
         
+        // trees
+        else if (treeGenerationValue > biome.treeGenerationValue){
+            patterns.push_back({position, PATTERN_TREE});
+            return;
+        }
 
         // water generation
-        if (terrainHeightValue < biome.waterGenerationValue){
+        else if (terrainHeightValue < biome.waterGenerationValue){
             patterns.push_back({
                 position,
                 PATTERN_WATER,
             });
+            return;
         }
         
     }
@@ -140,16 +153,37 @@ namespace TerrainGeneration {
         return biome.defaultTile;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // --== Pattern code ==--
+    bool isInChunk(int x, int y){
+        return x >= 0 && y >= 0 && x < OVERWORLD_CHUNK_SIZE && y < OVERWORLD_CHUNK_SIZE;
+    }
+    
+    
     void tryWatterPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], int tileId, const TerrainBiome& biome, int x, int y){
         
         
-        if (x >= 0 && y >= 0 && x < OVERWORLD_CHUNK_SIZE && y < OVERWORLD_CHUNK_SIZE && (tiles[x][y] == biome.defaultTile || tileId == biome.waterTile)){
+        if (isInChunk(x, y) && (tiles[x][y] == biome.defaultTile || tileId == biome.waterTile)){
             tiles[x][y] = tileId;
         }
     }
 
-    void OverworldTerrain::applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition, const TerrainBiome& biome){
-        OverworldPosition& pos = pattern.position;
+    
+    
+    void OverworldTerrain::applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE],  std::vector<OverworldObject>& objects, PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition, const TerrainBiome& biome){
+        OverworldPosition pos = pattern.position;
         pos.x -= chunkPosition.x * OVERWORLD_CHUNK_SIZE;
         pos.y -= chunkPosition.y * OVERWORLD_CHUNK_SIZE;
         
@@ -162,8 +196,32 @@ namespace TerrainGeneration {
                 tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y - 1);
                 tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y + 1);
                 break;
+            case PATTERN_TREE:
+                if (isInChunk(pos.x, pos.y)){objects.push_back(generateOverworldObject(biome, OBJECT_TREE, pattern.position));};
+                break;
+            case PATTERN_DUNGEON:
+                // 
+                if (isInChunk(pos.x, pos.y)){objects.push_back(generateOverworldObject(biome, OBJECT_DUNGEON, pattern.position));};
+                tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y);
+                tryWatterPattern(tiles, biome.sandTile, biome, pos.x + 1, pos.y);
+                tryWatterPattern(tiles, biome.sandTile, biome, pos.x - 1, pos.y);
+                tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y - 1);
+                tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y + 1);
+
+                break;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
     // --== Drawing ==--

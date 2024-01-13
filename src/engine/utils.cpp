@@ -21,7 +21,6 @@ namespace Utils {
 
         }
 
-
         return output;
     }
 

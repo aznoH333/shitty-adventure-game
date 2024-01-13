@@ -40,16 +40,22 @@ namespace TerrainGeneration {
 
 
     
-
+    enum ObjectType{
+        OBJECT_DUNGEON,
+        OBJECT_TREE,
+    };
 
     // tree, castle, dungeon, village ect
     struct OverworldObject{
         std::string sprite;
         OverworldPosition position;
+        ObjectType type;
     };
 
     enum PatternGenrationType{
         PATTERN_WATER,
+        PATTERN_DUNGEON,
+        PATTERN_TREE,
     };
 
 

@@ -34,7 +34,7 @@ namespace TerrainGeneration {
             .stoneValue = 0.6,
             .shoreValue = 0.4,
             .waterGenerationValue = 0.3,
-            .treeGenerationValue = 0.7,
+            .treeGenerationValue = 0.4,
             .structureFrequency = 20,
 
 
