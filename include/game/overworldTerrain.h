@@ -73,6 +73,7 @@ namespace TerrainGeneration{
         int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE];
         std::vector<OverworldObject> worldObjects;
         std::vector<PatternGenerationObject> patterns;
+        int terrainBiome;
     };
 
 
@@ -98,6 +99,7 @@ namespace TerrainGeneration{
         int shoreTile;
         int defaultTile;
         int sandTile;
+        int waterTile;
         int structureType;
     };
 
@@ -119,6 +121,7 @@ namespace TerrainGeneration{
             .shoreTile = 0,
             .defaultTile = 0,
             .sandTile = 1,
+            .waterTile = 3,
             .structureType = 0,
         }
     };
@@ -166,11 +169,11 @@ namespace TerrainGeneration{
             
             void draw();
             void drawChunk(OverworldChunk* chunk);
-            void addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position);
-            void addGenerationPattern(std::vector<PatternGenerationObject>& patterns, float terrainHeightValue, OverworldPosition position);
+            void addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position, const TerrainBiome& biome);
+            void addGenerationPattern(std::vector<PatternGenerationObject>& patterns, float terrainHeightValue, OverworldPosition position, const TerrainBiome& biome);
             OverworldChunk* generateChunk(ChunkCoordinates position);
-            int generateTile(float terrainHeightValue);
-            void applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition);
+            int generateTile(float terrainHeightValue, const TerrainBiome& biome);
+            void applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition, const TerrainBiome& biome);
 
         public:
             void update();
