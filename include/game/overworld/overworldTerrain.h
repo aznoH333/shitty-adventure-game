@@ -41,6 +41,7 @@ namespace TerrainGeneration{
 
         public:
             void update();
+            void reloadChunksAroundPoint(ChunkCoordinates coordinates);
             ~OverworldTerrain();
             OverworldTerrain();
 

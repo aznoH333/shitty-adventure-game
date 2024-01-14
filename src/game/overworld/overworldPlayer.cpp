@@ -10,6 +10,7 @@ OverworldPlayer::OverworldPlayer(TerrainGeneration::OverworldPosition position){
 
 void OverworldPlayer::update(){
     // temporary shitty update
+    Overworld::get()->setPlayerChunk({position.x / TerrainGeneration::OVERWORLD_CHUNK_SIZE, position.y / TerrainGeneration::OVERWORLD_CHUNK_SIZE});
 
     if (IsKeyPressed(KEY_W)){
         position.y -= 1;

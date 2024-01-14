@@ -4,6 +4,7 @@
 
 #include "engine/all.h"
 #include "overworldTerrain.h"
+#include "terrainStructs.h"
 
 
 
@@ -26,6 +27,7 @@ class Overworld{
 
         TerrainGeneration::OverworldTerrain* terrain;
         OverworldPlayer* player;
+        TerrainGeneration::ChunkCoordinates playerChunk = {0,0};
 
         Overworld();
 
@@ -35,6 +37,8 @@ class Overworld{
 
         void init();
         void dispose();
+        void setPlayerChunk(TerrainGeneration::ChunkCoordinates coordinates);
+
 
 
         void update();

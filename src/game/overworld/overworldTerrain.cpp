@@ -41,6 +41,21 @@ namespace TerrainGeneration {
 
 
 
+    // --== chunk loading ==--
+    void OverworldTerrain::reloadChunksAroundPoint(ChunkCoordinates coordinates){
+        // unload chunks
+        for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
+            delete loadedChunks[i];
+
+        }
+
+        // load
+        for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
+            loadedChunks[i] = generateChunk({i % 3 + coordinates.x - 1,i/3 + coordinates.y - 1});
+        }
+
+    }
+
 
 
 

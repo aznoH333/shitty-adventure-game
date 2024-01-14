@@ -7,7 +7,7 @@
 #include <raylib-cpp.hpp>
 
 
-const float DEFAULT_CAMERA_ZOOM = 3.0f;
+const float DEFAULT_CAMERA_ZOOM = 2.0f;
 
 struct RenderData{
     Texture2D* texture;
