@@ -160,17 +160,14 @@ namespace TerrainGeneration {
 
 
 
-
-
-
-
-
-
     // --== Pattern code ==--
     bool isInChunk(int x, int y){
         return x >= 0 && y >= 0 && x < OVERWORLD_CHUNK_SIZE && y < OVERWORLD_CHUNK_SIZE;
     }
     
+    bool isTileSolid(int tileId){
+        return tileLookupTable[tileId].blocksMovement;
+    }
     
     void tryWatterPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], int tileId, const TerrainBiome& biome, int x, int y){
         
@@ -197,16 +194,15 @@ namespace TerrainGeneration {
                 tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y + 1);
                 break;
             case PATTERN_TREE:
-                if (isInChunk(pos.x, pos.y)){objects.push_back(generateOverworldObject(biome, OBJECT_TREE, pattern.position));};
+                if (isInChunk(pos.x, pos.y) && !isTileSolid(tiles[pos.x][pos.y])){objects.push_back(generateOverworldObject(biome, OBJECT_TREE, pattern.position));};
                 break;
             case PATTERN_DUNGEON:
-                // 
-                if (isInChunk(pos.x, pos.y)){objects.push_back(generateOverworldObject(biome, OBJECT_DUNGEON, pattern.position));};
-                tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y);
-                tryWatterPattern(tiles, biome.sandTile, biome, pos.x + 1, pos.y);
-                tryWatterPattern(tiles, biome.sandTile, biome, pos.x - 1, pos.y);
-                tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y - 1);
-                tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y + 1);
+                    if (isInChunk(pos.x, pos.y) && !isTileSolid(tiles[pos.x][pos.y])){objects.push_back(generateOverworldObject(biome, OBJECT_DUNGEON, pattern.position));};
+                    tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y);
+                    tryWatterPattern(tiles, biome.sandTile, biome, pos.x + 1, pos.y);
+                    tryWatterPattern(tiles, biome.sandTile, biome, pos.x - 1, pos.y);
+                    tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y - 1);
+                    tryWatterPattern(tiles, biome.sandTile, biome, pos.x, pos.y + 1);
 
                 break;
         }
