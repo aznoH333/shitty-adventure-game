@@ -10,7 +10,8 @@
 #include "valueNoise.h"
 
 const float OVERWORLD_TILE_SIZE = 32.0f;
-const int LOADED_CHUNK_COUNT = 9;
+const int DISPLAYED_CHUNK_COUNT = 9;
+const int CHUNK_GENERATION_DISTANCE = 3;
 
 namespace TerrainGeneration{
 
@@ -22,14 +23,15 @@ namespace TerrainGeneration{
 
     class OverworldTerrain{
         private:
-            OverworldChunk* loadedChunks[LOADED_CHUNK_COUNT];
+            OverworldChunk* displayedChunks[DISPLAYED_CHUNK_COUNT];
+            std::map<ChunkCoordinates, OverworldChunk*> loadedChunks;
             ValueNoiseMap* noiseMap;
             ValueNoiseMap* treeNoiseMap;
             SpotNoiseMap* mountainNoiseMap;
             SpotNoiseMap* structureNoiseMap;
             
             
-            
+            void generateChunksAroundPoint(ChunkCoordinates coordinates);
             void draw();
             void drawChunk(OverworldChunk* chunk);
             void addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position, const TerrainBiome& biome);

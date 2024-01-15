@@ -13,16 +13,16 @@ namespace TerrainGeneration {
         structureNoiseMap = new SpotNoiseMap(1984);
         
         // init some garbage data
-        for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
-            loadedChunks[i] = generateChunk({i % 3,i/3});
+        for (int i = 0; i < DISPLAYED_CHUNK_COUNT; i++){
+            displayedChunks[i] = generateChunk({i % 3,i/3});
         }
 
     }
 
     OverworldTerrain::~OverworldTerrain(){
         // free loaded chunks
-        for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
-            delete loadedChunks[i];
+        for (const auto chunk : loadedChunks){
+            delete chunk.second;
         }
 
         delete noiseMap;
@@ -35,23 +35,33 @@ namespace TerrainGeneration {
 
     // --== Update ==--
     void OverworldTerrain::update(){
-
         draw();
     }
 
-
+    
 
     // --== chunk loading ==--
-    void OverworldTerrain::reloadChunksAroundPoint(ChunkCoordinates coordinates){
-        // unload chunks
-        for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
-            delete loadedChunks[i];
-
+    void OverworldTerrain::generateChunksAroundPoint(ChunkCoordinates coordinates){
+        for (int x = -CHUNK_GENERATION_DISTANCE; x <= CHUNK_GENERATION_DISTANCE; x++){
+            for (int y = -CHUNK_GENERATION_DISTANCE; y <= CHUNK_GENERATION_DISTANCE; y++){
+                ChunkCoordinates pos = {coordinates.x + x, coordinates.y + y};
+                
+                if (loadedChunks.find(pos) == loadedChunks.end()){
+                    loadedChunks[pos] = generateChunk(pos);
+                }
+            }
         }
-
+    }
+    
+    
+    
+    void OverworldTerrain::reloadChunksAroundPoint(ChunkCoordinates coordinates){
+        generateChunksAroundPoint(coordinates);
+        
+        
         // load
-        for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
-            loadedChunks[i] = generateChunk({i % 3 + coordinates.x - 1,i/3 + coordinates.y - 1});
+        for (int i = 0; i < DISPLAYED_CHUNK_COUNT; i++){
+            displayedChunks[i] = loadedChunks[{i % 3 + coordinates.x - 1,i/3 + coordinates.y - 1}];
         }
 
     }
@@ -60,10 +70,6 @@ namespace TerrainGeneration {
 
 
     // --== Generation ==--
-
-
-
-
     OverworldChunk* OverworldTerrain::generateChunk(ChunkCoordinates position){
         // generate some garbage data
         OverworldChunk* output = new OverworldChunk();
@@ -237,8 +243,8 @@ namespace TerrainGeneration {
 
     // --== Drawing ==--
     void OverworldTerrain::draw(){
-        for (int i = 0; i < LOADED_CHUNK_COUNT; i++){
-            drawChunk(loadedChunks[i]);
+        for (int i = 0; i < DISPLAYED_CHUNK_COUNT; i++){
+            drawChunk(displayedChunks[i]);
         }
     }
 
