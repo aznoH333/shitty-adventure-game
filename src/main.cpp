@@ -26,7 +26,10 @@ int main() {
         Drawing::get()->render();
         State::get()->stateUpdate();
         
-        //Drawing::get()->drawTexture("player_1", {100, 100}, false, 1, 0, WHITE, 0);
+
+
+        Utils::gameTickCounter++; // pavle naser si
+
         
     }
     

@@ -1,11 +1,9 @@
 #include "game/overworld/overworldTerrain.h"
-#include <iostream>
 
 namespace TerrainGeneration {
 
     OverworldObject generateDungeon(const TerrainBiome& biome, OverworldPosition position){
         
-        std::cout << position.x << " , " << position.y << "\n";
         return {
             .sprite = "placeholders_6",
             .position = position,

@@ -1,6 +1,7 @@
 #ifndef OVERWORLD_TERRAIN
 #define OVERWORLD_TERRAIN
 
+#include <thread>
 #include <vector>
 #include "engine/all.h"
 #include "tileLookup.h"
@@ -8,13 +9,16 @@
 #include "spotNoise.h"
 #include "terrainStructs.h"
 #include "valueNoise.h"
+#include <chrono>
 
 const float OVERWORLD_TILE_SIZE = 32.0f;
 const int DISPLAYED_CHUNK_COUNT = 9;
 const int CHUNK_GENERATION_DISTANCE = 3;
 
-namespace TerrainGeneration{
 
+namespace TerrainGeneration{
+    const int DEFAULT_THREAD_WAIT = 50;
+    const int DEFAULT_WORLD_LOADING_INTERVAL = 60;
 
     // terrain variables
     const int terrainNoiseResolution = 4;
@@ -25,12 +29,18 @@ namespace TerrainGeneration{
         private:
             OverworldChunk* displayedChunks[DISPLAYED_CHUNK_COUNT];
             std::map<ChunkCoordinates, OverworldChunk*> loadedChunks;
+            ChunkCoordinates lastLoadChunk = {0,0};
             ValueNoiseMap* noiseMap;
             ValueNoiseMap* treeNoiseMap;
             SpotNoiseMap* mountainNoiseMap;
             SpotNoiseMap* structureNoiseMap;
+            std::thread worldLoadingThread;
+
+            bool shouldAttemptLoading = true;
+            bool allChunksLoaded = false;
+            bool shouldWorldLoadingThreadBeRunning = true;            
             
-            
+            void worldLoadingFunction();
             void generateChunksAroundPoint(ChunkCoordinates coordinates);
             void draw();
             void drawChunk(OverworldChunk* chunk);

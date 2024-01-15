@@ -1,5 +1,5 @@
 #include "game/overworld/overworldTerrain.h"
-
+#include <iostream>
 
 namespace TerrainGeneration {
 
@@ -11,7 +11,7 @@ namespace TerrainGeneration {
         mountainNoiseMap = new SpotNoiseMap(960);
         treeNoiseMap = new ValueNoiseMap(3547);
         structureNoiseMap = new SpotNoiseMap(1984);
-        
+        worldLoadingThread = std::thread(&OverworldTerrain::worldLoadingFunction, this);
         // init some garbage data
         for (int i = 0; i < DISPLAYED_CHUNK_COUNT; i++){
             displayedChunks[i] = generateChunk({i % 3,i/3});
@@ -20,6 +20,11 @@ namespace TerrainGeneration {
     }
 
     OverworldTerrain::~OverworldTerrain(){
+        // stop thread
+        shouldWorldLoadingThreadBeRunning = false;
+        worldLoadingThread.join();
+        
+        
         // free loaded chunks
         for (const auto chunk : loadedChunks){
             delete chunk.second;
@@ -36,11 +41,26 @@ namespace TerrainGeneration {
     // --== Update ==--
     void OverworldTerrain::update(){
         draw();
+        if (Utils::gameTickCounter % DEFAULT_WORLD_LOADING_INTERVAL == 0){
+            shouldAttemptLoading = true;
+        }
     }
 
     
 
     // --== chunk loading ==--
+    void OverworldTerrain::worldLoadingFunction(){
+        while (shouldWorldLoadingThreadBeRunning){
+            if (shouldAttemptLoading && !allChunksLoaded){
+                shouldAttemptLoading = false;
+                generateChunksAroundPoint(lastLoadChunk);
+            }else {
+                std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_THREAD_WAIT));
+            }
+        }   
+    }
+    
+    
     void OverworldTerrain::generateChunksAroundPoint(ChunkCoordinates coordinates){
         for (int x = -CHUNK_GENERATION_DISTANCE; x <= CHUNK_GENERATION_DISTANCE; x++){
             for (int y = -CHUNK_GENERATION_DISTANCE; y <= CHUNK_GENERATION_DISTANCE; y++){
@@ -48,17 +68,20 @@ namespace TerrainGeneration {
                 
                 if (loadedChunks.find(pos) == loadedChunks.end()){
                     loadedChunks[pos] = generateChunk(pos);
+                    return;
                 }
             }
         }
+        allChunksLoaded = true;
     }
     
     
     
     void OverworldTerrain::reloadChunksAroundPoint(ChunkCoordinates coordinates){
+        lastLoadChunk = coordinates;
         generateChunksAroundPoint(coordinates);
         
-        
+        allChunksLoaded = false;
         // load
         for (int i = 0; i < DISPLAYED_CHUNK_COUNT; i++){
             displayedChunks[i] = loadedChunks[{i % 3 + coordinates.x - 1,i/3 + coordinates.y - 1}];
@@ -71,6 +94,8 @@ namespace TerrainGeneration {
 
     // --== Generation ==--
     OverworldChunk* OverworldTerrain::generateChunk(ChunkCoordinates position){
+        std::cout << "Started generating chunk... " << position.x << ", " << position.y << "\n";
+        
         // generate some garbage data
         OverworldChunk* output = new OverworldChunk();
         output->coordinates = position;

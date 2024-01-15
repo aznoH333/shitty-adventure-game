@@ -17,6 +17,8 @@ namespace Utils{
     float getRandomFloat(float min, float max);
     float pythagoras(float x1, float y1, float x2, float y2);
 
+    static int gameTickCounter = 0;
+
 
     // psuedo random
     int getPseudoRandomInt(int min, int max, int base);
