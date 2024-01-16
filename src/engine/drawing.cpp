@@ -80,6 +80,11 @@ void renderTexture(RenderData& data){
         {0,0}, data.rotation, data.color);
 }
 
+void Drawing::renderText(TextRenderData& text){
+    DrawText(text.text.c_str(), (int)text.position.x, (int)text.position.y, text.scale, text.color);
+}
+
+
 void renderLayer(std::queue<RenderData>& layer){
     while (!layer.empty()){
         renderTexture(layer.front());
@@ -92,6 +97,11 @@ void Drawing::drawTexture(std::string sprite, Vector2 pos, bool flipSprite, floa
     renderQueue[layer].push(RenderData{&textures.at(sprite), pos, scale, color, rotation, flipSprite});
 }
 
+
+void Drawing::drawText(std::string text, Vector2 pos, float scale, Color color){
+    textQueue.push({text, pos, (int)(DEFAULT_FONT_SIZE * scale), color});
+}
+
 void Drawing::render(){
 
      // draw to texture
@@ -101,6 +111,11 @@ void Drawing::render(){
         
         for (int i = 0; i < renderLayerCount; i++){
             renderLayer(renderQueue[i]);
+        }
+
+        while (!textQueue.empty()){
+            renderText(textQueue.front());
+            textQueue.pop();
         }
 
         EndMode2D();

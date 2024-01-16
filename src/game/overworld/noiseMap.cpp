@@ -1,6 +1,6 @@
 #include "game/overworld/valueNoise.h"
 
-
+#include <iostream>
 namespace TerrainGeneration {
 
 
@@ -14,13 +14,9 @@ namespace TerrainGeneration {
         
         
 
-        // shitty workaround for weird division stuff
-        int negativeX = position.x < 0;
-        int negativeY = position.y < 0;        
-        int noiseX = (position.x + negativeX) / resolution; 
-        int noiseY = (position.y + negativeY) / resolution;
-        noiseX -= negativeX;
-        noiseY -= negativeY;
+        
+        int noiseX = Utils::dividePosition(position.x, resolution);
+        int noiseY = Utils::dividePosition(position.y, resolution);
 
 
         for (int i = noiseX - 2; i < noiseX + 2; i++){
@@ -36,8 +32,8 @@ namespace TerrainGeneration {
 
 
 
-        float xInterp = Utils::smoothstep((float) (std::abs(position.x + negativeX) % resolution) / resolution);
-        float yInterp = Utils::smoothstep((float) (std::abs(position.y + negativeY) % resolution) / resolution);
+        float xInterp = Utils::smoothstep((float) (std::abs(position.x + (position.x < 0)) % resolution) / resolution);
+        float yInterp = Utils::smoothstep((float) (std::abs(position.y + (position.y < 0)) % resolution) / resolution);
 
         float a = Utils::interpolate(topLeftValue, topRightValue,  xInterp);
         float b = Utils::interpolate(bottomLeftValue, bottomRightValue,  xInterp);

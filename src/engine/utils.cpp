@@ -82,6 +82,8 @@ namespace Utils {
         delete distribution;
     }
 
+
+
     // pseudo random
     const int PSEUDO_RANDOM_MAX = 4000;
 
@@ -126,7 +128,13 @@ namespace Utils {
         return getPseudoRandomFloat(base) * (max - min) + min;
     }
 
-
+    // hacky workarounds
+    int dividePosition(int position, int denominator){
+        int negative = position < 0;
+        int result = (position + negative) / denominator; 
+        result -= negative;
+        return result;
+    }
 
 }
 

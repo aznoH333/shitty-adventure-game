@@ -20,8 +20,9 @@ namespace TerrainGeneration {
         
         float e = maxNoiseRadius - minNoiseRadius;
         
-        int noiseX = position.x / resolution;
-        int noiseY = position.y / resolution;
+        // shitty workaround for weird division stuff
+        int noiseX = Utils::dividePosition(position.x, resolution);
+        int noiseY = Utils::dividePosition(position.y, resolution);
 
         float value = 0;
         for (int i = noiseX - 1; i <= noiseX + 1; i++){

@@ -10,14 +10,12 @@ OverworldPlayer::OverworldPlayer(TerrainGeneration::OverworldPosition position){
 
 void OverworldPlayer::update(){
     // temporary shitty update
-    int negativeX = position.x < 0;
-    int negativeY = position.y < 0;
+
     
     TerrainGeneration::ChunkCoordinates playerChunk = 
-        { (position.x + negativeX)  / TerrainGeneration::OVERWORLD_CHUNK_SIZE, 
-          (position.y + negativeY) / TerrainGeneration::OVERWORLD_CHUNK_SIZE};
-    playerChunk.x -= negativeX;
-    playerChunk.y -= negativeY;
+        { Utils::dividePosition(position.x, TerrainGeneration::OVERWORLD_CHUNK_SIZE), 
+          Utils::dividePosition(position.y, TerrainGeneration::OVERWORLD_CHUNK_SIZE)};
+
 
 
     Overworld::get()->setPlayerChunk(playerChunk);

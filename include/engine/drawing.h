@@ -8,6 +8,7 @@
 
 
 const float DEFAULT_CAMERA_ZOOM = 1.5f;
+const int DEFAULT_FONT_SIZE = 20;
 
 struct RenderData{
     Texture2D* texture;
@@ -16,6 +17,13 @@ struct RenderData{
     Color color;
     float rotation;
     bool flipSprite;
+};
+
+struct TextRenderData{
+    std::string text;
+    Vector2 position;
+    int scale;
+    Color color;
 };
 
 
@@ -39,6 +47,7 @@ class Drawing{
 
         std::map<std::string, Texture2D> textures;
         std::map<int, std::queue<RenderData>> renderQueue;
+        std::queue<TextRenderData> textQueue;
         RenderTexture2D targetTexture;
         Camera2D camera;
         int renderLayerCount;
@@ -51,6 +60,7 @@ class Drawing{
 
         void loadTexture(std::string filePath);
         void loadAllTexturesFromDirectory(std::string directoryPath);
+        void renderText(TextRenderData& text);
 
     public:
         static Drawing* get();

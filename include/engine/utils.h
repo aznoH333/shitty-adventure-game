@@ -25,6 +25,10 @@ namespace Utils{
     float getPseudoRandomFloat(int base);
     float getPseudoRandomFloat(float min, float max, int base);
 
+
+    // hacky workarounds
+    int dividePosition(int position, int denominator);
+
     // hashing
     int hashInt(int input);
     int hashVector(int value1, int value2);

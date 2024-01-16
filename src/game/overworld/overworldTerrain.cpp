@@ -65,7 +65,6 @@ namespace TerrainGeneration {
         for (int x = -CHUNK_GENERATION_DISTANCE; x <= CHUNK_GENERATION_DISTANCE; x++){
             for (int y = -CHUNK_GENERATION_DISTANCE; y <= CHUNK_GENERATION_DISTANCE; y++){
                 ChunkCoordinates pos = {coordinates.x + x, coordinates.y + y};
-                
                 if (loadedChunks.find(pos) == loadedChunks.end()){
                     loadedChunks[pos] = generateChunk(pos);
                     return;
@@ -94,8 +93,7 @@ namespace TerrainGeneration {
 
     // --== Generation ==--
     OverworldChunk* OverworldTerrain::generateChunk(ChunkCoordinates position){
-        std::cout << "Started generating chunk... " << position.x << ", " << position.y << "\n";
-        
+
         // generate some garbage data
         OverworldChunk* output = new OverworldChunk();
         output->coordinates = position;
@@ -106,8 +104,13 @@ namespace TerrainGeneration {
         // generate tiles based on height map
         for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
+                int adjustedX = (position.x < 0) * (15 - x) + (position.x >= 0) * (x);
+                int adjustedY = (position.y < 0) * (15 - y) + (position.y >= 0) * (y);
+
                 
-                OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
+                OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + adjustedX, position.y * OVERWORLD_CHUNK_SIZE + adjustedY};
+
+
                 
                 float noiseValue = noiseMap->getNoiseValue(tilePosition, HEIGHT_NOISE_RESOLUTION);
                 float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16, MOUNTAIN_NOISE_RESOLUTION);
@@ -119,7 +122,7 @@ namespace TerrainGeneration {
             }
         }
 
-        /*
+        
         // generate patterns
         for (int x = -1; x <= 1; x++){
             for (int y = -1; y <= 1; y++){
@@ -132,7 +135,7 @@ namespace TerrainGeneration {
         for (PatternGenerationObject& p : output->patterns){
             applyPattern(output->tiles, output->worldObjects, p, position, biome);
         }
-        */
+        
 
 
         return output;
@@ -142,7 +145,10 @@ namespace TerrainGeneration {
     void OverworldTerrain::addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position, const TerrainBiome& biome){
         for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
-                OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
+                int adjustedX = (position.x < 0) * (15 - x) + (position.x >= 0) * (x);
+                int adjustedY = (position.y < 0) * (15 - y) + (position.y >= 0) * (y);
+                
+                OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + adjustedX, position.y * OVERWORLD_CHUNK_SIZE + adjustedY};
                 
                 float noiseValue = noiseMap->getNoiseValue(tilePosition, HEIGHT_NOISE_RESOLUTION);
                 float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16, 16);
@@ -275,6 +281,9 @@ namespace TerrainGeneration {
     }
 
     void OverworldTerrain::drawChunk(OverworldChunk* chunk){
+        
+        Drawing::get()->drawText(std::to_string(chunk->coordinates.x) + ", " + std::to_string(chunk->coordinates.y), {(float)chunk->coordinates.x * OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE, (float)chunk->coordinates.y * OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE}, 1, WHITE);
+        
         // draw tiles
         for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
