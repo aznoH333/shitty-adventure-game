@@ -109,9 +109,9 @@ namespace TerrainGeneration {
                 
                 OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
                 
-                float noiseValue = noiseMap->getNoiseValue(tilePosition, terrainNoiseResolution);
-                float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16, 16);
-                float terrainHeightValue = std::max(noiseValue, spotValue);
+                float noiseValue = noiseMap->getNoiseValue(tilePosition, HEIGHT_NOISE_RESOLUTION);
+                float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16, MOUNTAIN_NOISE_RESOLUTION);
+                float terrainHeightValue = noiseValue;
                 
                 
                 // add generation
@@ -119,7 +119,7 @@ namespace TerrainGeneration {
             }
         }
 
-
+        /*
         // generate patterns
         for (int x = -1; x <= 1; x++){
             for (int y = -1; y <= 1; y++){
@@ -132,6 +132,7 @@ namespace TerrainGeneration {
         for (PatternGenerationObject& p : output->patterns){
             applyPattern(output->tiles, output->worldObjects, p, position, biome);
         }
+        */
 
 
         return output;
@@ -143,12 +144,12 @@ namespace TerrainGeneration {
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
                 OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
                 
-                float noiseValue = noiseMap->getNoiseValue(tilePosition, terrainNoiseResolution);
+                float noiseValue = noiseMap->getNoiseValue(tilePosition, HEIGHT_NOISE_RESOLUTION);
                 float spotValue = mountainNoiseMap->getNoiseValue(tilePosition, 6, 16, 16);
                 float terrainHeightValue = std::max(noiseValue, spotValue);
 
 
-                float treeGenerationValue = treeNoiseMap->getNoiseValue(tilePosition, treeNoiseResolution) - structureNoiseMap->getNoiseValue(tilePosition, 2, 3, 16);
+                float treeGenerationValue = treeNoiseMap->getNoiseValue(tilePosition, TREE_NOISE_RESOLUTION) - structureNoiseMap->getNoiseValue(tilePosition, 2, 3, 16);
                 float structureValue = structureNoiseMap->getNoiseValue(tilePosition, 1, 1, 16);
                 
                 addGenerationPattern(patterns, terrainHeightValue, treeGenerationValue, structureValue, tilePosition, biome);

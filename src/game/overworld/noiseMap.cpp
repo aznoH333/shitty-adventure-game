@@ -1,7 +1,6 @@
 #include "game/overworld/valueNoise.h"
 
 
-
 namespace TerrainGeneration {
 
 
@@ -13,11 +12,15 @@ namespace TerrainGeneration {
 
     float ValueNoiseMap::getNoiseValue(OverworldPosition& position, int resolution){
         
-
         
-        int noiseX = position.x / resolution;
-        int noiseY = position.y / resolution;
 
+        // shitty workaround for weird division stuff
+        int negativeX = position.x < 0;
+        int negativeY = position.y < 0;        
+        int noiseX = (position.x + negativeX) / resolution; 
+        int noiseY = (position.y + negativeY) / resolution;
+        noiseX -= negativeX;
+        noiseY -= negativeY;
 
 
         for (int i = noiseX - 2; i < noiseX + 2; i++){
@@ -31,12 +34,17 @@ namespace TerrainGeneration {
         float bottomLeftValue = noise[{noiseX, noiseY + 1}];
         float bottomRightValue = noise[{noiseX + 1, noiseY + 1}];
 
-        float a = Utils::interpolate(topLeftValue, topRightValue,  Utils::smoothstep((float) (position.x % resolution) / resolution));
-        float b = Utils::interpolate(bottomLeftValue, bottomRightValue,  Utils::smoothstep((float) (position.x % resolution) / resolution));
+
+
+        float xInterp = Utils::smoothstep((float) (std::abs(position.x + negativeX) % resolution) / resolution);
+        float yInterp = Utils::smoothstep((float) (std::abs(position.y + negativeY) % resolution) / resolution);
+
+        float a = Utils::interpolate(topLeftValue, topRightValue,  xInterp);
+        float b = Utils::interpolate(bottomLeftValue, bottomRightValue,  xInterp);
 
 
         
-        return Utils::interpolate(a, b,  Utils::smoothstep((float) (position.y % resolution) / resolution));
+        return Utils::interpolate(a, b,  yInterp);
         
     }
 

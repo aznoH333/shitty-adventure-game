@@ -20,9 +20,11 @@ namespace TerrainGeneration{
     const int DEFAULT_THREAD_WAIT = 50;
     const int DEFAULT_WORLD_LOADING_INTERVAL = 60;
 
-    // terrain variables
-    const int terrainNoiseResolution = 4;
-    const int treeNoiseResolution = 8;
+
+    const int MOUNTAIN_NOISE_RESOLUTION = 16;
+    const int TREE_NOISE_RESOLUTION = 20;
+    const int HEIGHT_NOISE_RESOLUTION = 16;
+
     
 
     class OverworldTerrain{

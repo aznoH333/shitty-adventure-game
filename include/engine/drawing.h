@@ -7,7 +7,7 @@
 #include <raylib-cpp.hpp>
 
 
-const float DEFAULT_CAMERA_ZOOM = 2.0f;
+const float DEFAULT_CAMERA_ZOOM = 1.5f;
 
 struct RenderData{
     Texture2D* texture;
@@ -59,6 +59,7 @@ class Drawing{
         void render();
         Camera2D& getCamera();
         void drawTexture(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color, int layer);
+        void drawText(std::string text, Vector2 pos, float scale, Color color);
 
 
 

@@ -39,7 +39,7 @@ namespace TerrainGeneration {
 
 
             .mountainTile = 2,
-            .stoneTile = 0,
+            .stoneTile = 1,
             .shoreTile = 0,
             .defaultTile = 0,
             .sandTile = 1,
