@@ -9,6 +9,7 @@
 #include "spotNoise.h"
 #include "terrainStructs.h"
 #include "valueNoise.h"
+#include "biomeNoiseMap.h"
 #include <chrono>
 
 const float OVERWORLD_TILE_SIZE = 16.0f;
@@ -24,6 +25,7 @@ namespace TerrainGeneration{
     const int MOUNTAIN_NOISE_RESOLUTION = 16;
     const int TREE_NOISE_RESOLUTION = 8;
     const int HEIGHT_NOISE_RESOLUTION = 16;
+    const int BIOME_SIZE = 10;
 
     
 
@@ -32,6 +34,7 @@ namespace TerrainGeneration{
             OverworldChunk* displayedChunks[DISPLAYED_CHUNK_COUNT];
             std::map<ChunkCoordinates, OverworldChunk*> loadedChunks;
             ChunkCoordinates lastLoadChunk = {0,0};
+            BiomeNoiseMap* biomeMap;
             ValueNoiseMap* noiseMap;
             ValueNoiseMap* treeNoiseMap;
             SpotNoiseMap* mountainNoiseMap;
@@ -46,11 +49,11 @@ namespace TerrainGeneration{
             void generateChunksAroundPoint(ChunkCoordinates coordinates);
             void draw();
             void drawChunk(OverworldChunk* chunk);
-            void addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position, const TerrainBiome& biome);
-            void addGenerationPattern(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates& chunkPosition, int x, int y, const TerrainBiome& biome);
+            void addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position);
+            void addGenerationPattern(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates& chunkPosition, int x, int y);
             OverworldChunk* generateChunk(ChunkCoordinates position);
             int generateTile(float terrainHeightValue, const TerrainBiome& biome);
-            void applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], std::vector<OverworldObject>& objects, PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition, const TerrainBiome& biome);
+            void applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], std::vector<OverworldObject>& objects, PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition);
             OverworldObject generateOverworldObject(const TerrainBiome& biome, ObjectType type, OverworldPosition position);
             float getTerrainHeightValue(OverworldPosition position, const TerrainBiome& biome);
             void drawTile(const OverworldTile& tile, Vector2& position);

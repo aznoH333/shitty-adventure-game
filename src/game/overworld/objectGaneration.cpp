@@ -26,12 +26,14 @@ namespace TerrainGeneration {
         switch (treeType){
             default:
                 output.sprite = "overworld_tree_0";
+                break;
             case 1:
                 if (rng < 0.5f){
                     output.sprite = "overworld_tree_1";
                 }else {
                     output.sprite = "overworld_tree_2";
                 }
+                break;
         }
 
         return output;

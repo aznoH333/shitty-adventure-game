@@ -9,6 +9,7 @@ namespace TerrainGeneration {
         noiseMap = new ValueNoiseMap(1020);
         mountainNoiseMap = new SpotNoiseMap(960);
         treeNoiseMap = new ValueNoiseMap(3547);
+        biomeMap = new BiomeNoiseMap(1972, BIOME_SIZE);
         structureNoiseMap = new SpotNoiseMap(1984);
         worldLoadingThread = std::thread(&OverworldTerrain::worldLoadingFunction, this);
         // init some garbage data
@@ -33,6 +34,7 @@ namespace TerrainGeneration {
         delete mountainNoiseMap;
         delete treeNoiseMap;
         delete structureNoiseMap;
+        delete biomeMap;
     }
 
 
@@ -107,14 +109,18 @@ namespace TerrainGeneration {
         OverworldChunk* output = new OverworldChunk();
         output->coordinates = position;
         output->worldObjects = {};
-        output->terrainBiome = 1; // TODO
-        const TerrainBiome& biome = biomeLookup[output->terrainBiome];
+        //output->terrainBiome = 1; // TODO
+        //const TerrainBiome& biome = biomeLookup[output->terrainBiome];
 
         // generate tiles based on height map
         for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
 
+
                 OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
+                
+                const TerrainBiome& biome = biomeLookup[biomeMap->getBiome(tilePosition)];
+                
                 float terrainHeightValue = getTerrainHeightValue(tilePosition, biome);
                 
                 // add generation
@@ -126,14 +132,14 @@ namespace TerrainGeneration {
         // generate patterns
         for (int x = -1; x <= 1; x++){
             for (int y = -1; y <= 1; y++){
-                addGenerationPatternsForChunk(output->patterns, {position.x + x, position.y + y}, biome);
+                addGenerationPatternsForChunk(output->patterns, {position.x + x, position.y + y});
             }
         }
         
 
         // patterns
         for (PatternGenerationObject& p : output->patterns){
-            applyPattern(output->tiles, output->worldObjects, p, position, biome);
+            applyPattern(output->tiles, output->worldObjects, p, position);
         }
         
 
@@ -141,12 +147,12 @@ namespace TerrainGeneration {
 
     }
 
-    void OverworldTerrain::addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position, const TerrainBiome& biome){
+    void OverworldTerrain::addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position){
         for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
  
 
-                addGenerationPattern(patterns, position, x, y, biome);
+                addGenerationPattern(patterns, position, x, y);
 
             }
         }
@@ -154,9 +160,10 @@ namespace TerrainGeneration {
 
 
 
-    void OverworldTerrain::addGenerationPattern(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates& chunkPosition, int x, int y, const TerrainBiome& biome){
+    void OverworldTerrain::addGenerationPattern(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates& chunkPosition, int x, int y){
         // prep values
         OverworldPosition position = {chunkPosition.x * OVERWORLD_CHUNK_SIZE + x, chunkPosition.y * OVERWORLD_CHUNK_SIZE + y};
+        const TerrainBiome& biome = biomeLookup[biomeMap->getBiome(position)];
         float terrainHeightValue = getTerrainHeightValue(position, biome);
         float structureValue = structureNoiseMap->getNoiseValue(position, 1, 1, 16);
                 
@@ -234,11 +241,12 @@ namespace TerrainGeneration {
 
     
     
-    void OverworldTerrain::applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE],  std::vector<OverworldObject>& objects, PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition, const TerrainBiome& biome){
+    void OverworldTerrain::applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE],  std::vector<OverworldObject>& objects, PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition){
         OverworldPosition pos = pattern.position;
         pos.x -= chunkPosition.x * OVERWORLD_CHUNK_SIZE;
         pos.y -= chunkPosition.y * OVERWORLD_CHUNK_SIZE;
         
+        const TerrainBiome& biome = biomeLookup[biomeMap->getBiome(pos)];
         
         switch (pattern.patern) {
             case PATTERN_WATER:

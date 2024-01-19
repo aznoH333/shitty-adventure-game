@@ -100,7 +100,7 @@ namespace Utils {
 
     int getPseudoRandomInt(int min, int max, int base){
         int hashed = hashInt(base);
-        return (hashed % (max - min)) + min;
+        return (hashed % ((max + 1) - min)) + min;
     }
 
     
