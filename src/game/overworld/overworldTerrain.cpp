@@ -128,7 +128,7 @@ namespace TerrainGeneration {
             }
         }
 
-        
+        /*
         // generate patterns
         for (int x = -1; x <= 1; x++){
             for (int y = -1; y <= 1; y++){
@@ -142,7 +142,7 @@ namespace TerrainGeneration {
             applyPattern(output->tiles, output->worldObjects, p, position, biome);
         }
         
-
+    */
 
         return output;
 
