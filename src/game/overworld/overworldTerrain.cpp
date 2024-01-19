@@ -99,13 +99,7 @@ namespace TerrainGeneration {
         return ((noiseValue * 1.5f) + (spotValue * 0.5f) + roughnessValue) / 3;
     }
 
-    OverworldPosition getAdjustedPosition(int x, int y, ChunkCoordinates& chunkPosition){
-        int adjustedX = (chunkPosition.x < 0) * (15 - x) + (chunkPosition.x >= 0) * (x);
-        int adjustedY = (chunkPosition.y < 0) * (15 - y) + (chunkPosition.y >= 0) * (y);
-
-                
-        return {chunkPosition.x * OVERWORLD_CHUNK_SIZE + adjustedX, chunkPosition.y * OVERWORLD_CHUNK_SIZE + adjustedY};
-    }
+    
     
     OverworldChunk* OverworldTerrain::generateChunk(ChunkCoordinates position){
 
@@ -120,7 +114,7 @@ namespace TerrainGeneration {
         for (int x = 0; x < OVERWORLD_CHUNK_SIZE; x++){
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
 
-                OverworldPosition tilePosition = getAdjustedPosition(x, y, position);
+                OverworldPosition tilePosition = {position.x * OVERWORLD_CHUNK_SIZE + x, position.y * OVERWORLD_CHUNK_SIZE + y};
                 float terrainHeightValue = getTerrainHeightValue(tilePosition, biome);
                 
                 // add generation
@@ -128,7 +122,7 @@ namespace TerrainGeneration {
             }
         }
 
-        /*
+        
         // generate patterns
         for (int x = -1; x <= 1; x++){
             for (int y = -1; y <= 1; y++){
@@ -142,7 +136,6 @@ namespace TerrainGeneration {
             applyPattern(output->tiles, output->worldObjects, p, position, biome);
         }
         
-    */
 
         return output;
 
@@ -163,15 +156,10 @@ namespace TerrainGeneration {
 
     void OverworldTerrain::addGenerationPattern(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates& chunkPosition, int x, int y, const TerrainBiome& biome){
         // prep values
-        OverworldPosition position = getAdjustedPosition(x, y , chunkPosition);
+        OverworldPosition position = {chunkPosition.x * OVERWORLD_CHUNK_SIZE + x, chunkPosition.y * OVERWORLD_CHUNK_SIZE + y};
         float terrainHeightValue = getTerrainHeightValue(position, biome);
         float structureValue = structureNoiseMap->getNoiseValue(position, 1, 1, 16);
                 
-
-
-
-
-
         // structures
         if (structureValue > 0.9){
             patterns.push_back({position, PATTERN_DUNGEON});

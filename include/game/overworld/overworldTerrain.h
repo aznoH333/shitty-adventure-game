@@ -22,7 +22,7 @@ namespace TerrainGeneration{
 
 
     const int MOUNTAIN_NOISE_RESOLUTION = 16;
-    const int TREE_NOISE_RESOLUTION = 16;
+    const int TREE_NOISE_RESOLUTION = 8;
     const int HEIGHT_NOISE_RESOLUTION = 16;
 
     
