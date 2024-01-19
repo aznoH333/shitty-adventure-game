@@ -11,12 +11,32 @@ namespace TerrainGeneration {
         };
     }
 
-    OverworldObject generateTree(const TerrainBiome& biome, OverworldPosition position){
-        return {
+
+   
+
+    OverworldObject generateTree(const TerrainBiome& biome, OverworldPosition position, int treeType){
+        float rng = Utils::getPseudoRandomFloat(Utils::hashVector(position.x, position.y) + 1984);
+        
+        OverworldObject output = {
             .sprite = "overworld_tree_0",
             .position = position,
             .type = OBJECT_TREE,
         };
+        
+        switch (treeType){
+            default:
+                output.sprite = "overworld_tree_0";
+            case 1:
+                if (rng < 0.5f){
+                    output.sprite = "overworld_tree_1";
+                }else {
+                    output.sprite = "overworld_tree_2";
+                }
+        }
+
+        return output;
+        
+        
     }
 
 
@@ -30,9 +50,9 @@ namespace TerrainGeneration {
             case OBJECT_DUNGEON:
                 return generateDungeon(biome, position);
             case OBJECT_TREE:
-                return generateTree(biome, position);
+                return generateTree(biome, position, biome.treeType);
         }
-        return generateTree(biome, position);
+        return generateTree(biome, position, biome.treeType);
     }
 
 }

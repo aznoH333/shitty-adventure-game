@@ -107,7 +107,7 @@ namespace TerrainGeneration {
         OverworldChunk* output = new OverworldChunk();
         output->coordinates = position;
         output->worldObjects = {};
-        output->terrainBiome = 0; // TODO
+        output->terrainBiome = 1; // TODO
         const TerrainBiome& biome = biomeLookup[output->terrainBiome];
 
         // generate tiles based on height map

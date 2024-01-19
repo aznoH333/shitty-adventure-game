@@ -1,7 +1,7 @@
-
-
 #ifndef BIOME_LOOKUP
 #define BIOME_LOOKUP
+
+
 
 namespace TerrainGeneration {
 
@@ -27,6 +27,7 @@ namespace TerrainGeneration {
         int sandTile;
         int waterTile;
         int structureType;
+        int treeType;
     };
 
 
@@ -53,9 +54,34 @@ namespace TerrainGeneration {
             .sandTile = 1,
             .waterTile = 3,
             .structureType = 0,
-        }
+            .treeType = 0,
+        },
+        // desert biome
+        {
+            .mountainValue = 0.75f,
+            .stoneValue = 0.65f,
+            .shoreValue = 0.20f,
+            .waterGenerationValue = 0.2f,
+            .treeGenerationValue = 0.7f,
+            .structureFrequency = 20,
+            .preferedTreeValue = 0.5f,
+            .treeToleranceFalloff = 1.1f,
+            .treeDensity = 0.15f,
+            .terrainRoughnessModifier = 10,
+
+
+            .mountainTile = 2,
+            .stoneTile = 4,
+            .shoreTile = 5,
+            .defaultTile = 1,
+            .sandTile = 1,
+            .waterTile = 3,
+            .structureType = 0,
+            .treeType = 1,
+        },
     };
 
 }
+
 
 #endif
