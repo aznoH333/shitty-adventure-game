@@ -5,7 +5,7 @@ namespace TerrainGeneration {
     OverworldObject generateDungeon(const TerrainBiome& biome, OverworldPosition position){
         
         return {
-            .sprite = "placeholders_6",
+            .sprite = "test_art_4_3",
             .position = position,
             .type = OBJECT_DUNGEON,
         };
@@ -13,7 +13,7 @@ namespace TerrainGeneration {
 
     OverworldObject generateTree(const TerrainBiome& biome, OverworldPosition position){
         return {
-            .sprite = "placeholders_5",
+            .sprite = "test_art_4_2",
             .position = position,
             .type = OBJECT_TREE,
         };

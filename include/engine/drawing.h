@@ -7,7 +7,7 @@
 #include <raylib-cpp.hpp>
 
 
-const float DEFAULT_CAMERA_ZOOM = 1.5f;
+const float DEFAULT_CAMERA_ZOOM = 4.0f;
 const int DEFAULT_FONT_SIZE = 20;
 
 struct RenderData{

@@ -10,10 +10,14 @@ namespace TerrainGeneration {
     };
 
     const OverworldTile tileLookupTable[] = {
-            {"placeholders_1", false}, // grass
-            {"placeholders_2", false}, // sand
-            {"placeholders_3", true},  // mountain
-            {"placeholders_4", true}   // water
+            {"test_art_4_5", false}, // grass
+            {"test_art_4_7", false}, // sand
+            {"test_art_4_4", true},  // mountain
+            {"test_art_4_9", true},   // water
+            {"test_art_4_8", false},   // stone
+            {"test_art_4_6", false},   // shore
+
+
     };
 }
 

@@ -38,5 +38,5 @@ void OverworldPlayer::update(){
     }
 
     Drawing::get()->getCamera().target = {position.x * OVERWORLD_TILE_SIZE, position.y * OVERWORLD_TILE_SIZE};
-    Drawing::get()->drawTexture("placeholders_7", {position.x * OVERWORLD_TILE_SIZE, position.y * OVERWORLD_TILE_SIZE}, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
+    Drawing::get()->drawTexture("test_art_4_1", {position.x * OVERWORLD_TILE_SIZE, position.y * OVERWORLD_TILE_SIZE}, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
 }

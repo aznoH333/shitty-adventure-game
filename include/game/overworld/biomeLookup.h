@@ -13,6 +13,9 @@ namespace TerrainGeneration {
         float waterGenerationValue;
         float treeGenerationValue;
         float structureFrequency;
+        float preferedTreeValue;
+        float treeToleranceFalloff;
+        float treeDensity;
 
 
 
@@ -32,15 +35,18 @@ namespace TerrainGeneration {
         {
             .mountainValue = 0.7,
             .stoneValue = 0.6,
-            .shoreValue = 0.4,
+            .shoreValue = 0.35,
             .waterGenerationValue = 0.3,
-            .treeGenerationValue = 0.4,
+            .treeGenerationValue = 0.7,
             .structureFrequency = 20,
+            .preferedTreeValue = 0.6f,
+            .treeToleranceFalloff = 1.1f,
+            .treeDensity = 0.25f,
 
 
             .mountainTile = 2,
-            .stoneTile = 1,
-            .shoreTile = 0,
+            .stoneTile = 4,
+            .shoreTile = 5,
             .defaultTile = 0,
             .sandTile = 1,
             .waterTile = 3,
