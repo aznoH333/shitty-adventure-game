@@ -2,7 +2,6 @@
 #include "engine/utils.h"
 
 
-
 namespace Utils {
 
     std::vector<std::string> getFilesInFolder(std::filesystem::path path){
@@ -136,5 +135,9 @@ namespace Utils {
         return result;
     }
 
-}
+    int animationTimer(int start, int end, int frameTime){
+        int time = gameTickCounter / frameTime;
+        return start + (time % (end - start + 1));
+    }
 
+}

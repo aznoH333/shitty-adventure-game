@@ -18,7 +18,7 @@ const int CHUNK_GENERATION_DISTANCE = 3;
 
 namespace TerrainGeneration{
     const int DEFAULT_THREAD_WAIT = 50;
-    const int DEFAULT_WORLD_LOADING_INTERVAL = 60;
+    const int DEFAULT_WORLD_LOADING_INTERVAL = 10;
 
 
     const int MOUNTAIN_NOISE_RESOLUTION = 16;
@@ -52,7 +52,8 @@ namespace TerrainGeneration{
             int generateTile(float terrainHeightValue, const TerrainBiome& biome);
             void applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], std::vector<OverworldObject>& objects, PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition, const TerrainBiome& biome);
             OverworldObject generateOverworldObject(const TerrainBiome& biome, ObjectType type, OverworldPosition position);
-            float getTerrainHeightValue(OverworldPosition position);
+            float getTerrainHeightValue(OverworldPosition position, const TerrainBiome& biome);
+            void drawTile(const OverworldTile& tile, Vector2& position);
         public:
             void update();
             void reloadChunksAroundPoint(ChunkCoordinates coordinates);

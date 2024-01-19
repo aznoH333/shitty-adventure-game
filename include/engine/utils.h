@@ -17,7 +17,7 @@ namespace Utils{
     float getRandomFloat(float min, float max);
     float pythagoras(float x1, float y1, float x2, float y2);
 
-    static int gameTickCounter = 0;
+    extern int gameTickCounter;
 
 
     // psuedo random
@@ -28,6 +28,7 @@ namespace Utils{
 
     // hacky workarounds
     int dividePosition(int position, int denominator);
+    int animationTimer(int start, int end, int frameTime);
 
     // hashing
     int hashInt(int input);

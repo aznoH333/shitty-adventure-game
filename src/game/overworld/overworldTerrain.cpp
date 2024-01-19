@@ -92,10 +92,11 @@ namespace TerrainGeneration {
 
     // --== Generation ==--
     
-    float OverworldTerrain::getTerrainHeightValue(OverworldPosition position){
+    float OverworldTerrain::getTerrainHeightValue(OverworldPosition position, const TerrainBiome& biome){
         float noiseValue = noiseMap->getNoiseValue(position, HEIGHT_NOISE_RESOLUTION);
         float spotValue = mountainNoiseMap->getNoiseValue(position, 6, 16, MOUNTAIN_NOISE_RESOLUTION);
-        return ((noiseValue * 1.5f) + (spotValue * 0.5f)) / 2;
+        float roughnessValue = noiseMap->getNoiseValue(position, biome.terrainRoughnessModifier);
+        return ((noiseValue * 1.5f) + (spotValue * 0.5f) + roughnessValue) / 3;
     }
 
     OverworldPosition getAdjustedPosition(int x, int y, ChunkCoordinates& chunkPosition){
@@ -120,7 +121,7 @@ namespace TerrainGeneration {
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
 
                 OverworldPosition tilePosition = getAdjustedPosition(x, y, position);
-                float terrainHeightValue = getTerrainHeightValue(tilePosition);
+                float terrainHeightValue = getTerrainHeightValue(tilePosition, biome);
                 
                 // add generation
                 output->tiles[x][y] = generateTile(terrainHeightValue, biome);
@@ -163,7 +164,7 @@ namespace TerrainGeneration {
     void OverworldTerrain::addGenerationPattern(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates& chunkPosition, int x, int y, const TerrainBiome& biome){
         // prep values
         OverworldPosition position = getAdjustedPosition(x, y , chunkPosition);
-        float terrainHeightValue = getTerrainHeightValue(position);
+        float terrainHeightValue = getTerrainHeightValue(position, biome);
         float structureValue = structureNoiseMap->getNoiseValue(position, 1, 1, 16);
                 
 
@@ -293,6 +294,20 @@ namespace TerrainGeneration {
         }
     }
 
+
+    void OverworldTerrain::drawTile(const OverworldTile& tile, Vector2& position){
+        
+        std::string sprite = tile.sprite;
+        
+        if (tile.animation.animates){
+            sprite += "_" + std::to_string(Utils::animationTimer(tile.animation.startFrame, tile.animation.endFrame, tile.animation.ticksPerFrame));
+        }
+        
+        Drawing::get()->drawTexture(sprite, position, false, 1, 0, WHITE, DrawingLayers::LAYER_WORLD);
+
+    }
+
+
     void OverworldTerrain::drawChunk(OverworldChunk* chunk){
         
         Drawing::get()->drawText(std::to_string(chunk->coordinates.x) + ", " + std::to_string(chunk->coordinates.y), {(float)chunk->coordinates.x * OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE, (float)chunk->coordinates.y * OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE}, 1, WHITE);
@@ -302,8 +317,7 @@ namespace TerrainGeneration {
             for (int y = 0; y < OVERWORLD_CHUNK_SIZE; y++){
                 const OverworldTile tile = tileLookupTable[chunk->tiles[x][y]];
                 Vector2 position = {((chunk->coordinates.x * OVERWORLD_CHUNK_SIZE) + x) * OVERWORLD_TILE_SIZE, ((chunk->coordinates.y * OVERWORLD_CHUNK_SIZE) + y) * OVERWORLD_TILE_SIZE};
-                Drawing::get()->drawTexture(tile.sprite, position, false, 1, 0, WHITE, DrawingLayers::LAYER_WORLD);
-            
+                drawTile(tile, position);
             }
         }
 

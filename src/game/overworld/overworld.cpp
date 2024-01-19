@@ -42,8 +42,9 @@ void Overworld::setPlayerChunk(TerrainGeneration::ChunkCoordinates coordinates){
 void Overworld::update(){
     terrain->update();
     // debug draw main chunk
+    /*
     Drawing::get()->drawTexture("placeholders_7", 
     {playerChunk.x * TerrainGeneration::OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE, playerChunk.y * TerrainGeneration::OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE}
-    , false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
+    , false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);*/
     player->update();
 }

@@ -16,6 +16,7 @@ namespace TerrainGeneration {
         float preferedTreeValue;
         float treeToleranceFalloff;
         float treeDensity;
+        int terrainRoughnessModifier;
 
 
 
@@ -39,9 +40,10 @@ namespace TerrainGeneration {
             .waterGenerationValue = 0.3,
             .treeGenerationValue = 0.7,
             .structureFrequency = 20,
-            .preferedTreeValue = 0.6f,
+            .preferedTreeValue = 0.5f,
             .treeToleranceFalloff = 1.1f,
             .treeDensity = 0.25f,
+            .terrainRoughnessModifier = 5,
 
 
             .mountainTile = 2,

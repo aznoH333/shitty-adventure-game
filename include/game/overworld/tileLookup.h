@@ -4,18 +4,31 @@
 #include <string>
 
 namespace TerrainGeneration {
+    
+    struct TileAnimation{
+        bool animates = false;
+        int startFrame = 0;
+        int endFrame = 0;
+        int ticksPerFrame = 60;
+
+    };
+    
+    
     struct OverworldTile{
         std::string sprite;
         bool blocksMovement;
+        TileAnimation animation;
     };
 
+    
+
     const OverworldTile tileLookupTable[] = {
-            {"test_art_4_5", false}, // grass
-            {"test_art_4_7", false}, // sand
-            {"test_art_4_4", true},  // mountain
-            {"test_art_4_9", true},   // water
-            {"test_art_4_8", false},   // stone
-            {"test_art_4_6", false},   // shore
+            {"overworld_grass", false}, // grass
+            {"overworld_sand", false}, // sand
+            {"overworld_rock", true},  // mountain
+            {"overworld_water", true, {true, 0, 2, 30}},   // water
+            {"overworld_stone", false},   // stone
+            {"overworld_empty", false},   // shore
 
 
     };
