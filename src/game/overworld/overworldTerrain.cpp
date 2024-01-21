@@ -246,7 +246,7 @@ namespace TerrainGeneration {
         pos.x -= chunkPosition.x * OVERWORLD_CHUNK_SIZE;
         pos.y -= chunkPosition.y * OVERWORLD_CHUNK_SIZE;
         
-        const TerrainBiome& biome = biomeLookup[biomeMap->getBiome(pos)];
+        const TerrainBiome& biome = biomeLookup[biomeMap->getBiome(pattern.position)];
         
         switch (pattern.patern) {
             case PATTERN_WATER:

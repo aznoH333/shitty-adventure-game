@@ -25,7 +25,7 @@ namespace TerrainGeneration{
     const int MOUNTAIN_NOISE_RESOLUTION = 16;
     const int TREE_NOISE_RESOLUTION = 8;
     const int HEIGHT_NOISE_RESOLUTION = 16;
-    const int BIOME_SIZE = 10;
+    const int BIOME_SIZE = 96;
 
     
 
