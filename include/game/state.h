@@ -3,11 +3,13 @@
 
 
 #include "game/overworld/overworld.h"
+#include "game/dungeon/dungeon.h"
 
 
 enum GameState{
     STATE_MAIN_MENU = 0,
-    STATE_OVERWORLD
+    STATE_DUNGEON,
+    STATE_OVERWORLD,
 };
 
 

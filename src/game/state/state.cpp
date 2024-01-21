@@ -31,6 +31,9 @@ void State::stateUpdate(){
         case GameState::STATE_MAIN_MENU:
             // TODO
             break;
+        case GameState::STATE_DUNGEON:
+            Dungeon::get()->update();
+        
 
     }
 }
