@@ -41,8 +41,12 @@ namespace TerrainGeneration {
 
     // --== Update ==--
     void OverworldTerrain::update(){
+        
         draw();
-        if (Utils::gameTickCounter % DEFAULT_WORLD_LOADING_INTERVAL == 0){
+    }
+
+    void OverworldTerrain::chunkLoadingUpdate(){
+        if (Utils::gameTickCounter % DEFAULT_WORLD_LOADING_INTERVAL == 0 || initialLoading){
             shouldAttemptLoading = true;
         }
     }
@@ -59,6 +63,11 @@ namespace TerrainGeneration {
     
 
     // --== chunk loading ==--
+    bool OverworldTerrain::isDoneLoading(){
+        return !initialLoading;
+    }
+    
+    
     void OverworldTerrain::worldLoadingFunction(){
         while (shouldWorldLoadingThreadBeRunning){
             if (shouldAttemptLoading && !allChunksLoaded){
@@ -82,8 +91,16 @@ namespace TerrainGeneration {
             }
         }
         allChunksLoaded = true;
+        doneLoading();
     }
     
+    void OverworldTerrain::doneLoading(){
+        if (initialLoading == true){
+            initialLoading = false;
+            reloadChunksAroundPoint(lastLoadChunk);
+
+        }
+    }
     
     
     void OverworldTerrain::reloadChunksAroundPoint(ChunkCoordinates coordinates){

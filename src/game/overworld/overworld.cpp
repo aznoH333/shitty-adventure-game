@@ -40,13 +40,18 @@ void Overworld::setPlayerChunk(TerrainGeneration::ChunkCoordinates coordinates){
 
 // --== logic ==--
 void Overworld::update(){
-    terrain->update();
+    terrain->chunkLoadingUpdate();
+    if (terrain->isDoneLoading()){
+        terrain->update();
+        player->update();
+    }else {
+        Drawing::get()->drawText("Loading world", {0, 0}, 0.7f, WHITE);
+    }
     // debug draw main chunk
     /*
     Drawing::get()->drawTexture("placeholders_7", 
     {playerChunk.x * TerrainGeneration::OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE, playerChunk.y * TerrainGeneration::OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE}
     , false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);*/
-    player->update();
 }
 
 

@@ -42,12 +42,14 @@ namespace TerrainGeneration{
             std::thread worldLoadingThread;
 
             bool shouldAttemptLoading = true;
+            bool initialLoading = true;
             bool allChunksLoaded = false;
             bool shouldWorldLoadingThreadBeRunning = true;            
             
             void worldLoadingFunction();
             void generateChunksAroundPoint(ChunkCoordinates coordinates);
             void draw();
+            void doneLoading();
             void drawChunk(OverworldChunk* chunk);
             void addGenerationPatternsForChunk(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates position);
             void addGenerationPattern(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates& chunkPosition, int x, int y);
@@ -59,8 +61,10 @@ namespace TerrainGeneration{
             void drawTile(const OverworldTile& tile, Vector2& position);
         public:
             void update();
+            void chunkLoadingUpdate();
             void reloadChunksAroundPoint(ChunkCoordinates coordinates);
             bool isTileBlocking(ChunkCoordinates chunkPosition, int x, int y);
+            bool isDoneLoading();
             std::vector<OverworldObject*> getNearbyObjects(OverworldPosition position, float radius);
             ~OverworldTerrain();
             OverworldTerrain();
