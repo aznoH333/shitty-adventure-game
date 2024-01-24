@@ -23,20 +23,27 @@ void OverworldPlayer::update(){
     Overworld::get()->setPlayerChunk(playerChunk);
 
 
+    // display key prompt
+    if (isDungeonNearby){
+        Drawing::get()->drawText("Press space to enter", overworldPosToVec(nearbyDungeon->position), 0.4, WHITE);
 
+        if (IsKeyDown(KEY_SPACE)){
+            // TODO do stuff
+        }
+    }
 
     
     if (IsKeyDown(KEY_W)){
-        tryMove({0.0f, -moveSpeed});
+        tryMove({0.0f, -MOVE_SPEED});
     }
     if (IsKeyDown(KEY_S)){
-        tryMove({0.0f, +moveSpeed});
+        tryMove({0.0f, +MOVE_SPEED});
     }
     if (IsKeyDown(KEY_A)){
-        tryMove({-moveSpeed, 0.0f});
+        tryMove({-MOVE_SPEED, 0.0f});
     }
     if (IsKeyDown(KEY_D)){
-        tryMove({moveSpeed, 0.0f});
+        tryMove({MOVE_SPEED, 0.0f});
     }
 
     Drawing::get()->getCamera().target ={position.x * OVERWORLD_TILE_SIZE + (subPosition.x * OVERWORLD_TILE_SIZE), position.y * OVERWORLD_TILE_SIZE + (subPosition.y * OVERWORLD_TILE_SIZE)};
@@ -45,6 +52,26 @@ void OverworldPlayer::update(){
 
 
 }
+
+
+void OverworldPlayer::movedToAnotherTile(){
+    std::vector<TerrainGeneration::OverworldObject*> nearbyObjects =  Overworld::get()->getNearbyObjects(position, OBJECT_REACH);
+
+    // look for dungeon
+    isDungeonNearby = false;
+    nearbyDungeon = nullptr;
+
+    for (TerrainGeneration::OverworldObject* object : nearbyObjects){
+        if (object->type == TerrainGeneration::OBJECT_DUNGEON){
+            nearbyDungeon = object;
+            isDungeonNearby = true;
+            break;
+        }
+    }
+
+
+}
+
 
 // --== Movement ==--
 void OverworldPlayer::tryMove(Vector2 moveBy){
@@ -60,6 +87,7 @@ void OverworldPlayer::tryMove(Vector2 moveBy){
         if (std::abs(subPosition.x) >= 1.0f){
             position.x += xDir;
             subPosition.x -= xDir;
+            movedToAnotherTile();
         }
     }else {
         //subPosition.x = 0.0f;
@@ -73,6 +101,7 @@ void OverworldPlayer::tryMove(Vector2 moveBy){
         if (std::abs(subPosition.y) >= 1.0f){
             position.y += yDir;
             subPosition.y -= yDir;
+            movedToAnotherTile();
         }
     }else {
         //subPosition.y = 0;

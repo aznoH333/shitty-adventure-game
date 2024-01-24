@@ -1,5 +1,5 @@
 #include "game/overworld/overworldTerrain.h"
-#include <iostream>
+
 namespace TerrainGeneration {
 
 
@@ -52,12 +52,6 @@ namespace TerrainGeneration {
 
     bool OverworldTerrain::isTileBlocking(ChunkCoordinates chunkPosition, int x, int y){
         
-
-        if (x > 15 || x < 0 || y > 15 || y < 0){
-            std::cout << "out of bounds error \n";
-            std::cout << x << ", " << y << "\n";
-        }
-
         return tileLookupTable[loadedChunks[chunkPosition]->tiles[x][y]].blocksMovement;
 
     }
@@ -336,6 +330,28 @@ namespace TerrainGeneration {
         for (OverworldObject object : chunk->worldObjects){
             Drawing::get()->drawTexture(object.sprite, {object.position.x * OVERWORLD_TILE_SIZE, object.position.y * OVERWORLD_TILE_SIZE}, false, 1, 0, WHITE, LAYER_OBJECT);
         }
+    }
+
+
+    std::vector<OverworldObject*> OverworldTerrain::getNearbyObjects(OverworldPosition position, float radius){
+        int chunkX = Utils::dividePosition(position.x, OVERWORLD_CHUNK_SIZE);
+        int chunkY = Utils::dividePosition(position.y, OVERWORLD_CHUNK_SIZE);
+
+        std::vector<OverworldObject*> output;
+
+
+        for (int x = -1; x <= 1; x++){
+            for (int y = -1; y <= 1; y++){
+                for (TerrainGeneration::OverworldObject& object : loadedChunks[{chunkX + x, chunkY + y}]->worldObjects){
+                    if (Utils::pythagoras(position.x, position.y, object.position.x, object.position.y) < radius){
+                        output.push_back(&object);
+                    }
+                }
+            }
+        }
+
+        return output;
+
     }
 
 }

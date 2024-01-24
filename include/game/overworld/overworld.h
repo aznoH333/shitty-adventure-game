@@ -15,9 +15,14 @@ class OverworldPlayer{
     private:
         Vector2 subPosition;
         TerrainGeneration::OverworldPosition position;
-        const float moveSpeed = 0.05f;
+        const float MOVE_SPEED = 0.05f;
+        const float OBJECT_REACH = 2.0f;
+
+        TerrainGeneration::OverworldObject* nearbyDungeon;
+        bool isDungeonNearby = false;
 
 
+        void movedToAnotherTile();
         void tryMove(Vector2 moveBy);
 
     public:
@@ -45,6 +50,7 @@ class Overworld{
         void dispose();
         void setPlayerChunk(TerrainGeneration::ChunkCoordinates coordinates);
         bool collidesWithTerrain(Vector2 position, Vector2 size);
+        std::vector<TerrainGeneration::OverworldObject*> getNearbyObjects(TerrainGeneration::OverworldPosition position, float radius);
 
 
 
@@ -52,6 +58,9 @@ class Overworld{
 
 };
 
+
+// utility functions
+Vector2 overworldPosToVec(TerrainGeneration::OverworldPosition position);
 
 
 #endif

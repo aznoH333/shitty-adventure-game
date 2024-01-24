@@ -84,3 +84,11 @@ bool Overworld::collidesWithTerrain(Vector2 position, Vector2 size){
     }
     return false;
 }
+
+std::vector<TerrainGeneration::OverworldObject*> Overworld::getNearbyObjects(TerrainGeneration::OverworldPosition position, float radius){
+    return terrain->getNearbyObjects(position, radius);
+}
+
+Vector2 overworldPosToVec(TerrainGeneration::OverworldPosition position){
+    return {position.x * OVERWORLD_TILE_SIZE, position.y * OVERWORLD_TILE_SIZE};
+}

@@ -61,6 +61,7 @@ namespace TerrainGeneration{
             void update();
             void reloadChunksAroundPoint(ChunkCoordinates coordinates);
             bool isTileBlocking(ChunkCoordinates chunkPosition, int x, int y);
+            std::vector<OverworldObject*> getNearbyObjects(OverworldPosition position, float radius);
             ~OverworldTerrain();
             OverworldTerrain();
 
