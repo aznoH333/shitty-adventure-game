@@ -58,8 +58,8 @@ namespace TerrainGeneration {
         },
         // desert biome
         {
-            .mountainValue = 0.75f,
-            .stoneValue = 0.65f,
+            .mountainValue = 0.60f,
+            .stoneValue = 0.55f,
             .shoreValue = 0.20f,
             .waterGenerationValue = 0.2f,
             .treeGenerationValue = 0.7f,
