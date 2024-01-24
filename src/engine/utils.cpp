@@ -43,6 +43,11 @@ namespace Utils {
         return std::sqrt(a + b);
     }
 
+
+    int relu(float a){
+        return (a > 0.0f) + (a >= 0.0f) - 1;
+    }
+
     // --== generic random ==--
     std::random_device rd;
     std::mt19937 generator(rd());

@@ -1,7 +1,7 @@
 #include <raylib-cpp.hpp>
 #include "engine/all.h"
 #include "game/all.h"
-
+#include <iostream>
 
 const int windowWidth = 1280;
 const int windowHeight = 720;
@@ -14,6 +14,9 @@ int main() {
     raylib::Window w(windowWidth, windowHeight, "shitty adventure game");
     Drawing::init("./assets/", 10, windowWidth, windowHeight);
     
+    for (int i = 16; i > -20; i--){
+        std::cout << i % 16 << "\n";
+    }
 
     // init game
     State::get()->switchState(STATE_OVERWORLD);

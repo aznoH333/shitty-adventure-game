@@ -1,5 +1,5 @@
 #include "game/overworld/overworldTerrain.h"
-
+#include <iostream>
 namespace TerrainGeneration {
 
 
@@ -45,6 +45,21 @@ namespace TerrainGeneration {
         if (Utils::gameTickCounter % DEFAULT_WORLD_LOADING_INTERVAL == 0){
             shouldAttemptLoading = true;
         }
+    }
+
+
+    // --== collisions ==--
+
+    bool OverworldTerrain::isTileBlocking(ChunkCoordinates chunkPosition, int x, int y){
+        
+
+        if (x > 15 || x < 0 || y > 15 || y < 0){
+            std::cout << "out of bounds error \n";
+            std::cout << x << ", " << y << "\n";
+        }
+
+        return tileLookupTable[loadedChunks[chunkPosition]->tiles[x][y]].blocksMovement;
+
     }
 
     

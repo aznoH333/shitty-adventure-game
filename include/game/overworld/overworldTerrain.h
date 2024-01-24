@@ -60,6 +60,7 @@ namespace TerrainGeneration{
         public:
             void update();
             void reloadChunksAroundPoint(ChunkCoordinates coordinates);
+            bool isTileBlocking(ChunkCoordinates chunkPosition, int x, int y);
             ~OverworldTerrain();
             OverworldTerrain();
 

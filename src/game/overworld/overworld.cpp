@@ -16,7 +16,7 @@ Overworld* Overworld::get(){
 }
 
 Overworld::Overworld(){
-    player = new OverworldPlayer({0,0});
+    player = new OverworldPlayer({6,0});
     terrain = new TerrainGeneration::OverworldTerrain();
 }
 
@@ -47,4 +47,40 @@ void Overworld::update(){
     {playerChunk.x * TerrainGeneration::OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE, playerChunk.y * TerrainGeneration::OVERWORLD_CHUNK_SIZE * OVERWORLD_TILE_SIZE}
     , false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);*/
     player->update();
+}
+
+
+bool Overworld::collidesWithTerrain(Vector2 position, Vector2 size){
+
+    for (int x = (int)std::floor(position.x); x <= (int)std::ceil(position.x + size.x); x++){
+        for (int y = (int)std::floor(position.y); y <= (int)std::ceil(position.y + size.y); y++){
+    
+    
+            int tileX = Utils::dividePosition((int) x, OVERWORLD_TILE_SIZE); 
+            int tileY = Utils::dividePosition((int) y, OVERWORLD_TILE_SIZE);
+
+            TerrainGeneration::ChunkCoordinates coords = {
+                Utils::dividePosition(tileX, TerrainGeneration::OVERWORLD_CHUNK_SIZE),
+                Utils::dividePosition(tileY, TerrainGeneration::OVERWORLD_CHUNK_SIZE)
+            };
+            // 🤮
+            tileX = (tileX < 0) ? 
+                (TerrainGeneration::OVERWORLD_CHUNK_SIZE - 1) - (std::abs(tileX + 1) % TerrainGeneration::OVERWORLD_CHUNK_SIZE) : 
+                tileX % TerrainGeneration::OVERWORLD_CHUNK_SIZE;
+            
+            tileY = (tileY < 0) ? 
+                (TerrainGeneration::OVERWORLD_CHUNK_SIZE - 1) - (std::abs(tileY + 1) % TerrainGeneration::OVERWORLD_CHUNK_SIZE) : 
+                tileY % TerrainGeneration::OVERWORLD_CHUNK_SIZE;
+
+            
+
+
+
+            if (terrain->isTileBlocking(coords, tileX, tileY)){
+                return true;
+            }
+
+        }
+    }
+    return false;
 }

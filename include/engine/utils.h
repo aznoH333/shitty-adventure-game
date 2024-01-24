@@ -16,6 +16,7 @@ namespace Utils{
     float getRandomFloat();
     float getRandomFloat(float min, float max);
     float pythagoras(float x1, float y1, float x2, float y2);
+    int relu(float a);
 
     extern int gameTickCounter;
 
