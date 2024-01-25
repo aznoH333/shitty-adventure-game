@@ -32,7 +32,7 @@ void State::stateUpdate(){
             // TODO
             break;
         case GameState::STATE_DUNGEON:
-            Dungeon::get()->update();
+            DungeonCode::Dungeon::get()->update();
         
 
     }

@@ -107,7 +107,7 @@ void Drawing::render(){
      // draw to texture
     BeginTextureMode(targetTexture);
         BeginMode2D(camera);
-        ClearBackground(BLACK);
+        ClearBackground(backgroundColor);
         
         for (int i = 0; i < renderLayerCount; i++){
             renderLayer(renderQueue[i]);

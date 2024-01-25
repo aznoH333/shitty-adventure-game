@@ -1,5 +1,5 @@
 #include "game/overworld/overworld.h"
-
+#include "game/dungeon/dungeon.h"
 
 
 OverworldPlayer::OverworldPlayer(TerrainGeneration::OverworldPosition position){
@@ -28,7 +28,7 @@ void OverworldPlayer::update(){
         Drawing::get()->drawText("Press space to enter", overworldPosToVec(nearbyDungeon->position), 0.4, WHITE);
 
         if (IsKeyDown(KEY_SPACE)){
-            // TODO do stuff
+            DungeonCode::Dungeon::get()->enterDungeon(nearbyDungeon);
         }
     }
 
@@ -48,7 +48,7 @@ void OverworldPlayer::update(){
 
     Drawing::get()->getCamera().target ={position.x * OVERWORLD_TILE_SIZE + (subPosition.x * OVERWORLD_TILE_SIZE), position.y * OVERWORLD_TILE_SIZE + (subPosition.y * OVERWORLD_TILE_SIZE)};
     Drawing::get()->drawTexture("overworld_player", {position.x * OVERWORLD_TILE_SIZE + (subPosition.x * OVERWORLD_TILE_SIZE), position.y * OVERWORLD_TILE_SIZE + (subPosition.y * OVERWORLD_TILE_SIZE)}, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
-    Drawing::get()->drawTexture("overworld_player", {position.x * OVERWORLD_TILE_SIZE, position.y * OVERWORLD_TILE_SIZE}, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
+    //Drawing::get()->drawTexture("overworld_player", {position.x * OVERWORLD_TILE_SIZE, position.y * OVERWORLD_TILE_SIZE}, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
 
 
 }
@@ -84,7 +84,7 @@ void OverworldPlayer::tryMove(Vector2 moveBy){
     if (!overworld->collidesWithTerrain({currentPos.x + moveBy.x + xDir, currentPos.y}, {OVERWORLD_TILE_SIZE, OVERWORLD_TILE_SIZE})){
         subPosition.x += moveBy.x;
 
-        if (std::abs(subPosition.x) >= 1.0f){
+        if (std::abs(subPosition.x) > 0.5f){
             position.x += xDir;
             subPosition.x -= xDir;
             movedToAnotherTile();
@@ -98,7 +98,7 @@ void OverworldPlayer::tryMove(Vector2 moveBy){
     if (!overworld->collidesWithTerrain({currentPos.x, currentPos.y + moveBy.y + yDir}, {OVERWORLD_TILE_SIZE, OVERWORLD_TILE_SIZE})){
         subPosition.y += moveBy.y;
 
-        if (std::abs(subPosition.y) >= 1.0f){
+        if (std::abs(subPosition.y) > 0.5f){
             position.y += yDir;
             subPosition.y -= yDir;
             movedToAnotherTile();

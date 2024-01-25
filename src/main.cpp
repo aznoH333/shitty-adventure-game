@@ -37,7 +37,7 @@ int main() {
     Drawing::get()->dispose();
     State::get()->dispose();
     Overworld::get()->dispose();
-    Dungeon::get()->dispose();
+    DungeonCode::Dungeon::get()->dispose();
     
 
 

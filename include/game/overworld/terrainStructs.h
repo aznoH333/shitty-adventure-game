@@ -50,6 +50,8 @@ namespace TerrainGeneration {
         std::string sprite;
         OverworldPosition position;
         ObjectType type;
+        int dungeonId = 0;
+        bool hasAssignedId = false;
     };
 
     enum PatternGenrationType{

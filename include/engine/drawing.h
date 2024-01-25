@@ -41,6 +41,7 @@ class Drawing{
 
     private:
         static Drawing* instance;
+        const Color backgroundColor = {33, 30, 32, 255};
 
 
 
