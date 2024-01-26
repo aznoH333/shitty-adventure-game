@@ -39,21 +39,14 @@ namespace DungeonCode {
     // --== drawing ==--
 
     void Dungeon::draw(){
-        for (const LevelSlice& slice : currentLoadedLevel.sections[currentLoadedLevel.currentSection].levelData){
-            for (const int tileId : dungeonPatternLookup[slice.geometryPattern]){
-                const DungeonTile& tile = dungeonTileLookup[tileId];
-
-
-            }
-        }
-
+        
         for (int x = 0; x < currentLoadedLevel.sections[currentLoadedLevel.currentSection].levelData.size(); x++){
             const LevelSlice& slice = currentLoadedLevel.sections[currentLoadedLevel.currentSection].levelData[x];
 
             for (int y = 0; y < TILES_PER_PATTERN; y++){
-                const DungeonTile& tile = dungeonTileLookup[dungeonPatternLookup[slice.geometryPattern][y]];
+                const DungeonTile& tile = dungeonTileLookup[dungeonPatternLookup[slice.geometryPattern].tiles[y]];
 
-                if (dungeonPatternLookup[slice.geometryPattern][y] != 0){
+                if (dungeonPatternLookup[slice.geometryPattern].tiles[y] != 0){
                     Drawing::get()->drawTexture(tile.sprite, {(float) x * DUNGEON_TILE_SIZE, (float) y * DUNGEON_TILE_SIZE}, false, 1, 0, WHITE, DrawingLayers::LAYER_WORLD);
                 }
 
@@ -127,6 +120,36 @@ namespace DungeonCode {
         return output;
     }
 
+
+
+    LevelSlice Dungeon::getNextSegment(int index, const DungeonSection* level){
+        // level padding
+        if (index < DUNGEON_PADDING || index > level->sectionLength - DUNGEON_PADDING){
+            return {0}; // return full wall
+        }
+            
+            
+        if (remainingSegmantLength == 0 || currentSegmentId == 0){
+            // choose next segment
+            const Connector& connector = connectorGroupLookup[dungeonPatternLookup[currentSegmentId].connectorGroupId];
+
+            int rng = Utils::getPseudoRandomInt(0, connector.count, currentSeed++);
+            currentSegmentId = connector.patternIds[rng];
+
+            // set length
+            const DungeonPattern& p = dungeonPatternLookup[currentSegmentId];
+            remainingSegmantLength = Utils::getPseudoRandomInt(p.minLength, p.maxLength, currentSeed++);
+        }
+        
+        // return regular
+        remainingSegmantLength--;
+        return {currentSegmentId};
+
+            
+            
+    }
+
+
     DungeonSection Dungeon::generateSection(SectionPurpose purpose){
         DungeonSection output;
         // set length
@@ -138,13 +161,9 @@ namespace DungeonCode {
 
         
         for (int i = 0; i < output.sectionLength; i++){
-            // fill with walls
-            if (i < DUNGEON_PADDING || i > output.sectionLength - DUNGEON_PADDING){
-                output.levelData.push_back({0});
-            }else {
-                // temporary garbage generation
-                output.levelData.push_back({Utils::getPseudoRandomInt(1, 5, currentSeed++)});
-            }
+            
+            output.levelData.push_back(getNextSegment(i, &output));
+            
         }
 
         return output;

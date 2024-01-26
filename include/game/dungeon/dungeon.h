@@ -62,6 +62,10 @@ namespace DungeonCode {
             int lastGeneratedDungeonId = 0;
             int currentSeed = 0;
 
+            // generation vals
+            int currentSegmentId = 0;
+            int remainingSegmantLength = 0;
+
 
             // generation values
             const int MIN_MAIN_SECTION_LENGTH = 200;
@@ -74,6 +78,7 @@ namespace DungeonCode {
             void loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position);
             Level generateDungeon(TerrainGeneration::OverworldPosition position);
             DungeonSection generateSection(SectionPurpose);
+            LevelSlice getNextSegment(int index, const DungeonSection* level);
 
 
         public:
