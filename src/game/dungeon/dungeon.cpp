@@ -55,7 +55,16 @@ namespace DungeonCode {
         }
     }
 
+    // --== camera ==--
 
+    void Dungeon::setCameraPosition(Vector2 playerPosition){
+        Vector2 cameraPosition = {playerPosition.x, CAMERA_Y};
+        
+        cameraPosition.x = std::max(cameraPosition.x, MIN_CAMERA_X);
+        cameraPosition.x = std::min(cameraPosition.x, (currentLoadedLevel.sections[currentLoadedLevel.currentSection].sectionLength - 1) * DUNGEON_TILE_SIZE - MIN_CAMERA_X);
+
+        Drawing::get()->getCamera().target = cameraPosition;
+    }
 
     // --== loading ==--
     void Dungeon::enterDungeon(TerrainGeneration::OverworldObject* dungeon){
@@ -131,10 +140,11 @@ namespace DungeonCode {
             
         if (remainingSegmantLength == 0 || currentSegmentId == 0){
             // choose next segment
-            const Connector& connector = connectorGroupLookup[dungeonPatternLookup[currentSegmentId].connectorGroupId];
+            const std::vector<int>& connector = dungeonPatternLookup[currentSegmentId].connectors;
 
-            int rng = Utils::getPseudoRandomInt(0, connector.count, currentSeed++);
-            currentSegmentId = connector.patternIds[rng];
+            int rng = Utils::getPseudoRandomInt(0, connector.size() - 1, currentSeed++);
+            std::cout << "next segment rng : " << rng << "\n";
+            currentSegmentId = connector[rng];
 
             // set length
             const DungeonPattern& p = dungeonPatternLookup[currentSegmentId];
@@ -161,8 +171,11 @@ namespace DungeonCode {
 
         
         for (int i = 0; i < output.sectionLength; i++){
-            
+            if (i > output.sectionLength - DUNGEON_PADDING && remainingSegmantLength != 0){
+                output.sectionLength++;
+            }
             output.levelData.push_back(getNextSegment(i, &output));
+            
             
         }
 

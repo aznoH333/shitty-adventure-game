@@ -55,8 +55,11 @@ namespace DungeonCode {
             Level currentLoadedLevel;
             DungeonPlayer* player = nullptr;
 
+
+
             const int DUNGEON_TILE_SIZE = 16;
-            
+            const float CAMERA_Y = 56.0f;
+            const float MIN_CAMERA_X = 152.0f;            
             
             int nextDungeonId = 1;
             int lastGeneratedDungeonId = 0;
@@ -80,6 +83,8 @@ namespace DungeonCode {
             DungeonSection generateSection(SectionPurpose);
             LevelSlice getNextSegment(int index, const DungeonSection* level);
 
+            
+
 
         public:
             Dungeon();
@@ -88,7 +93,7 @@ namespace DungeonCode {
             void draw();
             void dispose();
             void enterDungeon(TerrainGeneration::OverworldObject* dungeon);
-
+            void setCameraPosition(Vector2 playerPosition);
 
     };
 }

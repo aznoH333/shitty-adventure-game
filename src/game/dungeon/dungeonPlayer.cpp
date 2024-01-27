@@ -25,6 +25,6 @@ void DungeonPlayer::update(){
         position.x += 1;
     }
 
-    Drawing::get()->getCamera().target = position;
+    Dungeon::get()->setCameraPosition(position);
     Drawing::get()->drawTexture("dungeon_test_2", position, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
 }
