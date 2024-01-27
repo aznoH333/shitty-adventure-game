@@ -83,8 +83,13 @@ namespace DungeonCode {
         }
 
         overworldDungeon = dungeon;
-        // spawn player
-        player = new DungeonPlayer({0,0});
+        
+        // set vals
+        currentSegmentId = 0;
+        remainingSegmantLength = 0;
+        nextSpawnIndex = 0;
+        nextSpawnType = NONE_SPAWN; 
+        playerSpawned = false;
 
         std::cout << "load \n";
 
@@ -143,16 +148,24 @@ namespace DungeonCode {
             const std::vector<int>& connector = dungeonPatternLookup[currentSegmentId].connectors;
 
             int rng = Utils::getPseudoRandomInt(0, connector.size() - 1, currentSeed++);
-            std::cout << "next segment rng : " << rng << "\n";
             currentSegmentId = connector[rng];
 
             // set length
             const DungeonPattern& p = dungeonPatternLookup[currentSegmentId];
             remainingSegmantLength = Utils::getPseudoRandomInt(p.minLength, p.maxLength, currentSeed++);
+
+            // next spawn logic
+            nextSpawnIndex = Utils::getPseudoRandomInt(0, p.maxLength, currentSeed++);
+            nextSpawnType = getNextSpawnType(p.spawnInfo.spawnType);
+            nextSpawnY = p.spawnInfo.spawnY + 1;
+            
+            
+
         }
         
         // return regular
         remainingSegmantLength--;
+        nextSpawnIndex--;
         return {currentSegmentId};
 
             
@@ -174,12 +187,81 @@ namespace DungeonCode {
             if (i > output.sectionLength - DUNGEON_PADDING && remainingSegmantLength != 0){
                 output.sectionLength++;
             }
+
+            if (nextSpawnIndex == 0){
+                spawnEntity({(float)(i * DUNGEON_TILE_SIZE), (float)((TILES_PER_PATTERN - nextSpawnY) * DUNGEON_TILE_SIZE)}, nextSpawnType);
+            }
+
             output.levelData.push_back(getNextSegment(i, &output));
             
             
         }
 
         return output;
+    }
+
+
+    // --== Entities ==--
+    EntitySpawnType Dungeon::getNextSpawnType(SpawnType type){
+        if (playerSpawned == false){
+            playerSpawned = true;
+            return PLAYER_SPAWN;
+        }
+                
+        switch(type){
+            case NONE:
+                return NONE_SPAWN;
+
+            case WATER_FALL_PLATFORM_AND_PLATFORM:
+                if (Utils::getPseudoRandomInt(0, 1, currentSeed++) > 0){
+                    return WATERFALL_SPAWN;
+                }
+                return PLATFORM_SPAWN;
+
+            case PLATFORM_SPAWN:
+                return PLATFORM_SPAWN;
+            default:
+            case GENERIC:
+                return ENEMY_SPAWN;// TODO
+        }
+        
+    }
+
+    void Dungeon::spawnEntity(Vector2 position, EntitySpawnType spawnType){
+        switch (spawnType){
+            case PLAYER_SPAWN:
+                if (player != nullptr){
+                    delete player;
+                }
+                player = new DungeonPlayer(position);
+                std::cout << "spawned player at " << position.x << ", " << position.y << "\n";
+                break;
+
+            case DOOR_SPAWN:
+                std::cout << "spawned door at " << position.x << ", " << position.y << "\n";
+
+                break;
+
+            case ITEM_SPAWN:
+                std::cout << "spawned item at " << position.x << ", " << position.y << "\n";
+
+                break;
+
+            case PLATFORM_SPAWN:
+                std::cout << "spawned platform at " << position.x << ", " << position.y << "\n";
+
+                break;
+
+            case WATERFALL_SPAWN:
+                std::cout << "spawned waterfall at " << position.x << ", " << position.y << "\n";
+
+                break;
+
+            case ENEMY_SPAWN:
+                std::cout << "spawned enemy at " << position.x << ", " << position.y << "\n";
+
+                break;
+        }
     }
 
 }

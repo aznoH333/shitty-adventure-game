@@ -18,6 +18,16 @@ namespace DungeonCode {
         NOTHING_SECTION,
     };
 
+    enum EntitySpawnType{
+        NONE_SPAWN = 0,
+        PLAYER_SPAWN,
+        DOOR_SPAWN,
+        ITEM_SPAWN,
+        PLATFORM_SPAWN,
+        WATERFALL_SPAWN,
+        ENEMY_SPAWN,
+    };
+
     struct LevelSlice{
         int geometryPattern;
         int tilesetModifier;
@@ -68,6 +78,11 @@ namespace DungeonCode {
             // generation vals
             int currentSegmentId = 0;
             int remainingSegmantLength = 0;
+            int nextSpawnIndex = 0;
+            float nextSpawnY = 0.0f;
+
+            EntitySpawnType nextSpawnType = NONE_SPAWN; 
+            bool playerSpawned = false;
 
 
             // generation values
@@ -82,6 +97,8 @@ namespace DungeonCode {
             Level generateDungeon(TerrainGeneration::OverworldPosition position);
             DungeonSection generateSection(SectionPurpose);
             LevelSlice getNextSegment(int index, const DungeonSection* level);
+            void spawnEntity(Vector2 position, EntitySpawnType spawnType);
+            EntitySpawnType getNextSpawnType(SpawnType type);
 
             
 
