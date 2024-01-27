@@ -155,7 +155,7 @@ namespace DungeonCode {
             remainingSegmantLength = Utils::getPseudoRandomInt(p.minLength, p.maxLength, currentSeed++);
 
             // next spawn logic
-            nextSpawnIndex = Utils::getPseudoRandomInt(0, p.maxLength, currentSeed++);
+            nextSpawnIndex = Utils::getPseudoRandomInt(0, p.maxLength - 1, currentSeed++);
             nextSpawnType = getNextSpawnType(p.spawnInfo.spawnType);
             nextSpawnY = p.spawnInfo.spawnY + 1;
             
