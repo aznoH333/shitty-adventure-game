@@ -75,14 +75,7 @@ namespace DungeonCode {
             int lastGeneratedDungeonId = 0;
             int currentSeed = 0;
 
-            // generation vals
-            int currentSegmentId = 0;
-            int remainingSegmantLength = 0;
-            int nextSpawnIndex = 0;
-            float nextSpawnY = 0.0f;
 
-            EntitySpawnType nextSpawnType = NONE_SPAWN; 
-            bool playerSpawned = false;
 
 
             // generation values
@@ -96,7 +89,7 @@ namespace DungeonCode {
             void loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position);
             Level generateDungeon(TerrainGeneration::OverworldPosition position);
             DungeonSection generateSection(SectionPurpose);
-            LevelSlice getNextSegment(int index, const DungeonSection* level);
+            
             void spawnEntity(Vector2 position, EntitySpawnType spawnType);
             EntitySpawnType getNextSpawnType(SpawnType type);
 

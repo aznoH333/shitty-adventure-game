@@ -84,12 +84,7 @@ namespace DungeonCode {
 
         overworldDungeon = dungeon;
         
-        // set vals
-        currentSegmentId = 0;
-        remainingSegmantLength = 0;
-        nextSpawnIndex = 0;
-        nextSpawnType = NONE_SPAWN; 
-        playerSpawned = false;
+        
 
         std::cout << "load \n";
 
@@ -136,78 +131,119 @@ namespace DungeonCode {
 
 
 
-    LevelSlice Dungeon::getNextSegment(int index, const DungeonSection* level){
-        // level padding
-        if (index < DUNGEON_PADDING || index > level->sectionLength - DUNGEON_PADDING){
-            return {0}; // return full wall
-        }
-            
-            
-        if (remainingSegmantLength == 0 || currentSegmentId == 0){
-            // choose next segment
-            const std::vector<int>& connector = dungeonPatternLookup[currentSegmentId].connectors;
-
-            int rng = Utils::getPseudoRandomInt(0, connector.size() - 1, currentSeed++);
-            currentSegmentId = connector[rng];
-
-            // set length
-            const DungeonPattern& p = dungeonPatternLookup[currentSegmentId];
-            remainingSegmantLength = Utils::getPseudoRandomInt(p.minLength, p.maxLength, currentSeed++);
-
-            // next spawn logic
-            nextSpawnIndex = Utils::getPseudoRandomInt(0, p.maxLength - 1, currentSeed++);
-            nextSpawnType = getNextSpawnType(p.spawnInfo.spawnType);
-            nextSpawnY = p.spawnInfo.spawnY + 1;
-            
-            
-
-        }
-        
-        // return regular
-        remainingSegmantLength--;
-        nextSpawnIndex--;
-        return {currentSegmentId};
-
-            
-            
-    }
+    
 
 
     DungeonSection Dungeon::generateSection(SectionPurpose purpose){
         DungeonSection output;
+        int desiredLength;
+        
         // set length
         if (purpose == SectionPurpose::MAIN_SECTION){
-            output.sectionLength = Utils::getPseudoRandomInt(MIN_MAIN_SECTION_LENGTH, MAX_MAIN_SECTION_LENGTH, currentSeed++);
+            desiredLength = Utils::getPseudoRandomInt(MIN_MAIN_SECTION_LENGTH, MAX_MAIN_SECTION_LENGTH, currentSeed++);
         }else {
-            output.sectionLength = Utils::getPseudoRandomInt(MIN_SECTION_LENGTH, MAX_SECTION_LENGTH, currentSeed++);
+            desiredLength = Utils::getPseudoRandomInt(MIN_SECTION_LENGTH, MAX_SECTION_LENGTH, currentSeed++);
         }
 
+        // controll vals
+        int generationState = 0;
+        bool isGenerationDone = false;
+        int generationLength = 0;
+        int completeLength = 0;
+
+
+        // generation vals
+        int currentSegmentLength = 0;
+        int currentSegmentId = 0;
+        EntitySpawnType nextSpawnType = NONE_SPAWN;
+        int nextSpawnDist = 0;
+        int nextY = 0;
+        bool spawnedPlayer = false;
+        bool spawnedExit = false;
+        bool tryToSpawnExit = false;
+
+
+
+        while (!isGenerationDone){
+            switch (generationState){
+                case 0:
+                case 2:
+                    // padding wall
+                    output.levelData.push_back({0}); 
+
+                    if (generationLength == DUNGEON_PADDING){
+                        // exit state
+                        generationState++;
+                        generationLength = 0;
+
+                    }
+                    break;
+
+                case 1:
+                    // spawn entity
+                    if (nextSpawnDist == 0){
+                        // special cases
+                        if (spawnedPlayer == false){
+                            spawnedPlayer = true;
+                            nextSpawnType = PLAYER_SPAWN;
+                        }else if (tryToSpawnExit){
+                            spawnedExit = true;
+                            nextSpawnType = DOOR_SPAWN; // TODO
+                        }
+                        
+                        spawnEntity({(float) completeLength * DUNGEON_TILE_SIZE, (float)(TILES_PER_PATTERN - nextY) * DUNGEON_TILE_SIZE}, nextSpawnType);
+                    }
+                    
+                    
+                    
+                    // segment value update
+                    if (currentSegmentLength == 0){
+                        // set geometry
+                        const DungeonPattern& pattern = dungeonPatternLookup[currentSegmentId];
+                        currentSegmentId = pattern.connectors[Utils::getPseudoRandomInt(0, pattern.connectors.size() - 1, currentSeed++)];
+                        const DungeonPattern& nextPattern = dungeonPatternLookup[currentSegmentId];
+                        currentSegmentLength = Utils::getPseudoRandomInt(nextPattern.minLength, nextPattern.minLength, currentSeed++);
+                        
+                        // set spawn
+                        tryToSpawnExit = generationLength > desiredLength && nextPattern.spawnInfo.spawnType == GENERIC;
+                        nextSpawnType = getNextSpawnType(nextPattern.spawnInfo.spawnType);
+                        nextY = nextPattern.spawnInfo.spawnY + 1;
+                        nextSpawnDist = Utils::getPseudoRandomInt(0, currentSegmentLength, currentSeed++);
+                    }
+                    
+
+                    // add geometry
+                    output.levelData.push_back({currentSegmentId});
+                    currentSegmentLength--;
+                    nextSpawnDist--;
+
+                    
+                    // exit status
+                    if (generationLength > desiredLength && currentSegmentLength == 0 && spawnedExit){
+                        generationState++;
+                        generationLength = 0;
+                    }
+                    break;
+                case 3:
+                    // generation done
+                    isGenerationDone = true;
+                    break;
+            }
+
+
+            generationLength++;
+            completeLength++;
+        }
         
-        for (int i = 0; i < output.sectionLength; i++){
-            if (i > output.sectionLength - DUNGEON_PADDING && remainingSegmantLength != 0){
-                output.sectionLength++;
-            }
+        output.sectionLength = completeLength;
 
-            if (nextSpawnIndex == 0){
-                spawnEntity({(float)(i * DUNGEON_TILE_SIZE), (float)((TILES_PER_PATTERN - nextSpawnY) * DUNGEON_TILE_SIZE)}, nextSpawnType);
-            }
-
-            output.levelData.push_back(getNextSegment(i, &output));
-            
-            
-        }
 
         return output;
     }
 
 
     // --== Entities ==--
-    EntitySpawnType Dungeon::getNextSpawnType(SpawnType type){
-        if (playerSpawned == false){
-            playerSpawned = true;
-            return PLAYER_SPAWN;
-        }
-                
+    EntitySpawnType Dungeon::getNextSpawnType(SpawnType type){        
         switch(type){
             case NONE:
                 return NONE_SPAWN;
@@ -218,7 +254,7 @@ namespace DungeonCode {
                 }
                 return PLATFORM_SPAWN;
 
-            case PLATFORM_SPAWN:
+            case PLATFORM:
                 return PLATFORM_SPAWN;
             default:
             case GENERIC:
@@ -261,6 +297,9 @@ namespace DungeonCode {
                 std::cout << "spawned enemy at " << position.x << ", " << position.y << "\n";
 
                 break;
+
+            case NONE_SPAWN:
+                break; // do nothing
         }
     }
 
