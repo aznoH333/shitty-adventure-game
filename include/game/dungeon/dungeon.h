@@ -4,6 +4,7 @@
 
 #include "game/overworld/terrainStructs.h"
 #include <vector>
+#include <list>
 #include "engine/drawing.h"
 #include "dungeonTileLookup.h"
 #include "raylib.h"
@@ -17,6 +18,28 @@ namespace DungeonCode {
         LOOT_SECTION,
         NOTHING_SECTION,
     };
+
+
+    struct DungeonPlatformSpawner{
+        Vector2 position;
+        bool isWaterFall;
+        int respawnTimer;
+    };
+
+    struct DungeonPlatform{
+        Vector2 position;
+        bool isFalling;
+        float speed;
+        bool isWaterFall;
+        DungeonPlatformSpawner* spawner;
+    };
+
+    struct DungeonEnemy{
+        Vector2 position;
+        // temporary placeholder
+    };
+
+    
 
     enum EntitySpawnType{
         NONE_SPAWN = 0,
@@ -76,6 +99,22 @@ namespace DungeonCode {
             int currentSeed = 0;
 
 
+            // platforms
+            std::list<DungeonPlatform> platforms;
+            std::vector<DungeonPlatformSpawner> platfromSpawners;
+
+            const float WATERFALL_PLATFORM_SPEED = 0.6f;
+            const float PLATFORM_ACCELERATION = 0.2;
+            const float MAX_PLATFORM_SPEED = 2.0f;
+            const int WATERFALL_PLATFORM_RESPAWN_TIME = 100;
+            const int PLATFORM_RESPAWN_TIME = 200;
+            const int PLATFORM_DESPAWN_TRESHOLD = 196;
+            const float WATERFALL_PLATFORM_SPAWN_HEIGHT = 0.0f;
+
+
+            // enemies
+            std::list<DungeonEnemy> enemies;
+
 
 
             // generation values
@@ -85,13 +124,26 @@ namespace DungeonCode {
             const int MAX_SECTION_LENGTH = 200;
             const int DUNGEON_PADDING = 10;
 
+
+            // generation
             void unloadDungeon();
             void loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position);
             Level generateDungeon(TerrainGeneration::OverworldPosition position);
             DungeonSection generateSection(SectionPurpose);
             
+            // entities
             void spawnEntity(Vector2 position, EntitySpawnType spawnType);
             EntitySpawnType getNextSpawnType(SpawnType type);
+
+            // platforms
+            void addPlatform(Vector2 position, bool isWaterFall);
+            void updatePlatforms();
+            void removeAllPlatforms();
+
+            // enemies
+            void addEnemy(Vector2 position);
+            void updateEnemies();
+            void removeAllEnemies();
 
             
 

@@ -60,8 +60,8 @@ const int TILES_PER_PATTERN = 10;
         {{1, 0, 0, 0, 1, 0, 0, 0, 1, 1}, 3, 5, {1, 2, 4, 9, 10}, {GENERIC, 6}}, // fork [9-10]
         {{1, 0, 0, 0, 1, 0, 0, 0, 1, 1}, 3, 5, {1, 2, 4, 9, 10}, {GENERIC, 2}}, // fork lower spawn
 
-        {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 5, 5, {1, 2, 4, 5, 6, 8, 9, 10}, {WATER_FALL_PLATFORM_AND_PLATFORM, 6}}, // gaps with platforms [11-12]
-        {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 5, 5, {1, 2, 4, 5, 6, 8, 9, 10}, {PLATFORM, 6}},
+        {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 5, 5, {1, 2, 4, 5, 6, 8, 9, 10}, {WATER_FALL_PLATFORM_AND_PLATFORM, 4}}, // gaps with platforms [11-12]
+        {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 5, 5, {1, 2, 4, 5, 6, 8, 9, 10}, {PLATFORM, 4}},
 
 
 

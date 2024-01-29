@@ -33,6 +33,9 @@ namespace DungeonCode {
         // todo something
         player->update();
         draw();
+
+        updatePlatforms();
+        updateEnemies();
     }
 
 
@@ -101,6 +104,9 @@ namespace DungeonCode {
             delete player;
             player = nullptr;
         }
+
+        removeAllPlatforms();
+        removeAllEnemies();
     }
 
     void Dungeon::loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position){
@@ -157,7 +163,7 @@ namespace DungeonCode {
         int currentSegmentId = 0;
         EntitySpawnType nextSpawnType = NONE_SPAWN;
         int nextSpawnDist = 0;
-        int nextY = 0;
+        int nextSpawnY = 0;
         bool spawnedPlayer = false;
         bool spawnedExit = false;
         bool tryToSpawnExit = false;
@@ -180,19 +186,7 @@ namespace DungeonCode {
                     break;
 
                 case 1:
-                    // spawn entity
-                    if (nextSpawnDist == 0){
-                        // special cases
-                        if (spawnedPlayer == false){
-                            spawnedPlayer = true;
-                            nextSpawnType = PLAYER_SPAWN;
-                        }else if (tryToSpawnExit){
-                            spawnedExit = true;
-                            nextSpawnType = DOOR_SPAWN; // TODO
-                        }
-                        
-                        spawnEntity({(float) completeLength * DUNGEON_TILE_SIZE, (float)(TILES_PER_PATTERN - nextY) * DUNGEON_TILE_SIZE}, nextSpawnType);
-                    }
+                    
                     
                     
                     
@@ -207,8 +201,28 @@ namespace DungeonCode {
                         // set spawn
                         tryToSpawnExit = generationLength > desiredLength && nextPattern.spawnInfo.spawnType == GENERIC;
                         nextSpawnType = getNextSpawnType(nextPattern.spawnInfo.spawnType);
-                        nextY = nextPattern.spawnInfo.spawnY + 1;
+                        nextSpawnY = nextPattern.spawnInfo.spawnY + 1;
+                        std::cout << "next y " << nextPattern.spawnInfo.spawnY << "\n"; 
                         nextSpawnDist = Utils::getPseudoRandomInt(0, currentSegmentLength, currentSeed++);
+
+                        // exception for platforms
+                        if (nextSpawnType == PLATFORM_SPAWN || nextSpawnType == WATERFALL_SPAWN){
+                            nextSpawnDist = 1;
+                        }
+                    }
+
+                    // spawn entity
+                    if (nextSpawnDist == 0){
+                        // special cases
+                        if (spawnedPlayer == false){
+                            spawnedPlayer = true;
+                            nextSpawnType = PLAYER_SPAWN;
+                        }else if (tryToSpawnExit){
+                            spawnedExit = true;
+                            nextSpawnType = DOOR_SPAWN; // TODO
+                        }
+                        
+                        spawnEntity({(float) completeLength * DUNGEON_TILE_SIZE, (float)(TILES_PER_PATTERN - nextSpawnY) * DUNGEON_TILE_SIZE}, nextSpawnType);
                     }
                     
 
@@ -285,17 +299,17 @@ namespace DungeonCode {
 
             case PLATFORM_SPAWN:
                 std::cout << "spawned platform at " << position.x << ", " << position.y << "\n";
-
+                addPlatform(position, false);
                 break;
 
             case WATERFALL_SPAWN:
                 std::cout << "spawned waterfall at " << position.x << ", " << position.y << "\n";
-
+                addPlatform(position, true);
                 break;
 
             case ENEMY_SPAWN:
                 std::cout << "spawned enemy at " << position.x << ", " << position.y << "\n";
-
+                addEnemy(position);
                 break;
 
             case NONE_SPAWN:
@@ -303,4 +317,76 @@ namespace DungeonCode {
         }
     }
 
+
+
+    // --== Platforms ==--
+
+    void Dungeon::addPlatform(Vector2 position, bool isWaterFall){
+        platfromSpawners.push_back({
+            {position.x, isWaterFall ? WATERFALL_PLATFORM_SPAWN_HEIGHT : position.y}, isWaterFall, 1
+        });
+    }
+
+    void Dungeon::updatePlatforms(){
+        // update platforms
+        for (DungeonPlatform& p : platforms){
+            Drawing::get()->drawTexture("platform", p.position, false, 1, 0, WHITE, LAYER_WORLD);
+        
+            // speed and movement
+            p.position.y += p.speed;
+            if (!p.isWaterFall && p.isFalling){
+                // accelerate
+                if (p.speed < MAX_PLATFORM_SPEED){
+                    p.speed += PLATFORM_ACCELERATION;
+                }
+                // set spawner respawn time
+                if (p.position.y > PLATFORM_DESPAWN_TRESHOLD){
+                    p.spawner->respawnTimer = PLATFORM_RESPAWN_TIME;
+                }
+            }
+        }
+        // remove platforms
+        platforms.remove_if([this](DungeonPlatform& p){
+            return p.position.y > PLATFORM_DESPAWN_TRESHOLD;
+        });
+
+
+
+
+        // update spawners
+        for (DungeonPlatformSpawner& spawner: platfromSpawners){
+            spawner.respawnTimer -= spawner.respawnTimer >= 0; // goes to -1 to spawn exactly 1 platform
+            // spawn new platform
+            if (spawner.respawnTimer == 0){
+                platforms.push_back(
+                    {spawner.position, false, WATERFALL_PLATFORM_SPEED * spawner.isWaterFall, spawner.isWaterFall, &spawner}
+                );
+                spawner.respawnTimer = WATERFALL_PLATFORM_RESPAWN_TIME * spawner.isWaterFall;
+            }
+
+        }
+    }
+
+
+    void Dungeon::removeAllPlatforms(){
+        platfromSpawners.clear();
+        platforms.clear();
+    }
+
+
+    // --== enemies ==--
+    void Dungeon::addEnemy(Vector2 position){
+        enemies.push_back({position});
+    }
+
+    void Dungeon::updateEnemies(){
+        for (DungeonEnemy& enemy : enemies){
+            Drawing::get()->drawTexture("dungeon_test_3", enemy.position, false, 1, 0, WHITE, LAYER_ENEMY);
+        }
+    }
+
+    void Dungeon::removeAllEnemies(){
+        enemies.clear();
+    }
+    
 }
