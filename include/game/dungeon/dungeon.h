@@ -5,6 +5,7 @@
 #include "game/overworld/terrainStructs.h"
 #include <vector>
 #include <list>
+#include "engine/utils.h"
 #include "engine/drawing.h"
 #include "dungeonTileLookup.h"
 #include "raylib.h"
@@ -73,12 +74,31 @@ namespace DungeonCode {
 
         private:
             Vector2 position;
+            Vector2 velocity = {0,0};
+            const Vector2 SIZE = {16.0f, 16.0f};
+
+            const float GRAVITY = 0.2f;
+            const float JUMP_FORCE = 3.5f;
+            const float WALK_ACCELERATION = 0.1f;
+            const float WALK_SPEED = 2.0f;
+            
+            // movement vars
+            bool isAirborne = false;
+            float walkVal = 0.0f;
+
+
+
+            void readPlayerInput();
+            void tryMove();
+            void tryJump();
+            void updateMovementValues();
 
         public:
             DungeonPlayer(Vector2 position);
             void update();
     };
 
+    const int DUNGEON_TILE_SIZE = 16;
 
     class Dungeon{
 
@@ -90,7 +110,6 @@ namespace DungeonCode {
 
 
 
-            const int DUNGEON_TILE_SIZE = 16;
             const float CAMERA_Y = 56.0f;
             const float MIN_CAMERA_X = 152.0f;            
             
@@ -146,6 +165,9 @@ namespace DungeonCode {
             void removeAllEnemies();
 
             
+            // collisions
+            bool collidesWithLevel(Vector2& position, Vector2& size);
+            bool collidesWithPlatform(Vector2& position, Vector2& size);
 
 
         public:
@@ -156,6 +178,7 @@ namespace DungeonCode {
             void dispose();
             void enterDungeon(TerrainGeneration::OverworldObject* dungeon);
             void setCameraPosition(Vector2 playerPosition);
+            bool collidesWithDungeon(Vector2 position, Vector2 size);
 
     };
 }

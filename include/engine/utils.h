@@ -17,6 +17,9 @@ namespace Utils{
     float getRandomFloat(float min, float max);
     float pythagoras(float x1, float y1, float x2, float y2);
     int relu(float a);
+    float gravitateValue(float value, float goal, float stepSize);
+
+    const float RELU_PRECISION = 0.05f;
 
     extern int gameTickCounter;
 

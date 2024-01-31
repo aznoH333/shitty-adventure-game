@@ -203,7 +203,7 @@ namespace DungeonCode {
                         nextSpawnType = getNextSpawnType(nextPattern.spawnInfo.spawnType);
                         nextSpawnY = nextPattern.spawnInfo.spawnY + 1;
                         std::cout << "next y " << nextPattern.spawnInfo.spawnY << "\n"; 
-                        nextSpawnDist = Utils::getPseudoRandomInt(0, currentSegmentLength, currentSeed++);
+                        nextSpawnDist = Utils::getPseudoRandomInt(0, currentSegmentLength - 1, currentSeed++);
 
                         // exception for platforms
                         if (nextSpawnType == PLATFORM_SPAWN || nextSpawnType == WATERFALL_SPAWN){
@@ -389,4 +389,39 @@ namespace DungeonCode {
         enemies.clear();
     }
     
+
+
+    // --== collisions ==--
+    bool Dungeon::collidesWithDungeon(Vector2 position, Vector2 size){
+        return collidesWithLevel(position, size) || collidesWithPlatform(position, size);
+    }
+
+    bool Dungeon::collidesWithLevel(Vector2& position, Vector2& size){
+        
+        DungeonSection& currentSection = currentLoadedLevel.sections[currentLoadedLevel.currentSection];
+        
+        int xEnd = std::floor(position.x + size.x) / DUNGEON_TILE_SIZE;
+        int yEnd = std::floor(position.y + size.y) / DUNGEON_TILE_SIZE;
+
+        for (int x = std::floor(position.x) / DUNGEON_TILE_SIZE; x <= xEnd; x++){
+            for (int y = std::floor(position.y) / DUNGEON_TILE_SIZE; y <= yEnd; y++){
+                
+
+
+
+                if (x < 0 || x > currentSection.sectionLength || y < 0 || y > TILES_PER_PATTERN ||
+                    dungeonPatternLookup[currentSection.levelData[x].geometryPattern].tiles[y] != 0){
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
+    }
+
+    bool Dungeon::collidesWithPlatform(Vector2& position, Vector2& size){
+        // TODO
+        return false;
+    }
 }

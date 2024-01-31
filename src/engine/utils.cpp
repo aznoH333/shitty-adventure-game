@@ -24,6 +24,12 @@ namespace Utils {
     }
 
 
+    float gravitateValue(float value, float goal, float stepSize){
+        return value + (Utils::relu(goal - value) * stepSize);
+    }
+
+
+
     float interpolate(float a, float b, float w){
         return (b - a) * w + a;
     }
@@ -45,7 +51,7 @@ namespace Utils {
 
 
     int relu(float a){
-        return (a > 0.0f) + (a >= 0.0f) - 1;
+        return (a > RELU_PRECISION) + (a > -RELU_PRECISION) - 1;
     }
 
     // --== generic random ==--
