@@ -110,7 +110,7 @@ namespace DungeonCode {
 
 
 
-            const float CAMERA_Y = 56.0f;
+            const float CAMERA_Y = 86.0f;
             const float MIN_CAMERA_X = 152.0f;            
             
             int nextDungeonId = 1;
