@@ -135,7 +135,59 @@ namespace DungeonCode {
         return output;
     }
 
+    std::vector<int>& Dungeon::getPossibleConnectors(int currentId){
+        if (dynamicConnectorLookupTable.find(currentId) != dynamicConnectorLookupTable.end()){
+            // found result
+            return dynamicConnectorLookupTable.at(currentId);
+        }
+        std::cout << currentId << " : ";
 
+        // else compute result
+        std::vector<int> out;
+        const DungeonPattern& currentPattern = dungeonPatternLookup[currentId];
+
+        bool canNextBeGap = !currentPattern.generationInfo.isGap;
+
+        for (int i = 0; i < dungeonPatternLookup.size(); i++){
+            const DungeonPattern& p = dungeonPatternLookup[i];
+            
+
+            // ✞ bože pomoc ✞
+            if (
+                
+                // no walls
+                !p.generationInfo.isWall &&
+                // no double gaps
+                (!p.generationInfo.isGap || canNextBeGap) &&
+
+                // make sure that segments are connected
+                // does not apply to walls
+                (currentPattern.generationInfo.isWall 
+                || 
+                (currentPattern.generationInfo.ceilingHeight < p.generationInfo.floorHeight - MIN_TILE_GAP && 
+                currentPattern.generationInfo.floorHeight > p.generationInfo.ceilingHeight + MIN_TILE_GAP)
+                )
+
+
+
+                
+                
+                ){
+                out.push_back(i);
+                std::cout << i << ", ";
+            }
+        }
+        std::cout <<  " \n";
+
+
+        if (out.size() == 0) {
+            std::cout << "neco se posralo pri generaci levelu \n";
+            return dynamicConnectorLookupTable[0];
+        }
+
+        dynamicConnectorLookupTable[currentId] = out;
+        return dynamicConnectorLookupTable.at(currentId);
+    }
 
     
 
@@ -194,15 +246,22 @@ namespace DungeonCode {
                     if (currentSegmentLength == 0){
                         // set geometry
                         const DungeonPattern& pattern = dungeonPatternLookup[currentSegmentId];
-                        currentSegmentId = pattern.connectors[Utils::getPseudoRandomInt(0, pattern.connectors.size() - 1, currentSeed++)];
+                        
+                        std::vector<int>& possibleConnectors = getPossibleConnectors(currentSegmentId);
+
+
+                        
+
+                        currentSegmentId = possibleConnectors[Utils::getPseudoRandomInt(0, possibleConnectors.size() - 1, currentSeed++)];
                         const DungeonPattern& nextPattern = dungeonPatternLookup[currentSegmentId];
-                        currentSegmentLength = Utils::getPseudoRandomInt(nextPattern.minLength, nextPattern.minLength, currentSeed++);
+                        currentSegmentLength = Utils::getPseudoRandomInt(nextPattern.generationInfo.minLength, nextPattern.generationInfo.maxLength, currentSeed++);
                         
                         // set spawn
                         tryToSpawnExit = generationLength > desiredLength && nextPattern.spawnInfo.spawnType == GENERIC;
                         nextSpawnType = getNextSpawnType(nextPattern.spawnInfo.spawnType);
                         nextSpawnY = nextPattern.spawnInfo.spawnY + 1;
-                        std::cout << "next y " << nextPattern.spawnInfo.spawnY << "\n"; 
+                        std::cout << "seg id " << currentSegmentId << "\n"; 
+
                         nextSpawnDist = Utils::getPseudoRandomInt(0, currentSegmentLength - 1, currentSeed++);
 
                         // exception for platforms

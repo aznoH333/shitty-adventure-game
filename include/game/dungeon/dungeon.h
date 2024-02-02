@@ -129,6 +129,7 @@ namespace DungeonCode {
             const int PLATFORM_RESPAWN_TIME = 200;
             const int PLATFORM_DESPAWN_TRESHOLD = 196;
             const float WATERFALL_PLATFORM_SPAWN_HEIGHT = 0.0f;
+            
 
 
             // enemies
@@ -142,13 +143,17 @@ namespace DungeonCode {
             const int MIN_SECTION_LENGTH = 100;
             const int MAX_SECTION_LENGTH = 200;
             const int DUNGEON_PADDING = 10;
+            const int MIN_TILE_GAP = 2;
 
 
             // generation
+            std::map<int, std::vector<int>> dynamicConnectorLookupTable;
+
             void unloadDungeon();
             void loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position);
             Level generateDungeon(TerrainGeneration::OverworldPosition position);
             DungeonSection generateSection(SectionPurpose);
+            std::vector<int>& getPossibleConnectors(int currentId);
             
             // entities
             void spawnEntity(Vector2 position, EntitySpawnType spawnType);

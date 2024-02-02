@@ -71,9 +71,9 @@ void DungeonPlayer::tryMove(){
 }
 
 void DungeonPlayer::tryJump(){
-    if (isAirborne == false){
+    //if (isAirborne == false){
         velocity.y = -JUMP_FORCE;
-    }
+    //}
 }
 
 void DungeonPlayer::updateMovementValues(){
