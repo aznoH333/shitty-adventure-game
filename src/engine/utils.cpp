@@ -54,6 +54,15 @@ namespace Utils {
         return (a > RELU_PRECISION) + (a > -RELU_PRECISION) - 1;
     }
 
+
+    bool squaresCollide(Vector2 position1, Vector2 position2, Vector2 size1, Vector2 size2){
+        return 
+            position1.x + size1.x > position2.x &&
+            position1.x < position2.x + size2.x &&
+            position1.y + size1.y > position2.y &&
+            position1.y < position2.y + size2.y;
+    }
+
     // --== generic random ==--
     std::random_device rd;
     std::mt19937 generator(rd());

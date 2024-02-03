@@ -1,4 +1,5 @@
 #include "game/dungeon/dungeon.h"
+#include <iostream>
 
 using namespace DungeonCode;
 
@@ -10,6 +11,10 @@ DungeonPlayer::DungeonPlayer(Vector2 position){
 void DungeonPlayer::update(){
     
     readPlayerInput();
+    
+    // set platform ptr
+    platformPtr = nullptr;
+    
     tryMove();
     updateMovementValues();
     
@@ -48,22 +53,19 @@ void DungeonPlayer::tryMove(){
 
     velocity.x = walkVal * WALK_SPEED;
 
-    if (!Dungeon::get()->collidesWithDungeon({position.x + velocity.x, position.y}, SIZE)){
+    if (!Dungeon::get()->collidesWithDungeon({position.x + velocity.x, position.y}, SIZE, false)){
         position.x += velocity.x;
     }else {
         //position.x = position.x - std::fmod(position.x, DUNGEON_TILE_SIZE) + (Utils::relu(velocity.x) * DUNGEON_TILE_SIZE);
-        
         velocity.x = 0.0f;
         walkVal = 0.0f;
     }
 
-    if (!Dungeon::get()->collidesWithDungeon({position.x, position.y + velocity.y}, SIZE)){
+    if (!Dungeon::get()->collidesWithDungeon({position.x, position.y + velocity.y}, SIZE, false)){
         position.y += velocity.y;
     }else {
         // snap position to nearest tile
-        
         //position.y = position.y - std::fmod(position.y, DUNGEON_TILE_SIZE) + (Utils::relu(velocity.y) * DUNGEON_TILE_SIZE);
-        
         velocity.y = 0.0f;
         
     }
@@ -76,13 +78,27 @@ void DungeonPlayer::tryJump(){
     //}
 }
 
-void DungeonPlayer::updateMovementValues(){
-    isAirborne = !Dungeon::get()->collidesWithDungeon({position.x, position.y + SIZE.y + 1.0f}, {SIZE.x, 1.0f});
 
-    if (isAirborne){
+void DungeonPlayer::updateMovementValues(){
+
+    isAirborne = !Dungeon::get()->advancedDungeonCollisions({position.x, position.y + SIZE.y + 1.0f}, {SIZE.x, 1.0f}, position, platformPtr);
+
+   
+    
+    
+    if (isAirborne || (platformPtr != nullptr && velocity.y < -0.1f)){
+        // in air
         velocity.y += GRAVITY;
+    }else if (platformPtr != nullptr){
+        // on platform
+        velocity.y = platformPtr->speed;
+        position.y = platformPtr->position.y - SIZE.y;
+        platformPtr->isFalling = !platformPtr->isWaterFall;
     }else {
+        // on ground
         velocity.y = 0.0f;
     }
 
+
+    
 }

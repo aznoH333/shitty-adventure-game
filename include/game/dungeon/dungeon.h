@@ -86,6 +86,11 @@ namespace DungeonCode {
             bool isAirborne = false;
             float walkVal = 0.0f;
 
+            // platform stuff
+            DungeonPlatform* platformPtr = nullptr;
+
+
+
 
 
             void readPlayerInput();
@@ -111,7 +116,9 @@ namespace DungeonCode {
 
 
             const float CAMERA_Y = 86.0f;
-            const float MIN_CAMERA_X = 152.0f;            
+            const float MIN_CAMERA_X = 152.0f; 
+            const Vector2 PLATFORM_SIZE = {48.0f, 4.0f};       
+
             
             int nextDungeonId = 1;
             int lastGeneratedDungeonId = 0;
@@ -123,7 +130,7 @@ namespace DungeonCode {
             std::vector<DungeonPlatformSpawner> platfromSpawners;
 
             const float WATERFALL_PLATFORM_SPEED = 0.6f;
-            const float PLATFORM_ACCELERATION = 0.2;
+            const float PLATFORM_ACCELERATION = 0.2f;
             const float MAX_PLATFORM_SPEED = 2.0f;
             const int WATERFALL_PLATFORM_RESPAWN_TIME = 100;
             const int PLATFORM_RESPAWN_TIME = 200;
@@ -173,6 +180,8 @@ namespace DungeonCode {
             // collisions
             bool collidesWithLevel(Vector2& position, Vector2& size);
             bool collidesWithPlatform(Vector2& position, Vector2& size);
+            bool collidesWithPlatformAdvanced(Vector2& position, Vector2& size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
+
 
 
         public:
@@ -184,6 +193,9 @@ namespace DungeonCode {
             void enterDungeon(TerrainGeneration::OverworldObject* dungeon);
             void setCameraPosition(Vector2 playerPosition);
             bool collidesWithDungeon(Vector2 position, Vector2 size);
+            bool collidesWithDungeon(Vector2 position, Vector2 size, bool checkPlatforms);
+
+            bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
 
     };
 }

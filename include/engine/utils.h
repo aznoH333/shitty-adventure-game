@@ -6,6 +6,7 @@
 #include <string>
 #include <filesystem>
 #include <random>
+#include <raylib.h>
 
 
 namespace Utils{
@@ -18,6 +19,7 @@ namespace Utils{
     float pythagoras(float x1, float y1, float x2, float y2);
     int relu(float a);
     float gravitateValue(float value, float goal, float stepSize);
+    bool squaresCollide(Vector2 position1, Vector2 position2, Vector2 size1, Vector2 size2);
 
     const float RELU_PRECISION = 0.05f;
 
@@ -37,6 +39,8 @@ namespace Utils{
     // hashing
     int hashInt(int input);
     int hashVector(int value1, int value2);
+
+
 
     class SeededGenerator{
         private:

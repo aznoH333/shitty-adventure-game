@@ -452,7 +452,11 @@ namespace DungeonCode {
 
     // --== collisions ==--
     bool Dungeon::collidesWithDungeon(Vector2 position, Vector2 size){
-        return collidesWithLevel(position, size) || collidesWithPlatform(position, size);
+        return collidesWithDungeon(position, size, true);
+    }
+
+    bool Dungeon::collidesWithDungeon(Vector2 position, Vector2 size, bool checkPlatforms){
+        return collidesWithLevel(position, size) || (checkPlatforms && collidesWithPlatform(position, size));
     }
 
     bool Dungeon::collidesWithLevel(Vector2& position, Vector2& size){
@@ -479,8 +483,29 @@ namespace DungeonCode {
         return false;
     }
 
-    bool Dungeon::collidesWithPlatform(Vector2& position, Vector2& size){
-        // TODO
+    bool Dungeon::collidesWithPlatformAdvanced(Vector2& position, Vector2& size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef){
+        for (DungeonPlatform& p : platforms){
+            if (Utils::squaresCollide(position, p.position, size, PLATFORM_SIZE)){
+                platformPointerRef = &p;
+                return true;
+            }
+        }
+        
         return false;
+    }
+
+
+    bool Dungeon::collidesWithPlatform(Vector2& position, Vector2& size){
+        for (DungeonPlatform& p : platforms){
+            if (Utils::squaresCollide(position, p.position, size, PLATFORM_SIZE)){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    bool Dungeon::advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef){
+        return collidesWithLevel(position, size) || collidesWithPlatformAdvanced(position, size, actualPosition, platformPointerRef);
     }
 }
