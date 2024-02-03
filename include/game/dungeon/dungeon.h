@@ -116,8 +116,8 @@ namespace DungeonCode {
 
 
             const float CAMERA_Y = 86.0f;
-            const float MIN_CAMERA_X = 152.0f; 
-            const Vector2 PLATFORM_SIZE = {48.0f, 4.0f};       
+            const float MIN_CAMERA_X = 256.0f; 
+            const Vector2 PLATFORM_SIZE = {48.0f, 10.0f};       
 
             
             int nextDungeonId = 1;
@@ -151,11 +151,12 @@ namespace DungeonCode {
             const int MAX_SECTION_LENGTH = 200;
             const int DUNGEON_PADDING = 10;
             const int MIN_TILE_GAP = 2;
+            const int TEMPORARY_MAX_JUMP_HEIGHT = 5;
+            const int TEMPORARY_MAX_JUMP_HEIGHT_AFTER_GAP = 2;
 
-
-            // generation
             std::map<int, std::vector<int>> dynamicConnectorLookupTable;
 
+            // generation
             void unloadDungeon();
             void loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position);
             Level generateDungeon(TerrainGeneration::OverworldPosition position);

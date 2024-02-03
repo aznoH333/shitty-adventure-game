@@ -146,33 +146,35 @@ namespace DungeonCode {
         std::vector<int> out;
         const DungeonPattern& currentPattern = dungeonPatternLookup[currentId];
 
-        bool canNextBeGap = !currentPattern.generationInfo.isGap;
+        bool canNextGenerateGap = !currentPattern.generationInfo.isGap && !currentPattern.generationInfo.isWall;
+        int heighestNextFloor = currentPattern.generationInfo.floorHeight - TEMPORARY_MAX_JUMP_HEIGHT;
 
         for (int i = 0; i < dungeonPatternLookup.size(); i++){
             const DungeonPattern& p = dungeonPatternLookup[i];
             
+            // no double gaps
+            bool canNextBeGap = (!p.generationInfo.isGap || canNextGenerateGap);
+            
+            // make sure that segments are connected
+            // does not apply to walls
+            bool connectsToCurrentSegment = 
+                (currentPattern.generationInfo.ceilingHeight < p.generationInfo.floorHeight - MIN_TILE_GAP && 
+                 currentPattern.generationInfo.floorHeight > p.generationInfo.ceilingHeight + MIN_TILE_GAP) ||
+                 currentPattern.generationInfo.isWall;
+
+            // check if jump height is valid
+            // does not apply to walls and gaps
+            bool isJumpHeightValid = (currentPattern.generationInfo.isWall == true || currentPattern.generationInfo.isGap || 
+                                      p.generationInfo.floorHeight >= heighestNextFloor);
 
             // ✞ bože pomoc ✞
             if (
-                
-                // no walls
-                !p.generationInfo.isWall &&
-                // no double gaps
-                (!p.generationInfo.isGap || canNextBeGap) &&
-
-                // make sure that segments are connected
-                // does not apply to walls
-                (currentPattern.generationInfo.isWall 
-                || 
-                (currentPattern.generationInfo.ceilingHeight < p.generationInfo.floorHeight - MIN_TILE_GAP && 
-                currentPattern.generationInfo.floorHeight > p.generationInfo.ceilingHeight + MIN_TILE_GAP)
+                !p.generationInfo.isWall && // no walls
+                canNextBeGap &&
+                connectsToCurrentSegment &&
+                isJumpHeightValid
                 )
-
-
-
-                
-                
-                ){
+            {
                 out.push_back(i);
                 std::cout << i << ", ";
             }
@@ -256,6 +258,8 @@ namespace DungeonCode {
                         const DungeonPattern& nextPattern = dungeonPatternLookup[currentSegmentId];
                         currentSegmentLength = Utils::getPseudoRandomInt(nextPattern.generationInfo.minLength, nextPattern.generationInfo.maxLength, currentSeed++);
                         
+                        
+
                         // set spawn
                         tryToSpawnExit = generationLength > desiredLength && nextPattern.spawnInfo.spawnType == GENERIC;
                         nextSpawnType = getNextSpawnType(nextPattern.spawnInfo.spawnType);

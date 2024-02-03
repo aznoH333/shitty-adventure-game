@@ -80,12 +80,8 @@ void DungeonPlayer::tryJump(){
 
 
 void DungeonPlayer::updateMovementValues(){
-
     isAirborne = !Dungeon::get()->advancedDungeonCollisions({position.x, position.y + SIZE.y + 1.0f}, {SIZE.x, 1.0f}, position, platformPtr);
 
-   
-    
-    
     if (isAirborne || (platformPtr != nullptr && velocity.y < -0.1f)){
         // in air
         velocity.y += GRAVITY;

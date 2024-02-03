@@ -59,7 +59,22 @@ const int TILES_PER_PATTERN = 14;
             {0,0, false, true, 0, 0},
             {NONE, 0},
         },
-        
+
+        // tunnel 2
+        {
+            {1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 6, false, false, 3, 7},
+            {GENERIC, 9},
+        },
+
+        // tunnel 1
+        {
+            {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1},
+            {8,12, false, false, 3, 7},
+            {GENERIC, 2},
+        },
+
+    
         // gap
         {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -69,19 +84,19 @@ const int TILES_PER_PATTERN = 14;
         // gap platform
         {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {1,15, true, false, 5, 5},
-            {PLATFORM, 10},
+            {1,9, true, false, 5, 5},
+            {PLATFORM, 6},
         },
         // gap water fall
         {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0,14, true, false, 5, 5},
-            {WATER_FALL_PLATFORM_AND_PLATFORM, 10},
+            {0,9, true, false, 5, 5},
+            {WATER_FALL_PLATFORM_AND_PLATFORM, 5},
         },
         // gap 1/3
         {
             {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {4,14, true, false, 3, 6},
+            {4,14, true, false, 3, 5},
             {NONE, 0},
         },
 
@@ -113,7 +128,6 @@ const int TILES_PER_PATTERN = 14;
             {2,6, false, false, 3, 7},
             {GENERIC, 8},
         },
-
 
     };
 
