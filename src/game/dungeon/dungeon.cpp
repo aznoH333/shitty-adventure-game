@@ -36,6 +36,7 @@ namespace DungeonCode {
 
         updatePlatforms();
         updateEnemies();
+        updateDoors();
     }
 
 
@@ -106,7 +107,6 @@ namespace DungeonCode {
         }
 
         removeAllPlatforms();
-        removeAllEnemies();
     }
 
     void Dungeon::loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position){
@@ -285,7 +285,7 @@ namespace DungeonCode {
                             nextSpawnType = DOOR_SPAWN; // TODO
                         }
                         
-                        spawnEntity({(float) completeLength * DUNGEON_TILE_SIZE, (float)(TILES_PER_PATTERN - nextSpawnY) * DUNGEON_TILE_SIZE}, nextSpawnType);
+                        spawnEntity({(float) completeLength * DUNGEON_TILE_SIZE, (float)(TILES_PER_PATTERN - nextSpawnY) * DUNGEON_TILE_SIZE}, nextSpawnType, output);
                     }
                     
 
@@ -340,7 +340,7 @@ namespace DungeonCode {
         
     }
 
-    void Dungeon::spawnEntity(Vector2 position, EntitySpawnType spawnType){
+    void Dungeon::spawnEntity(Vector2 position, EntitySpawnType spawnType, DungeonSection& section){
         switch (spawnType){
             case PLAYER_SPAWN:
                 if (player != nullptr){
@@ -352,7 +352,7 @@ namespace DungeonCode {
 
             case DOOR_SPAWN:
                 std::cout << "spawned door at " << position.x << ", " << position.y << "\n";
-
+                addDoor(position, section);
                 break;
 
             case ITEM_SPAWN:
@@ -362,17 +362,17 @@ namespace DungeonCode {
 
             case PLATFORM_SPAWN:
                 std::cout << "spawned platform at " << position.x << ", " << position.y << "\n";
-                addPlatform(position, false);
+                addPlatform(position, false, section.platfromSpawners);
                 break;
 
             case WATERFALL_SPAWN:
                 std::cout << "spawned waterfall at " << position.x << ", " << position.y << "\n";
-                addPlatform(position, true);
+                addPlatform(position, true, section.platfromSpawners);
                 break;
 
             case ENEMY_SPAWN:
                 std::cout << "spawned enemy at " << position.x << ", " << position.y << "\n";
-                addEnemy(position);
+                addEnemy(position, section);
                 break;
 
             case NONE_SPAWN:
@@ -384,7 +384,7 @@ namespace DungeonCode {
 
     // --== Platforms ==--
 
-    void Dungeon::addPlatform(Vector2 position, bool isWaterFall){
+    void Dungeon::addPlatform(Vector2 position, bool isWaterFall, std::vector<DungeonPlatformSpawner>& platfromSpawners){
         platfromSpawners.push_back({
             {position.x, isWaterFall ? WATERFALL_PLATFORM_SPAWN_HEIGHT : position.y}, isWaterFall, 1
         });
@@ -417,7 +417,7 @@ namespace DungeonCode {
 
 
         // update spawners
-        for (DungeonPlatformSpawner& spawner: platfromSpawners){
+        for (DungeonPlatformSpawner& spawner: currentLoadedLevel.sections[currentLoadedLevel.currentSection].platfromSpawners){
             spawner.respawnTimer -= spawner.respawnTimer >= 0; // goes to -1 to spawn exactly 1 platform
             // spawn new platform
             if (spawner.respawnTimer == 0){
@@ -432,25 +432,21 @@ namespace DungeonCode {
 
 
     void Dungeon::removeAllPlatforms(){
-        platfromSpawners.clear();
         platforms.clear();
     }
 
 
     // --== enemies ==--
-    void Dungeon::addEnemy(Vector2 position){
-        enemies.push_back({position});
+    void Dungeon::addEnemy(Vector2 position, DungeonSection& section){
+        section.enemies.push_back({position});
     }
 
     void Dungeon::updateEnemies(){
-        for (DungeonEnemy& enemy : enemies){
+        for (DungeonEnemy& enemy : currentLoadedLevel.sections[currentLoadedLevel.currentSection].enemies){
             Drawing::get()->drawTexture("dungeon_test_3", enemy.position, false, 1, 0, WHITE, LAYER_ENEMY);
         }
     }
 
-    void Dungeon::removeAllEnemies(){
-        enemies.clear();
-    }
     
 
 
@@ -512,4 +508,19 @@ namespace DungeonCode {
     bool Dungeon::advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef){
         return collidesWithLevel(position, size) || collidesWithPlatformAdvanced(position, size, actualPosition, platformPointerRef);
     }
+
+
+    // --== doors ==--
+    void Dungeon::addDoor(Vector2 position, DungeonSection& section){
+        section.doors.push_back({
+            position
+        });
+    }
+    void Dungeon::updateDoors(){
+        for (DungeonDoor& door : currentLoadedLevel.sections[currentLoadedLevel.currentSection].doors){
+            Drawing::get()->drawTexture("door", {door.position.x, door.position.y - DUNGEON_TILE_SIZE}, false, 1, 0, WHITE, LAYER_OBJECT);
+
+        }
+    }
+
 }

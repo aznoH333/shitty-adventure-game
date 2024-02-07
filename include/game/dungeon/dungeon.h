@@ -40,6 +40,12 @@ namespace DungeonCode {
         // temporary placeholder
     };
 
+    struct DungeonDoor{
+        Vector2 position;
+
+        // temporary placeholder
+    };
+
     
 
     enum EntitySpawnType{
@@ -61,6 +67,9 @@ namespace DungeonCode {
         std::vector<LevelSlice> levelData;
         int sectionLength;
         SectionPurpose purpose;
+        std::vector<DungeonPlatformSpawner> platfromSpawners;
+        std::list<DungeonEnemy> enemies;
+        std::list<DungeonDoor> doors;
     };
 
     struct Level {
@@ -110,7 +119,7 @@ namespace DungeonCode {
             // platform stuff
             DungeonPlatform* platformPtr = nullptr;
 
-
+            
 
 
 
@@ -149,7 +158,6 @@ namespace DungeonCode {
 
             // platforms
             std::list<DungeonPlatform> platforms;
-            std::vector<DungeonPlatformSpawner> platfromSpawners;
 
             const float WATERFALL_PLATFORM_SPEED = 0.6f;
             const float PLATFORM_ACCELERATION = 0.1f;
@@ -162,7 +170,6 @@ namespace DungeonCode {
 
 
             // enemies
-            std::list<DungeonEnemy> enemies;
 
 
 
@@ -186,18 +193,21 @@ namespace DungeonCode {
             std::vector<int>& getPossibleConnectors(int currentId);
             
             // entities
-            void spawnEntity(Vector2 position, EntitySpawnType spawnType);
+            void spawnEntity(Vector2 position, EntitySpawnType spawnType, DungeonSection& section);
             EntitySpawnType getNextSpawnType(SpawnType type);
 
             // platforms
-            void addPlatform(Vector2 position, bool isWaterFall);
+            void addPlatform(Vector2 position, bool isWaterFall, std::vector<DungeonPlatformSpawner>& platfromSpawners);
             void updatePlatforms();
             void removeAllPlatforms();
 
             // enemies
-            void addEnemy(Vector2 position);
+            void addEnemy(Vector2 position, DungeonSection& section);
             void updateEnemies();
-            void removeAllEnemies();
+
+            // door stuff
+            void addDoor(Vector2 position, DungeonSection& section);
+            void updateDoors();
 
             
             // collisions
