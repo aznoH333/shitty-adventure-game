@@ -93,10 +93,12 @@ namespace DungeonCode {
 
             // movement vars
             const float ADDITIONAL_VELOCITY_DECAY_SPEED = 0.3f;
+            const int JUMP_BUFFER_LENGTH = 10;
             bool isAirborne = false;
             float walkVal = 0.0f;
             float additionalHorizontalVelocity = 0.0f;
             int jumpHeightBuffer = 0;
+            int jumpBuffer = 0;
 
             // wall climbing
             const float WALL_CLIMB_JUMP_FORCE = 3.2f;

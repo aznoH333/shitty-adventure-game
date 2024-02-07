@@ -36,6 +36,7 @@ void DungeonPlayer::readPlayerInput(){
     buttonRight = IsKeyDown(KEY_D);
     buttonJumpPressed = IsKeyPressed(KEY_SPACE);
     buttonJump = IsKeyDown(KEY_SPACE);
+    
 
     // no button or both buttons pressed
     if (buttonLeft == buttonRight){
@@ -55,7 +56,7 @@ void DungeonPlayer::readPlayerInput(){
 
     }
 
-    if (buttonJumpPressed){
+    if (jumpBuffer > 0){
         tryJump();
         tryWallClimbJump();
     }else{
@@ -101,6 +102,11 @@ void DungeonPlayer::tryWallClimbJump(){
         
         float wallClimbStrength = std::max(1.0f - (wallClimbCounter * WALL_CLIMB_DECAY), 0.0f);
         
+        if (wallClimbStrength <= 0.1f){
+            // dont climb if strength too weak
+            return;
+        }
+
         velocity.y = -WALL_CLIMB_JUMP_FORCE * wallClimbStrength;
         // no jump buffer for wall climbs
         additionalHorizontalVelocity = (buttonLeft * 2 - 1) * WALL_CLIMB_PUSH_FORCE * wallClimbStrength;
@@ -144,6 +150,12 @@ void DungeonPlayer::updateMovementValues(){
         && (buttonLeft != buttonRight) 
         && velocity.y > 0.0f;
     
+
+    // jump buffer
+    if (buttonJumpPressed){
+        jumpBuffer = JUMP_BUFFER_LENGTH;
+    }
+    jumpBuffer -= jumpBuffer > 0;
 
     additionalHorizontalVelocity = Utils::gravitateValue(additionalHorizontalVelocity, 0.0f, ADDITIONAL_VELOCITY_DECAY_SPEED);
 }
