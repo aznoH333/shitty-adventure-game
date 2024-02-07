@@ -25,7 +25,12 @@ namespace Utils {
 
 
     float gravitateValue(float value, float goal, float stepSize){
-        return value + (Utils::relu(goal - value) * stepSize);
+        float a = value + (Utils::relu(goal - value) * stepSize);
+        if(std::abs(a - goal) > stepSize){
+            return a;
+        }else {
+            return goal;
+        }
     }
 
 

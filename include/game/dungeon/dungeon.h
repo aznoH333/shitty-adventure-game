@@ -78,13 +78,32 @@ namespace DungeonCode {
             const Vector2 SIZE = {16.0f, 16.0f};
 
             const float GRAVITY = 0.2f;
-            const float JUMP_FORCE = 3.5f;
+            const float JUMP_FORCE = 3.0f;
             const float WALK_ACCELERATION = 0.1f;
             const float WALK_SPEED = 2.0f;
+            const int JUMP_HEIGHT_BUFFER_LENGTH = 10;
+
             
+            // input vars
+            bool buttonLeft = false;
+            bool buttonRight = false;
+            bool buttonJump = false;
+            bool buttonJumpPressed = false;
+
+
             // movement vars
+            const float ADDITIONAL_VELOCITY_DECAY_SPEED = 0.3f;
             bool isAirborne = false;
             float walkVal = 0.0f;
+            float additionalHorizontalVelocity = 0.0f;
+            int jumpHeightBuffer = 0;
+
+            // wall climbing
+            const float WALL_CLIMB_JUMP_FORCE = 3.2f;
+            const float WALL_CLIMB_PUSH_FORCE = 2.5f;
+            const float WALL_CLIMB_DECAY = 0.15f;
+            bool canWallClimb = false;
+            int wallClimbCounter = 0;
 
             // platform stuff
             DungeonPlatform* platformPtr = nullptr;
@@ -95,6 +114,7 @@ namespace DungeonCode {
 
             void readPlayerInput();
             void tryMove();
+            void tryWallClimbJump();
             void tryJump();
             void updateMovementValues();
 
@@ -130,11 +150,11 @@ namespace DungeonCode {
             std::vector<DungeonPlatformSpawner> platfromSpawners;
 
             const float WATERFALL_PLATFORM_SPEED = 0.6f;
-            const float PLATFORM_ACCELERATION = 0.2f;
-            const float MAX_PLATFORM_SPEED = 2.0f;
+            const float PLATFORM_ACCELERATION = 0.1f;
+            const float MAX_PLATFORM_SPEED = 4.5f;
             const int WATERFALL_PLATFORM_RESPAWN_TIME = 100;
             const int PLATFORM_RESPAWN_TIME = 200;
-            const int PLATFORM_DESPAWN_TRESHOLD = 196;
+            const int PLATFORM_DESPAWN_TRESHOLD = 212;
             const float WATERFALL_PLATFORM_SPAWN_HEIGHT = 0.0f;
             
 

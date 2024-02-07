@@ -6,6 +6,11 @@ using namespace DungeonCode;
 
 DungeonPlayer::DungeonPlayer(Vector2 position){
     this->position = position;
+    // couldn't figure out why
+    // but the player has to start a pixel heigher othervise he is stuck in the floor
+    // got introduced with wall climbing
+    // not urgent enough to fix
+    this->position.y -= 1.0f;
 }
 
 void DungeonPlayer::update(){
@@ -27,31 +32,42 @@ void DungeonPlayer::update(){
 // --== Movement ==--
 
 void DungeonPlayer::readPlayerInput(){
-    
-    if (IsKeyDown(KEY_A) == IsKeyDown(KEY_D)){
+    buttonLeft = IsKeyDown(KEY_A);
+    buttonRight = IsKeyDown(KEY_D);
+    buttonJumpPressed = IsKeyPressed(KEY_SPACE);
+    buttonJump = IsKeyDown(KEY_SPACE);
+
+    // no button or both buttons pressed
+    if (buttonLeft == buttonRight){
         
         walkVal = Utils::gravitateValue(walkVal, 0.0f, WALK_ACCELERATION);
 
-    }else if (IsKeyDown(KEY_A)){
+    // move left
+    }else if (buttonLeft){
 
         walkVal = Utils::gravitateValue(walkVal, -1.0f, WALK_ACCELERATION);
 
-        
-    }else if (IsKeyDown(KEY_D)){
+    // move right
+    }else if (buttonRight){
         
         walkVal = Utils::gravitateValue(walkVal, 1.0f, WALK_ACCELERATION);
 
 
     }
 
-    if (IsKeyDown(KEY_SPACE)){
+    if (buttonJumpPressed){
         tryJump();
+        tryWallClimbJump();
+    }else{
+        // reset jump buffer
+        jumpHeightBuffer *= buttonJump;
+
     }
 }
 
 void DungeonPlayer::tryMove(){
 
-    velocity.x = walkVal * WALK_SPEED;
+    velocity.x = (walkVal * WALK_SPEED) + additionalHorizontalVelocity;
 
     if (!Dungeon::get()->collidesWithDungeon({position.x + velocity.x, position.y}, SIZE, false)){
         position.x += velocity.x;
@@ -72,10 +88,28 @@ void DungeonPlayer::tryMove(){
 
 }
 
+// --== jumping and climbing ==--
 void DungeonPlayer::tryJump(){
-    //if (isAirborne == false){
+    if (isAirborne == false){
         velocity.y = -JUMP_FORCE;
-    //}
+        jumpHeightBuffer = JUMP_HEIGHT_BUFFER_LENGTH;
+    }
+}
+
+void DungeonPlayer::tryWallClimbJump(){
+    if (canWallClimb){
+        
+        float wallClimbStrength = std::max(1.0f - (wallClimbCounter * WALL_CLIMB_DECAY), 0.0f);
+        
+        velocity.y = -WALL_CLIMB_JUMP_FORCE * wallClimbStrength;
+        // no jump buffer for wall climbs
+        additionalHorizontalVelocity = (buttonLeft * 2 - 1) * WALL_CLIMB_PUSH_FORCE * wallClimbStrength;
+
+
+        wallClimbCounter++;
+
+    }
+
 }
 
 
@@ -84,7 +118,7 @@ void DungeonPlayer::updateMovementValues(){
 
     if (isAirborne || (platformPtr != nullptr && velocity.y < -0.1f)){
         // in air
-        velocity.y += GRAVITY;
+        velocity.y += GRAVITY * (jumpHeightBuffer == 0);
     }else if (platformPtr != nullptr){
         // on platform
         velocity.y = platformPtr->speed;
@@ -93,8 +127,23 @@ void DungeonPlayer::updateMovementValues(){
     }else {
         // on ground
         velocity.y = 0.0f;
+        wallClimbCounter = 0;
     }
 
+    jumpHeightBuffer -= jumpHeightBuffer > 0;
 
+
+    // wall climbing
+    // rules
+    // has to be air borne
+    // and near a wall
+    // and holding key towards wall
+    // and falling (vel > 0)
+    canWallClimb = isAirborne 
+        && Dungeon::get()->collidesWithDungeon({position.x  - 1.0f, position.y}, {SIZE.x + 2.0f, SIZE.y}, false) 
+        && (buttonLeft != buttonRight) 
+        && velocity.y > 0.0f;
     
+
+    additionalHorizontalVelocity = Utils::gravitateValue(additionalHorizontalVelocity, 0.0f, ADDITIONAL_VELOCITY_DECAY_SPEED);
 }
