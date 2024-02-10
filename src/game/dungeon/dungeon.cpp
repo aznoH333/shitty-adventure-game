@@ -130,7 +130,8 @@ namespace DungeonCode {
             Utils::hashVector(position.x, position.y),
         };
 
-        output.sections.push_back(generateSection(MAIN_SECTION));
+        output.sections.push_back(generateSection(MAIN_SECTION, output, -1, 0, {0.0f,0.0f}));
+        
 
         return output;
     }
@@ -193,190 +194,155 @@ namespace DungeonCode {
 
     
 
+    DungeonSection Dungeon::generateSection(SectionPurpose purpose, Level& level, int returnValue, int sectionId, Vector2 returnLoacation){
+        DungeonSection output = {
+            {},
+            0,
+            purpose,
+            {},
+            {},
+            {}
+        };
 
-    DungeonSection Dungeon::generateSection(SectionPurpose purpose){
-        DungeonSection output;
-        int desiredLength;
-        
-        // set length
-        if (purpose == SectionPurpose::MAIN_SECTION){
-            desiredLength = Utils::getPseudoRandomInt(MIN_MAIN_SECTION_LENGTH, MAX_MAIN_SECTION_LENGTH, currentSeed++);
-        }else {
-            desiredLength = Utils::getPseudoRandomInt(MIN_SECTION_LENGTH, MAX_SECTION_LENGTH, currentSeed++);
-        }
+        addPadding(output);
+        generateRegularLevel(output, level, -1, 0, returnLoacation);
+        addPadding(output);
 
-        // controll vals
-        int generationState = 0;
-        bool isGenerationDone = false;
-        int generationLength = 0;
-        int completeLength = 0;
-
-
-        // generation vals
-        int currentSegmentLength = 0;
-        int currentSegmentId = 0;
-        EntitySpawnType nextSpawnType = NONE_SPAWN;
-        int nextSpawnDist = 0;
-        int nextSpawnY = 0;
-        bool spawnedPlayer = false;
-        bool spawnedExit = false;
-        bool tryToSpawnExit = false;
-
-
-
-        while (!isGenerationDone){
-            switch (generationState){
-                case 0:
-                case 2:
-                    // padding wall
-                    output.levelData.push_back({0}); 
-
-                    if (generationLength == DUNGEON_PADDING){
-                        // exit state
-                        generationState++;
-                        generationLength = 0;
-
-                    }
-                    break;
-
-                case 1:
-                    
-                    
-                    
-                    
-                    // segment value update
-                    if (currentSegmentLength == 0){
-                        // set geometry
-                        const DungeonPattern& pattern = dungeonPatternLookup[currentSegmentId];
-                        
-                        std::vector<int>& possibleConnectors = getPossibleConnectors(currentSegmentId);
-
-
-                        
-
-                        currentSegmentId = possibleConnectors[Utils::getPseudoRandomInt(0, possibleConnectors.size() - 1, currentSeed++)];
-                        const DungeonPattern& nextPattern = dungeonPatternLookup[currentSegmentId];
-                        currentSegmentLength = Utils::getPseudoRandomInt(nextPattern.generationInfo.minLength, nextPattern.generationInfo.maxLength, currentSeed++);
-                        
-                        
-
-                        // set spawn
-                        tryToSpawnExit = generationLength > desiredLength && nextPattern.spawnInfo.spawnType == GENERIC;
-                        nextSpawnType = getNextSpawnType(nextPattern.spawnInfo.spawnType);
-                        nextSpawnY = nextPattern.spawnInfo.spawnY + 1;
-                        std::cout << "seg id " << currentSegmentId << "\n"; 
-
-                        nextSpawnDist = Utils::getPseudoRandomInt(0, currentSegmentLength - 1, currentSeed++);
-
-                        // exception for platforms
-                        if (nextSpawnType == PLATFORM_SPAWN || nextSpawnType == WATERFALL_SPAWN){
-                            nextSpawnDist = 1;
-                        }
-                    }
-
-                    // spawn entity
-                    if (nextSpawnDist == 0){
-                        // special cases
-                        if (spawnedPlayer == false){
-                            spawnedPlayer = true;
-                            nextSpawnType = PLAYER_SPAWN;
-                        }else if (tryToSpawnExit){
-                            spawnedExit = true;
-                            nextSpawnType = DOOR_SPAWN; // TODO
-                        }
-                        
-                        spawnEntity({(float) completeLength * DUNGEON_TILE_SIZE, (float)(TILES_PER_PATTERN - nextSpawnY) * DUNGEON_TILE_SIZE}, nextSpawnType, output);
-                    }
-                    
-
-                    // add geometry
-                    output.levelData.push_back({currentSegmentId});
-                    currentSegmentLength--;
-                    nextSpawnDist--;
-
-                    
-                    // exit status
-                    if (generationLength > desiredLength && currentSegmentLength == 0 && spawnedExit){
-                        generationState++;
-                        generationLength = 0;
-                    }
-                    break;
-                case 3:
-                    // generation done
-                    isGenerationDone = true;
-                    break;
-            }
-
-
-            generationLength++;
-            completeLength++;
-        }
-        
-        output.sectionLength = completeLength;
-
+        output.sectionLength = output.levelData.size();
 
         return output;
     }
-
-
-    // --== Entities ==--
-    EntitySpawnType Dungeon::getNextSpawnType(SpawnType type){        
-        switch(type){
-            case NONE:
-                return NONE_SPAWN;
-
-            case WATER_FALL_PLATFORM_AND_PLATFORM:
-                if (Utils::getPseudoRandomInt(0, 1, currentSeed++) > 0){
-                    return WATERFALL_SPAWN;
-                }
-                return PLATFORM_SPAWN;
-
-            case PLATFORM:
-                return PLATFORM_SPAWN;
-            default:
-            case GENERIC:
-                return ENEMY_SPAWN;// TODO
+    
+    void Dungeon::addPadding(DungeonSection& section){
+        for (int i = 0; i < DUNGEON_PADDING; i++){
+            section.levelData.push_back({0});
         }
+    }
+
+    void Dungeon::generateRegularLevel(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation){
+        switch (section.purpose) {
+            case MAIN_SECTION:
+                generateMainSection(section, level, returnSection, sectionId, returnLoacation);
+                break;
+            case FIGHT_SECTION:
+                generateFightSection(section, level, returnSection, sectionId, returnLoacation);
+                break;
+
+            case FILLER_SECTION:
+                generateFillerSection(section, level, returnSection, sectionId, returnLoacation);
+                break;
+
+            case REWARD_SECTION:
+                generateRewardSection(section, level, returnSection, sectionId, returnLoacation);
+                break;
+        }
+    }
+
+    void Dungeon::generateMainSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation){
+        int length = Utils::getPseudoRandomInt(MIN_MAIN_SECTION_LENGTH, MAX_MAIN_SECTION_LENGTH, currentSeed++);
+
+        int currentSegment = 0;
+        int segmentLength = 0;
+        int nextSpawn = 0;
+        bool generatedEndDoor = false;
+        bool generatedEntrance = false;
+
+        int iterator = 0;
+        while (true){
+            if (segmentLength == 0){
+                // choose next segment
+                std::vector<int> connectors = getPossibleConnectors(currentSegment);
+                currentSegment = Utils::getPseudoRandomInt(0, connectors.size(), currentSeed++);
+                const GenerationInfo& info = dungeonPatternLookup[currentSegment].generationInfo;
+                segmentLength = Utils::getPseudoRandomInt(info.minLength, info.maxLength, currentSeed++);
+                nextSpawn = Utils::getPseudoRandomInt(0, segmentLength - 1, currentSeed++);
+            }
+            section.levelData.push_back({currentSegment});
+
+
+            if (nextSpawn == 0){
+                // spawn thing
+                const SpawnInfo& info = dungeonPatternLookup[currentSegment].spawnInfo;
+
+                Vector2 position = {(float) (section.levelData.size() * DUNGEON_TILE_SIZE), (float)(TILES_PER_PATTERN - info.spawnY) * DUNGEON_TILE_SIZE};
+                EntitySpawnType spawnType = getNextSpawnType(info.spawnType);
+                int doorTarget = 0;
+
+                
+                // override spawn
+                if (spawnType == ENEMY_SPAWN){
+                    if (generatedEntrance == false){
+                        spawnType = DOOR_SPAWN;
+                        doorTarget = returnSection;
+                        spawnEntity(position, PLAYER_SPAWN, section, level, doorTarget, returnLoacation);
+                        generatedEntrance = true;
+                    }
+                    
+                }
+                
+                spawnEntity(position, spawnType, section, level, doorTarget, returnLoacation);
+            }
+
+
+
+            // loop
+            segmentLength--;
+            nextSpawn--;
+            iterator++;
+            if (generatedEndDoor){
+                break;
+            }
+            
+        }
+    }
+
+
+    void Dungeon::generateRewardSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation){
         
     }
 
-    void Dungeon::spawnEntity(Vector2 position, EntitySpawnType spawnType, DungeonSection& section){
-        switch (spawnType){
-            case PLAYER_SPAWN:
-                if (player != nullptr){
-                    delete player;
+    
+
+    // --== Entities ==--
+    EntitySpawnType Dungeon::getNextSpawnType(SpawnType type){
+        switch (type) {
+            case NONE:
+                return NONE_SPAWN;
+            case WATER_FALL_PLATFORM_AND_PLATFORM:
+                if (Utils::getPseudoRandomFloat(currentSeed++) > 0.5f){
+                    return PLATFORM_SPAWN;
                 }
-                player = new DungeonPlayer(position);
-                std::cout << "spawned player at " << position.x << ", " << position.y << "\n";
-                break;
+                return WATERFALL_SPAWN;
+            case PLATFORM:
+                return PLATFORM_SPAWN;
+            case GENERIC:
+                return ENEMY_SPAWN;
+        }
+        return NONE_SPAWN;
+    }
 
-            case DOOR_SPAWN:
-                std::cout << "spawned door at " << position.x << ", " << position.y << "\n";
-                addDoor(position, section);
-                break;
 
-            case ITEM_SPAWN:
-                std::cout << "spawned item at " << position.x << ", " << position.y << "\n";
-
-                break;
-
-            case PLATFORM_SPAWN:
-                std::cout << "spawned platform at " << position.x << ", " << position.y << "\n";
-                addPlatform(position, false, section.platfromSpawners);
-                break;
-
-            case WATERFALL_SPAWN:
-                std::cout << "spawned waterfall at " << position.x << ", " << position.y << "\n";
-                addPlatform(position, true, section.platfromSpawners);
-                break;
-
-            case ENEMY_SPAWN:
-                std::cout << "spawned enemy at " << position.x << ", " << position.y << "\n";
-                addEnemy(position, section);
-                break;
-
+    void Dungeon::spawnEntity(Vector2 position, EntitySpawnType type, DungeonSection& section, Level& level, int doorTarget, Vector2 returnLoacation){
+        switch(type){
             case NONE_SPAWN:
-                break; // do nothing
+                return;
+            case PLAYER_SPAWN:
+                if (player == nullptr){
+                    player = new DungeonPlayer(position);
+                }
+                return;
+            case ENEMY_SPAWN:
+                addEnemy(position, section);
+                return;
+            case WATERFALL_SPAWN:
+                addPlatform(position, true, section.platfromSpawners);
+                return;
+            case PLATFORM_SPAWN:
+                addPlatform(position, false, section.platfromSpawners);
+                return;
+            case DOOR_SPAWN:
+                addDoor(position, doorTarget, section, returnLoacation);
+                return;
         }
     }
 
@@ -511,9 +477,11 @@ namespace DungeonCode {
 
 
     // --== doors ==--
-    void Dungeon::addDoor(Vector2 position, DungeonSection& section){
+    void Dungeon::addDoor(Vector2 position, int targetSection, DungeonSection& section, Vector2 returnLocation){
         section.doors.push_back({
-            position
+            position,
+            returnLocation,
+            targetSection,
         });
     }
     void Dungeon::updateDoors(){

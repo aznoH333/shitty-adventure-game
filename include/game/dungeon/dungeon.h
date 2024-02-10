@@ -15,9 +15,9 @@ namespace DungeonCode {
 
     enum SectionPurpose{
         MAIN_SECTION,
-        KEY_SECTION,
-        LOOT_SECTION,
-        NOTHING_SECTION,
+        FILLER_SECTION,
+        REWARD_SECTION,
+        FIGHT_SECTION,
     };
 
 
@@ -42,7 +42,8 @@ namespace DungeonCode {
 
     struct DungeonDoor{
         Vector2 position;
-
+        Vector2 exitLocation;
+        int target;
         // temporary placeholder
     };
 
@@ -52,7 +53,6 @@ namespace DungeonCode {
         NONE_SPAWN = 0,
         PLAYER_SPAWN,
         DOOR_SPAWN,
-        ITEM_SPAWN,
         PLATFORM_SPAWN,
         WATERFALL_SPAWN,
         ENEMY_SPAWN,
@@ -70,6 +70,7 @@ namespace DungeonCode {
         std::vector<DungeonPlatformSpawner> platfromSpawners;
         std::list<DungeonEnemy> enemies;
         std::list<DungeonDoor> doors;
+        Vector2 defaultEntry;
     };
 
     struct Level {
@@ -189,11 +190,20 @@ namespace DungeonCode {
             void unloadDungeon();
             void loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position);
             Level generateDungeon(TerrainGeneration::OverworldPosition position);
-            DungeonSection generateSection(SectionPurpose);
+            DungeonSection generateSection(SectionPurpose, Level& level, int returnValue, int sectionId, Vector2 returnLoacation);
             std::vector<int>& getPossibleConnectors(int currentId);
+
+            // tile generating functions
+            void addPadding(DungeonSection& section);
+            void generateRegularLevel(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
+            void generateMainSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
+            void generateFightSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
+            void generateFillerSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
+            void generateRewardSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
+
             
             // entities
-            void spawnEntity(Vector2 position, EntitySpawnType spawnType, DungeonSection& section);
+            void spawnEntity(Vector2 position, EntitySpawnType spawnType, DungeonSection& section, Level& level, int doorTarget, Vector2 returnLocation);
             EntitySpawnType getNextSpawnType(SpawnType type);
 
             // platforms
@@ -206,7 +216,7 @@ namespace DungeonCode {
             void updateEnemies();
 
             // door stuff
-            void addDoor(Vector2 position, DungeonSection& section);
+            void addDoor(Vector2 position, int targetSection, DungeonSection& section, Vector2 returnLocation);
             void updateDoors();
 
             
