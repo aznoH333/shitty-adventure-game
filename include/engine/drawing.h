@@ -32,6 +32,7 @@ enum DrawingLayers{
     LAYER_OBJECT,
     LAYER_ENEMY,
     LAYER_PLAYER,
+    LAYER_UI,
 
 };
 

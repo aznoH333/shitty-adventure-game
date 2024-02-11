@@ -23,7 +23,7 @@ int main() {
     {
         // main loop
         Utils::gameTickCounter++; // pavle naser si
-
+        UICode::updateUi();
         Drawing::get()->render();
         State::get()->stateUpdate();
         
