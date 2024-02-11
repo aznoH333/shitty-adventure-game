@@ -5,6 +5,7 @@
 #include "game/overworld/terrainStructs.h"
 #include <vector>
 #include <list>
+#include <map>
 #include "engine/utils.h"
 #include "engine/drawing.h"
 #include "dungeonTileLookup.h"
@@ -18,6 +19,11 @@ namespace DungeonCode {
         FILLER_SECTION,
         REWARD_SECTION,
         FIGHT_SECTION,
+    };
+
+    struct SectionInfo{
+        SectionPurpose purpose;
+        bool isMain;
     };
 
 
@@ -44,6 +50,7 @@ namespace DungeonCode {
         Vector2 position;
         Vector2 exitLocation;
         int target;
+        bool useDefaultEntry;
         // temporary placeholder
     };
 
@@ -66,7 +73,7 @@ namespace DungeonCode {
     struct DungeonSection{
         std::vector<LevelSlice> levelData;
         int sectionLength;
-        SectionPurpose purpose;
+        SectionInfo sectionInfo;
         std::vector<DungeonPlatformSpawner> platfromSpawners;
         std::list<DungeonEnemy> enemies;
         std::list<DungeonDoor> doors;
@@ -74,9 +81,10 @@ namespace DungeonCode {
     };
 
     struct Level {
-        std::vector<DungeonSection> sections;
+        std::map<int, DungeonSection> sections;
         int currentSection;
         int seed;
+        int lastId;
     };
 
 
@@ -99,6 +107,7 @@ namespace DungeonCode {
             bool buttonRight = false;
             bool buttonJump = false;
             bool buttonJumpPressed = false;
+            bool buttonUpPressed = false;
 
 
             // movement vars
@@ -120,6 +129,9 @@ namespace DungeonCode {
             // platform stuff
             DungeonPlatform* platformPtr = nullptr;
 
+
+            // door stuff
+            DungeonDoor* nearbyDoor = nullptr;
             
 
 
@@ -129,9 +141,14 @@ namespace DungeonCode {
             void tryWallClimbJump();
             void tryJump();
             void updateMovementValues();
+            void updateGravity();
+            void updateWallClimbing();
+            void updateDoorInteraction();
 
         public:
             DungeonPlayer(Vector2 position);
+            Vector2& getPosition();
+            void setNearbyDoor(DungeonDoor* door);
             void update();
     };
 
@@ -167,6 +184,7 @@ namespace DungeonCode {
             const int PLATFORM_RESPAWN_TIME = 200;
             const int PLATFORM_DESPAWN_TRESHOLD = 212;
             const float WATERFALL_PLATFORM_SPAWN_HEIGHT = 0.0f;
+            const float NEARBY_DOOR_DISTANCE = 32.0f;
             
 
 
@@ -183,6 +201,10 @@ namespace DungeonCode {
             const int MIN_TILE_GAP = 2;
             const int TEMPORARY_MAX_JUMP_HEIGHT = 5;
             const int TEMPORARY_MAX_JUMP_HEIGHT_AFTER_GAP = 2;
+            const int REWARD_ROOM_SIZE = 25;
+            const int SMALL_REWARD_ROOM_SIZE = 10;
+            const float SIDE_ROOM_CHANCE = 0.03f;
+            const int FIGHT_ROOM_SIZE = 35;
 
             std::map<int, std::vector<int>> dynamicConnectorLookupTable;
 
@@ -190,8 +212,9 @@ namespace DungeonCode {
             void unloadDungeon();
             void loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position);
             Level generateDungeon(TerrainGeneration::OverworldPosition position);
-            DungeonSection generateSection(SectionPurpose, Level& level, int returnValue, int sectionId, Vector2 returnLoacation);
+            DungeonSection generateSection(SectionInfo info, Level& level, int returnValue, int sectionId, Vector2 returnLoacation);
             std::vector<int>& getPossibleConnectors(int currentId);
+            SectionInfo getNextPurpose(SectionInfo info);
 
             // tile generating functions
             void addPadding(DungeonSection& section);
@@ -200,24 +223,25 @@ namespace DungeonCode {
             void generateFightSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
             void generateFillerSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
             void generateRewardSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
+            void generateGeneric(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation, bool isMain);
 
             
             // entities
-            void spawnEntity(Vector2 position, EntitySpawnType spawnType, DungeonSection& section, Level& level, int doorTarget, Vector2 returnLocation);
+            void spawnEntity(Vector2 position, EntitySpawnType spawnType, DungeonSection& section, Level& level, int doorTarget, Vector2 returnLocation, bool useDefaultEntry);
             EntitySpawnType getNextSpawnType(SpawnType type);
 
             // platforms
             void addPlatform(Vector2 position, bool isWaterFall, std::vector<DungeonPlatformSpawner>& platfromSpawners);
-            void updatePlatforms();
+            void updatePlatforms(DungeonSection& section);
             void removeAllPlatforms();
 
             // enemies
             void addEnemy(Vector2 position, DungeonSection& section);
-            void updateEnemies();
+            void updateEnemies(DungeonSection& section);
 
             // door stuff
-            void addDoor(Vector2 position, int targetSection, DungeonSection& section, Vector2 returnLocation);
-            void updateDoors();
+            void addDoor(Vector2 position, int targetSection, DungeonSection& section, Vector2 returnLocation, bool useDefaultEntry);
+            void updateDoors(DungeonSection& section);
 
             
             // collisions
@@ -231,12 +255,14 @@ namespace DungeonCode {
             Dungeon();
             static Dungeon* get();
             void update();
-            void draw();
+            void draw(DungeonSection& section);
             void dispose();
             void enterDungeon(TerrainGeneration::OverworldObject* dungeon);
             void setCameraPosition(Vector2 playerPosition);
             bool collidesWithDungeon(Vector2 position, Vector2 size);
             bool collidesWithDungeon(Vector2 position, Vector2 size, bool checkPlatforms);
+            void enterDoor(DungeonDoor* door);
+            void exitDungeon();
 
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
 

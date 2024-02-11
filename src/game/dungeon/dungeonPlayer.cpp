@@ -36,6 +36,7 @@ void DungeonPlayer::readPlayerInput(){
     buttonRight = IsKeyDown(KEY_D);
     buttonJumpPressed = IsKeyPressed(KEY_SPACE);
     buttonJump = IsKeyDown(KEY_SPACE);
+    buttonUpPressed = IsKeyPressed(KEY_W);
     
 
     // no button or both buttons pressed
@@ -120,6 +121,16 @@ void DungeonPlayer::tryWallClimbJump(){
 
 
 void DungeonPlayer::updateMovementValues(){
+    updateGravity();    
+    updateWallClimbing();
+    updateDoorInteraction();
+
+    // decay additional speed
+    additionalHorizontalVelocity = Utils::gravitateValue(additionalHorizontalVelocity, 0.0f, ADDITIONAL_VELOCITY_DECAY_SPEED);
+}
+
+
+void DungeonPlayer::updateGravity(){
     isAirborne = !Dungeon::get()->advancedDungeonCollisions({position.x, position.y + SIZE.y + 1.0f}, {SIZE.x, 1.0f}, position, platformPtr);
 
     if (isAirborne || (platformPtr != nullptr && velocity.y < -0.1f)){
@@ -139,6 +150,14 @@ void DungeonPlayer::updateMovementValues(){
     jumpHeightBuffer -= jumpHeightBuffer > 0;
 
 
+    // jump buffer
+    if (buttonJumpPressed){
+        jumpBuffer = JUMP_BUFFER_LENGTH;
+    }
+    jumpBuffer -= jumpBuffer > 0;
+}
+
+void DungeonPlayer::updateWallClimbing(){
     // wall climbing
     // rules
     // has to be air borne
@@ -149,13 +168,27 @@ void DungeonPlayer::updateMovementValues(){
         && Dungeon::get()->collidesWithDungeon({position.x  - 1.0f, position.y}, {SIZE.x + 2.0f, SIZE.y}, false) 
         && (buttonLeft != buttonRight) 
         && velocity.y > 0.0f;
-    
+}
 
-    // jump buffer
-    if (buttonJumpPressed){
-        jumpBuffer = JUMP_BUFFER_LENGTH;
+void DungeonPlayer::updateDoorInteraction(){
+    if (nearbyDoor == nullptr || isAirborne){
+        return;
     }
-    jumpBuffer -= jumpBuffer > 0;
 
-    additionalHorizontalVelocity = Utils::gravitateValue(additionalHorizontalVelocity, 0.0f, ADDITIONAL_VELOCITY_DECAY_SPEED);
+    // display interaction prompt
+    Drawing::get()->drawText("press w", {position.x, position.y - 32.0f}, 1, WHITE);
+
+    if (buttonUpPressed){
+        Dungeon::get()->enterDoor(nearbyDoor);
+    }
+}
+
+
+// --== getters and setters ==--
+Vector2& DungeonPlayer::getPosition(){
+    return position;
+}
+
+void DungeonPlayer::setNearbyDoor(DungeonDoor* door){
+    this->nearbyDoor = door;
 }

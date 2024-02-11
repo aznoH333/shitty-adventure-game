@@ -56,7 +56,7 @@ const int TILES_PER_PATTERN = 14;
         // full wall
         {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {0,0, false, true, 0, 0},
+            {0,0, false, true, 1, 2},
             {NONE, 0},
         },
 
@@ -128,6 +128,21 @@ const int TILES_PER_PATTERN = 14;
             {2,6, false, false, 3, 7},
             {GENERIC, 8},
         },
+
+        // reward room step
+        {
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+            {1,11, false, false, 3, 7},
+            {GENERIC, 3},
+        },
+
+        // reward room step 2
+        {
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+            {1,10, false, false, 3, 7},
+            {GENERIC, 4},
+        },
+
 
     };
 

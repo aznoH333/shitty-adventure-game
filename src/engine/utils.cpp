@@ -1,7 +1,6 @@
 
 #include "engine/utils.h"
 
-
 namespace Utils {
 
     std::vector<std::string> getFilesInFolder(std::filesystem::path path){
