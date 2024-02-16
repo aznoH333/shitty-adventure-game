@@ -81,7 +81,7 @@ namespace UICode{
 
                 // glyphs
                 if (c == '('){
-                    output.textData[output.length++] = input[++iter] - 'a' + 26;
+                    output.textData[output.length++] = input[++iter] - 'a' + 27;
                     iter++;
                 
                 
@@ -89,7 +89,7 @@ namespace UICode{
                 
                 // numbers
                 }else if (c >= '0' && c <= '9'){
-                    output.textData[output.length++] = c - '0' + 38;
+                    output.textData[output.length++] = c - '0' + 39;
                 }
                 
                 
@@ -101,22 +101,22 @@ namespace UICode{
                             output.textData[output.length++] = 0;
                             break;
                         case '.':
-                            output.textData[output.length++] = 48;
-                            break;
-                        case ':':
                             output.textData[output.length++] = 49;
                             break;
-                        case '!':
+                        case ':':
                             output.textData[output.length++] = 50;
                             break;
-                        case '?':
+                        case '!':
                             output.textData[output.length++] = 51;
                             break;
-                        case '[':
+                        case '?':
                             output.textData[output.length++] = 52;
                             break;
-                        case ']':
+                        case '[':
                             output.textData[output.length++] = 53;
+                            break;
+                        case ']':
+                            output.textData[output.length++] = 54;
                     }
                 }
                 

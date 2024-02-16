@@ -45,7 +45,7 @@ void Overworld::update(){
         terrain->update();
         player->update();
     }else {
-        Drawing::get()->drawText("Loading world", {0, 0}, 0.7f, WHITE);
+        UICode::Text::renderGameText("loading world ...", {0, 0}, WHITE, 1.0f);
     }
     // debug draw main chunk
     /*
