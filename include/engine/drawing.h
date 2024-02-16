@@ -50,9 +50,12 @@ class Drawing{
 
         std::map<std::string, Texture2D> textures;
         std::map<int, std::queue<RenderData>> renderQueue;
+        std::queue<RenderData> staticQueue;
         std::queue<TextRenderData> textQueue;
         RenderTexture2D targetTexture;
         Camera2D camera;
+        Camera2D staticCamera;
+
         int renderLayerCount;
 
         const int gameScreenWidth = 1280;
@@ -72,6 +75,7 @@ class Drawing{
         void render();
         Camera2D& getCamera();
         void drawTexture(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color, int layer);
+        void drawTextureStatic(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color);
         void drawText(std::string text, Vector2 pos, float scale, Color color);
 
 

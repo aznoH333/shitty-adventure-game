@@ -18,6 +18,8 @@ int main() {
     State::get()->switchState(STATE_OVERWORLD);
 
 
+
+
     SetTargetFPS(60);
     while (!w.ShouldClose() && !State::get()->shouldQuit())
     {
@@ -27,8 +29,6 @@ int main() {
         Drawing::get()->render();
         State::get()->stateUpdate();
         
-
-
 
         
     }

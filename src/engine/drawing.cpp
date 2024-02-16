@@ -19,6 +19,8 @@ void Drawing::init(std::string assetsFolder, int renderLayerCount, int screenWid
     Drawing::instance->loadAllTexturesFromDirectory(std::filesystem::path{assetsFolder + "sprites/"});
 
     Drawing::instance->camera = Camera2D{{((float)screenWidth) / 2.0f - 32.0f, ((float) screenHeight) / 2.0f - 32.0f}, {0,0}, 0, DEFAULT_CAMERA_ZOOM};
+    Drawing::instance->staticCamera = Camera2D{{0.0f,0.0f}, {0,0}, 0, DEFAULT_CAMERA_ZOOM};
+    
     Drawing::instance->renderLayerCount = renderLayerCount;
     
     for (int i = 0; i < renderLayerCount; i++){
@@ -93,15 +95,6 @@ void renderLayer(std::queue<RenderData>& layer){
 }
 
 
-void Drawing::drawTexture(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color, int layer){
-    renderQueue[layer].push(RenderData{&textures.at(sprite), pos, scale, color, rotation, flipSprite});
-}
-
-
-void Drawing::drawText(std::string text, Vector2 pos, float scale, Color color){
-    textQueue.push({text, pos, (int)(DEFAULT_FONT_SIZE * scale), color});
-}
-
 void Drawing::render(){
 
      // draw to texture
@@ -119,6 +112,11 @@ void Drawing::render(){
         }
 
         EndMode2D();
+        // render statics
+        BeginMode2D(staticCamera);
+            renderLayer(staticQueue);
+        EndMode2D();
+
     EndTextureMode();
 
     // draw texture
@@ -130,6 +128,21 @@ void Drawing::render(){
 
 
 }
+
+// --== Drawing functions
+void Drawing::drawTexture(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color, int layer){
+    renderQueue[layer].push(RenderData{&textures.at(sprite), pos, scale, color, rotation, flipSprite});
+}
+
+
+void Drawing::drawText(std::string text, Vector2 pos, float scale, Color color){
+    textQueue.push({text, pos, (int)(DEFAULT_FONT_SIZE * scale), color});
+}
+
+void Drawing::drawTextureStatic(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color){
+    staticQueue.push(RenderData{&textures.at(sprite), pos, scale, color, rotation, flipSprite});
+}
+
 
 // --== Misc functions ==--
 Camera2D& Drawing::getCamera(){
