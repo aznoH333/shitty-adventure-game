@@ -25,9 +25,9 @@ void OverworldPlayer::update(){
 
     // display key prompt
     if (isDungeonNearby){
-        Drawing::get()->drawText("Press space to enter", overworldPosToVec(nearbyDungeon->position), 0.4, WHITE);
+        UICode::Boxes::displayPrompt("press e to enter");
 
-        if (IsKeyDown(KEY_SPACE)){
+        if (IsKeyDown(KEY_E)){
             DungeonCode::Dungeon::get()->enterDungeon(nearbyDungeon);
         }
     }

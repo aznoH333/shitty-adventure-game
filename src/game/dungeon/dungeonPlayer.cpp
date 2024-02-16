@@ -36,7 +36,7 @@ void DungeonPlayer::readPlayerInput(){
     buttonRight = IsKeyDown(KEY_D);
     buttonJumpPressed = IsKeyPressed(KEY_SPACE);
     buttonJump = IsKeyDown(KEY_SPACE);
-    buttonUpPressed = IsKeyPressed(KEY_W);
+    buttonInteractPressed = IsKeyPressed(KEY_E);
     
 
     // no button or both buttons pressed
@@ -176,9 +176,9 @@ void DungeonPlayer::updateDoorInteraction(){
     }
 
     // display interaction prompt
-    Drawing::get()->drawText("press w", {position.x, position.y - 32.0f}, 1, WHITE);
+    UICode::Boxes::displayPrompt("press e to enter");
 
-    if (buttonUpPressed){
+    if (buttonInteractPressed){
         Dungeon::get()->enterDoor(nearbyDoor);
     }
 }

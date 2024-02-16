@@ -10,6 +10,7 @@
 #include "engine/drawing.h"
 #include "dungeonTileLookup.h"
 #include "raylib.h"
+#include "game/ui/ui.h"
 
 namespace DungeonCode {
 
@@ -107,7 +108,7 @@ namespace DungeonCode {
             bool buttonRight = false;
             bool buttonJump = false;
             bool buttonJumpPressed = false;
-            bool buttonUpPressed = false;
+            bool buttonInteractPressed = false;
 
 
             // movement vars

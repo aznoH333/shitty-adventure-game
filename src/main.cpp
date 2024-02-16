@@ -29,7 +29,6 @@ int main() {
         Drawing::get()->render();
         State::get()->stateUpdate();
         
-
         
     }
     

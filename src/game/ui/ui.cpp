@@ -45,6 +45,7 @@ namespace UICode{
 
     void updateUi(){
         UICode::Hud::updateHud();
+        UICode::Boxes::updateTextBoxes();
         if (IsKeyPressed(KEY_U)){
             UICode::Hud::setHudVisibility(a);
             a = !a;
@@ -151,6 +152,85 @@ namespace UICode{
         }
     }
 
+
+    namespace Boxes {
+        Prompt currentPrompt = {};
+        
+        void drawBox(Vector2 position, int width, int height, Color color){
+            int boxWidth = width / BOX_SCALE;
+            int boxHeight = height / BOX_SCALE;
+
+            Drawing* d = Drawing::get();
+
+            for (int x = 0; x < boxWidth; x++){
+                for (int y = 0; y < boxHeight; y++){
+                    
+                    Vector2 drawPosition = {
+                        position.x + (x * BOX_SCALE),
+                        position.y + (y * BOX_SCALE)
+                    };
+
+                    // get correct sprite
+                    int cornerSpriteIndex = 1;
+                    
+                    if (
+                        (x == 0 || x == boxWidth - 1) && 
+                        (y == 0 || y == boxHeight - 1)
+                    ){
+                        // hardcoded mess
+                        cornerSpriteIndex += (y == 0) * 2;
+                        cornerSpriteIndex += (x != 0);
+
+                    }else {
+                        cornerSpriteIndex = 5;
+                    }
+
+                    std::string sprite = "test_ui_box_" + std::to_string(cornerSpriteIndex);
+
+
+                    d->drawTextureStatic(sprite, drawPosition, false, 1.0f, 0.0f, color);
+
+                }
+            }
+        }
+
+
+        void displayPrompt(std::string text){
+            currentPrompt.isActive = true;
+            currentPrompt.isVisible = true;
+            currentPrompt.text = text;
+
+        }
+
+
+        void displayDismissPrompt(std::string text){
+
+
+        }
+
+        void updateTextBoxes(){
+            if (!currentPrompt.isVisible){
+                return;
+            }
+            // fade
+            currentPrompt.fadePercentage = Utils::gravitateValue(currentPrompt.fadePercentage, (float)currentPrompt.isActive, FADE_SPEED);
+            currentPrompt.isVisible = currentPrompt.fadePercentage > 0.05f;
+            // calculate color
+            Color boxColor = {255, 255, 255, 255};
+            boxColor.a = (unsigned char)(currentPrompt.fadePercentage * 255);
+
+            Color textColor = boxColor;
+            boxColor.a /= 1.2f;
+
+            // draw prompt
+            drawBox({DEFAULT_PROMPT_X, DEFAULT_PROMPT_Y}, DEFAULT_PROMPT_WIDTH, DEFAULT_PROMPT_HEIGHT, boxColor);
+            UICode::Text::renderGameText(currentPrompt.text, DEFAULT_TEXT_POSITION, textColor, 0.7f);
+
+            
+
+            currentPrompt.isActive = false;
+        }
+    }
 
 
 }
