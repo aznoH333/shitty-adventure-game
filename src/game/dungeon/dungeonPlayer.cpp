@@ -5,7 +5,7 @@ using namespace DungeonCode;
 
 
 DungeonPlayer::DungeonPlayer(Vector2 position){
-    this->position = position;
+    this->position = {position.x, position.y + (16.0f - SIZE.y)};
     // couldn't figure out why
     // but the player has to start a pixel heigher othervise he is stuck in the floor
     // got introduced with wall climbing
@@ -23,20 +23,42 @@ void DungeonPlayer::update(){
     tryMove();
     updateMovementValues();
     
+    updateGun();
+    drawGun();
 
     Dungeon::get()->setCameraPosition(position);
-    Drawing::get()->drawTexture("dungeon_test_2", position, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
+    drawSprite();
+}
+
+
+void DungeonPlayer::drawSprite(){
+    std::string sprite;
+    
+    if (isAirborne){
+        if (canWallClimb){
+            sprite = "player_dungeon_wall_jump";
+        }else {
+            sprite = "player_dungeon_jump";
+        }
+    }else if (std::abs(velocity.x) > 0.5f){
+        sprite = "player_dungeon_walk_" + std::to_string(Utils::animationTimer(1, 3, 10));
+    }else {
+        sprite = "player_dungeon";
+    }
+    
+    
+    Drawing::get()->drawTexture(sprite, position, flipSprite, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
 }
 
 
 // --== Movement ==--
-
 void DungeonPlayer::readPlayerInput(){
     buttonLeft = IsKeyDown(KEY_A);
     buttonRight = IsKeyDown(KEY_D);
     buttonJumpPressed = IsKeyPressed(KEY_SPACE);
     buttonJump = IsKeyDown(KEY_SPACE);
     buttonInteractPressed = IsKeyPressed(KEY_E);
+    buttonFirePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
     
 
     // no button or both buttons pressed
@@ -53,7 +75,6 @@ void DungeonPlayer::readPlayerInput(){
     }else if (buttonRight){
         
         walkVal = Utils::gravitateValue(walkVal, 1.0f, WALK_ACCELERATION);
-
 
     }
 
@@ -192,3 +213,61 @@ Vector2& DungeonPlayer::getPosition(){
 void DungeonPlayer::setNearbyDoor(DungeonDoor* door){
     this->nearbyDoor = door;
 }
+
+
+
+// --== gun ==--
+void DungeonPlayer::updateGun(){
+    
+    
+    // drawing and visuals
+    {
+        gunState.position = {position.x + (flipSprite ? GUN_OFFSET_X_1 : GUN_OFFSET_X_2), position.y + GUN_OFFSET_Y};
+        Vector2 mousePosition = Drawing::get()->getInworldMousePosition();
+        
+
+        float reloadPercentage = ((float) (TEMPORARY_RELOAD_TIME - gunState.reloadTimer) / TEMPORARY_RELOAD_TIME);
+        float flipRotation = flipSprite * 2.0f - 1.0f;
+        float reloadOffset = reloadPercentage * 360.0f * flipRotation;
+        float recoilOffset = ((float) (RECOIL_TIME - (RECOIL_TIME - gunState.recoilTimer)) / RECOIL_TIME) * RECOIL_OFFSET * flipRotation;
+        gunState.direction = std::atan2(gunState.position.y - mousePosition.y, gunState.position.x - mousePosition.x) * RAD2DEG - 180 + reloadOffset + recoilOffset;
+        flipSprite = position.x > mousePosition.x;
+
+
+        // spawn shotgun shell
+        if (gunState.shouldSpawnShell == true && reloadPercentage > 0.25f){
+            // TODO
+            gunState.shouldSpawnShell = false;
+            Dungeon::get()->addGiblet(
+                {"bullet_2", 
+                gunState.position, 
+                {SHELL_EJECT_VELOCITY.x * flipRotation, SHELL_EJECT_VELOCITY.y}, 
+                Utils::getRandomFloat() * SHELL_ROTATION_SPEED, 
+                0.0f, 
+                0});
+        }
+    }
+    
+
+
+    // shooting logic
+    {
+        gunState.recoilTimer -= gunState.recoilTimer > 0;
+        gunState.reloadTimer -= gunState.recoilTimer == 0 && gunState.reloadTimer > 0;
+        if (buttonFirePressed && gunState.reloadTimer == 0){
+            // shoot
+            gunState.reloadTimer = TEMPORARY_RELOAD_TIME;
+            gunState.recoilTimer = RECOIL_TIME;
+            gunState.shouldSpawnShell = true;
+        }
+    }
+
+
+}
+
+
+void DungeonPlayer::drawGun(){
+    Drawing::get()->drawTexture("gun", gunState.position, flipSprite * 2, 1.0f, gunState.direction, WHITE, DrawingLayers::LAYER_PLAYER);
+
+}
+

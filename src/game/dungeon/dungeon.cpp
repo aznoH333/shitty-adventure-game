@@ -37,6 +37,7 @@ namespace DungeonCode {
         updatePlatforms(section);
         updateEnemies(section);
         updateDoors(section);
+        updateGiblets();
         player->update();
 
     }
@@ -112,6 +113,7 @@ namespace DungeonCode {
         }
 
         removeAllPlatforms();
+        clearAllGiblets();
     }
 
     void Dungeon::loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position){
@@ -655,11 +657,40 @@ namespace DungeonCode {
         delete player;
 
         removeAllPlatforms();
+        clearAllGiblets();
         currentLoadedLevel.currentSection = door->target;
         Vector2 position = door->useDefaultEntry ? currentLoadedLevel.sections[currentLoadedLevel.currentSection].defaultEntry : door->exitLocation;
         player = new DungeonPlayer(position);
 
 
     }
+
+
+    // --== giblets ==--
+    void Dungeon::addGiblet(Giblet giblet){
+        giblets.push_back(giblet);
+    }
+
+    void Dungeon::updateGiblets(){
+        
+        Drawing* d = Drawing::get();
+        
+        giblets.remove_if([this, d](Giblet& g){
+            g.position.x += g.velocity.x;
+            g.position.y += g.velocity.y;
+            g.velocity.y += GIBLET_GRAVITY;
+            g.rotation += g.rotationSpeed;
+
+
+            d->drawTexture(g.sprite, g.position, 0, 1.0f, g.rotation, WHITE, DrawingLayers::LAYER_UI);
+
+
+            return g.position.y > TILES_PER_PATTERN * DUNGEON_TILE_SIZE;
+        });
+    }
+    void Dungeon::clearAllGiblets(){
+        giblets.clear();
+    }
+
 
 }

@@ -73,13 +73,22 @@ void renderTexture(RenderData& data){
     Vector2 origin = {0,0};
         
     Vector2 pos = data.pos;
+
+    bool flipHorizontaly = (data.flipSprite == 1 || data.flipSprite == 3);
+    bool flipVerticaly = (data.flipSprite == 2 || data.flipSprite == 3);
+
+    Rectangle source = {
+        flipHorizontaly ? (float)data.texture->width : 0,
+        flipVerticaly ? (float)data.texture->height : 0, 
+        flipHorizontaly ? -(float)data.texture->width : (float)data.texture->width, 
+        flipVerticaly ? -(float)data.texture->height : (float)data.texture->height
+    };
         
         
     DrawTexturePro(*data.texture, 
-        {(float) data.texture->width * data.flipSprite, 0,
-        (float) data.texture->width * (!data.flipSprite * 2 - 1), (float) data.texture->height}, 
+        source, 
         {pos.x, pos.y , calculatedWidth.x, calculatedWidth.y},
-        {0,0}, data.rotation, data.color);
+        {0.0f,0.0f + (data.texture->height * flipVerticaly)}, data.rotation, data.color);
 }
 
 void Drawing::renderText(TextRenderData& text){
@@ -130,7 +139,7 @@ void Drawing::render(){
 }
 
 // --== Drawing functions
-void Drawing::drawTexture(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color, int layer){
+void Drawing::drawTexture(std::string sprite, Vector2 pos, int flipSprite, float scale, float rotation, Color color, int layer){
     renderQueue[layer].push(RenderData{&textures.at(sprite), pos, scale, color, rotation, flipSprite});
 }
 
@@ -147,4 +156,8 @@ void Drawing::drawTextureStatic(std::string sprite, Vector2 pos, bool flipSprite
 // --== Misc functions ==--
 Camera2D& Drawing::getCamera(){
     return camera;
+}
+
+Vector2 Drawing::getInworldMousePosition(){
+    return GetScreenToWorld2D(GetMousePosition(), camera);
 }

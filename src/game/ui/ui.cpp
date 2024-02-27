@@ -142,7 +142,7 @@ namespace UICode{
                 char c = convertedText.textData[i];
 
                 if (c != 0){
-                    std::string name = "test_font_" + std::to_string(c);
+                    std::string name = "font_" + std::to_string(c);
                     Vector2 pos = {position.x + i * (CHARACTER_WIDTH * size), position.y};
                     
                     Drawing::get()->drawTextureStatic(name , pos, false, size, 0, color);

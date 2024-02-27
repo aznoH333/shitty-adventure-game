@@ -88,19 +88,30 @@ namespace DungeonCode {
         int lastId;
     };
 
+    
+
 
     class DungeonPlayer{
 
         private:
+            struct GunState {
+                float direction = 0;
+                int reloadTimer = 0;
+                int recoilTimer = 0;
+                bool shouldSpawnShell = false;
+                Vector2 position;
+            };
+            
             Vector2 position;
             Vector2 velocity = {0,0};
-            const Vector2 SIZE = {16.0f, 16.0f};
+            const Vector2 SIZE = {16.0f, 25.0f};
 
-            const float GRAVITY = 0.2f;
+            const float GRAVITY = 0.3f;
             const float JUMP_FORCE = 3.0f;
             const float WALK_ACCELERATION = 0.1f;
             const float WALK_SPEED = 2.0f;
             const int JUMP_HEIGHT_BUFFER_LENGTH = 10;
+            bool flipSprite = false;
 
             
             // input vars
@@ -109,7 +120,7 @@ namespace DungeonCode {
             bool buttonJump = false;
             bool buttonJumpPressed = false;
             bool buttonInteractPressed = false;
-
+            bool buttonFirePressed = false;
 
             // movement vars
             const float ADDITIONAL_VELOCITY_DECAY_SPEED = 0.3f;
@@ -126,6 +137,18 @@ namespace DungeonCode {
             const float WALL_CLIMB_DECAY = 0.15f;
             bool canWallClimb = false;
             int wallClimbCounter = 0;
+
+            // gun
+            GunState gunState = {};
+            const float GUN_OFFSET_Y = 10.0f;
+            const float GUN_OFFSET_X_1 = 4.0f;
+            const float GUN_OFFSET_X_2 = 12.0f;
+            const int TEMPORARY_RELOAD_TIME = 15;
+            const int RECOIL_TIME = 15;
+            const float RECOIL_OFFSET = 35.5f;
+            const Vector2 SHELL_EJECT_VELOCITY = {4.5f, -4.0f};
+            const float SHELL_ROTATION_SPEED = 4.0f;
+
 
             // platform stuff
             DungeonPlatform* platformPtr = nullptr;
@@ -145,6 +168,9 @@ namespace DungeonCode {
             void updateGravity();
             void updateWallClimbing();
             void updateDoorInteraction();
+            void drawSprite();
+            void updateGun();
+            void drawGun();
 
         public:
             DungeonPlayer(Vector2 position);
@@ -154,6 +180,15 @@ namespace DungeonCode {
     };
 
     const int DUNGEON_TILE_SIZE = 16;
+
+    struct Giblet{
+        std::string sprite;
+        Vector2 position;
+        Vector2 velocity;
+        float rotationSpeed;
+        float rotation;
+        int gibletType;
+    };
 
     class Dungeon{
 
@@ -178,6 +213,10 @@ namespace DungeonCode {
             // platforms
             std::list<DungeonPlatform> platforms;
 
+            // giblets
+            std::list<Giblet> giblets;
+            const float GIBLET_GRAVITY = 0.3f;
+
             const float WATERFALL_PLATFORM_SPEED = 0.6f;
             const float PLATFORM_ACCELERATION = 0.1f;
             const float MAX_PLATFORM_SPEED = 4.5f;
@@ -187,19 +226,13 @@ namespace DungeonCode {
             const float WATERFALL_PLATFORM_SPAWN_HEIGHT = 0.0f;
             const float NEARBY_DOOR_DISTANCE = 32.0f;
             
-
-
-            // enemies
-
-
-
             // generation values
             const int MIN_MAIN_SECTION_LENGTH = 200;
             const int MAX_MAIN_SECTION_LENGTH = 400;
             const int MIN_SECTION_LENGTH = 100;
             const int MAX_SECTION_LENGTH = 200;
             const int DUNGEON_PADDING = 10;
-            const int MIN_TILE_GAP = 2;
+            const int MIN_TILE_GAP = 4;
             const int TEMPORARY_MAX_JUMP_HEIGHT = 5;
             const int TEMPORARY_MAX_JUMP_HEIGHT_AFTER_GAP = 2;
             const int REWARD_ROOM_SIZE = 25;
@@ -250,7 +283,9 @@ namespace DungeonCode {
             bool collidesWithPlatform(Vector2& position, Vector2& size);
             bool collidesWithPlatformAdvanced(Vector2& position, Vector2& size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
 
-
+            // giblets
+            void updateGiblets();
+            void clearAllGiblets();
 
         public:
             Dungeon();
@@ -264,6 +299,7 @@ namespace DungeonCode {
             bool collidesWithDungeon(Vector2 position, Vector2 size, bool checkPlatforms);
             void enterDoor(DungeonDoor* door);
             void exitDungeon();
+            void addGiblet(Giblet giblet);
 
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
 

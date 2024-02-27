@@ -13,7 +13,7 @@ const int TILES_PER_PATTERN = 14;
 
     const DungeonTile dungeonTileLookup[] = {
         {"", false}, // air
-        {"dungeon_test_1", true}, // default bricks
+        {"dungeon_tiles_2", true}, // default bricks
     };
 
 

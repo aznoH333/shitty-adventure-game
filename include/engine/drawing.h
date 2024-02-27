@@ -16,7 +16,7 @@ struct RenderData{
     float scale;
     Color color;
     float rotation;
-    bool flipSprite;
+    int flipSprite;
 };
 
 struct TextRenderData{
@@ -32,6 +32,7 @@ enum DrawingLayers{
     LAYER_OBJECT,
     LAYER_ENEMY,
     LAYER_PLAYER,
+    LAYER_EFFECTS,
     LAYER_UI,
 
 };
@@ -72,9 +73,10 @@ class Drawing{
         static Drawing* get();
         static void init(std::string assetsFolder, int renderLayerCount, int screenWidth, int screenHeight);
         void dispose();
+        Vector2 getInworldMousePosition();
         void render();
         Camera2D& getCamera();
-        void drawTexture(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color, int layer);
+        void drawTexture(std::string sprite, Vector2 pos, int flipSprite, float scale, float rotation, Color color, int layer);
         void drawTextureStatic(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color);
         void drawText(std::string text, Vector2 pos, float scale, Color color);
 
