@@ -149,6 +149,11 @@ namespace DungeonCode {
             const Vector2 SHELL_EJECT_VELOCITY = {4.5f, -4.0f};
             const float SHELL_ROTATION_SPEED = 4.0f;
 
+            const int TEMPORARY_PROJECTILE_COUNT = 4;
+            const float TEMPORARY_PROJECTILE_SPREAD = 5.0f;
+            const float TEMPORARY_BULLET_SPEED = 6.0f;
+            const float BULLET_SPAWN_OFFSET = 16.0f;
+
 
             // platform stuff
             DungeonPlatform* platformPtr = nullptr;
@@ -190,6 +195,15 @@ namespace DungeonCode {
         int gibletType;
     };
 
+    struct Projectile{
+        std::string sprite;
+        Vector2 position;
+        Vector2 velocity;
+        float rotation;
+        int extraUpdates = 1;
+        bool alliedWithPlayer;
+    };
+
     class Dungeon{
 
         private:
@@ -216,6 +230,10 @@ namespace DungeonCode {
             // giblets
             std::list<Giblet> giblets;
             const float GIBLET_GRAVITY = 0.3f;
+
+
+            // projectiles
+            std::list<Projectile> projectiles;
 
             const float WATERFALL_PLATFORM_SPEED = 0.6f;
             const float PLATFORM_ACCELERATION = 0.1f;
@@ -259,7 +277,9 @@ namespace DungeonCode {
             void generateRewardSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation);
             void generateGeneric(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation, bool isMain);
 
-            
+            void clearTemporaryObjects();
+
+
             // entities
             void spawnEntity(Vector2 position, EntitySpawnType spawnType, DungeonSection& section, Level& level, int doorTarget, Vector2 returnLocation, bool useDefaultEntry);
             EntitySpawnType getNextSpawnType(SpawnType type);
@@ -287,6 +307,10 @@ namespace DungeonCode {
             void updateGiblets();
             void clearAllGiblets();
 
+            // projectiles
+            void updateProjectiles();
+            void clearAllProjectiles();
+
         public:
             Dungeon();
             static Dungeon* get();
@@ -300,6 +324,8 @@ namespace DungeonCode {
             void enterDoor(DungeonDoor* door);
             void exitDungeon();
             void addGiblet(Giblet giblet);
+            void addProjectile(Projectile giblet);
+
 
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
 

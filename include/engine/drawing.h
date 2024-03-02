@@ -30,6 +30,7 @@ struct TextRenderData{
 enum DrawingLayers{
     LAYER_WORLD = 0,
     LAYER_OBJECT,
+    LAYER_PROJECTILES,
     LAYER_ENEMY,
     LAYER_PLAYER,
     LAYER_EFFECTS,

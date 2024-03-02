@@ -1,5 +1,4 @@
 #include "game/dungeon/dungeon.h"
-#include <iostream>
 
 using namespace DungeonCode;
 
@@ -242,7 +241,7 @@ void DungeonPlayer::updateGun(){
                 {"bullet_2", 
                 gunState.position, 
                 {SHELL_EJECT_VELOCITY.x * flipRotation, SHELL_EJECT_VELOCITY.y}, 
-                Utils::getRandomFloat() * SHELL_ROTATION_SPEED, 
+                Utils::getRandomFloat(-SHELL_ROTATION_SPEED, SHELL_ROTATION_SPEED), 
                 0.0f, 
                 0});
         }
@@ -252,14 +251,33 @@ void DungeonPlayer::updateGun(){
 
     // shooting logic
     {
-        gunState.recoilTimer -= gunState.recoilTimer > 0;
-        gunState.reloadTimer -= gunState.recoilTimer == 0 && gunState.reloadTimer > 0;
         if (buttonFirePressed && gunState.reloadTimer == 0){
             // shoot
+            Dungeon* d = Dungeon::get();
+            Vector2 bulletOrigin = gunState.position;
+            bulletOrigin.x += std::cos(gunState.direction * DEG2RAD) * BULLET_SPAWN_OFFSET;
+            bulletOrigin.y += std::sin(gunState.direction * DEG2RAD) * BULLET_SPAWN_OFFSET;
+
+
+            for (int i = 0; i < TEMPORARY_PROJECTILE_COUNT; i++){
+                Projectile p;
+                p.position = bulletOrigin;
+                p.rotation = gunState.direction + Utils::getRandomFloat(-TEMPORARY_PROJECTILE_SPREAD, TEMPORARY_PROJECTILE_SPREAD);
+                p.velocity.x = std::cos(p.rotation * DEG2RAD) * TEMPORARY_BULLET_SPEED;
+                p.velocity.y = std::sin(p.rotation * DEG2RAD) * TEMPORARY_BULLET_SPEED;
+                p.sprite = "bullet_1";
+                p.alliedWithPlayer = true;
+                p.extraUpdates = 3;
+                d->addProjectile(p);
+            }
+
+
             gunState.reloadTimer = TEMPORARY_RELOAD_TIME;
             gunState.recoilTimer = RECOIL_TIME;
             gunState.shouldSpawnShell = true;
         }
+        gunState.recoilTimer -= gunState.recoilTimer > 0;
+        gunState.reloadTimer -= gunState.recoilTimer == 0 && gunState.reloadTimer > 0;
     }
 
 

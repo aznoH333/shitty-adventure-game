@@ -38,8 +38,14 @@ namespace DungeonCode {
         updateEnemies(section);
         updateDoors(section);
         updateGiblets();
+        updateProjectiles();
         player->update();
 
+    }
+
+    void Dungeon::clearTemporaryObjects(){
+        removeAllPlatforms();
+        clearAllGiblets();
     }
 
 
@@ -112,8 +118,7 @@ namespace DungeonCode {
             player = nullptr;
         }
 
-        removeAllPlatforms();
-        clearAllGiblets();
+        clearTemporaryObjects();
     }
 
     void Dungeon::loadDungeon(int dungeonId, TerrainGeneration::OverworldPosition position){
@@ -656,8 +661,7 @@ namespace DungeonCode {
         }
         delete player;
 
-        removeAllPlatforms();
-        clearAllGiblets();
+        clearTemporaryObjects();
         currentLoadedLevel.currentSection = door->target;
         Vector2 position = door->useDefaultEntry ? currentLoadedLevel.sections[currentLoadedLevel.currentSection].defaultEntry : door->exitLocation;
         player = new DungeonPlayer(position);
@@ -690,6 +694,37 @@ namespace DungeonCode {
     }
     void Dungeon::clearAllGiblets(){
         giblets.clear();
+    }
+
+
+    // --== projectiles ==--
+    void Dungeon::addProjectile(Projectile projectile){
+        projectiles.push_back(projectile);
+    }
+
+    void Dungeon::updateProjectiles(){
+        
+        Drawing* d = Drawing::get();
+        
+        projectiles.remove_if([this, d](Projectile& p){
+            
+            for (int i = 0; i < p.extraUpdates; i++){
+                p.position.x += p.velocity.x;
+                p.position.y += p.velocity.y;
+                if (collidesWithDungeon(p.position, {8.0f, 8.0f}, false)){
+                    return true;
+                }
+                d->drawTexture(p.sprite, p.position, 0, 1.0f, p.rotation, WHITE, DrawingLayers::LAYER_PROJECTILES);
+
+            }
+            
+            
+
+            return false;
+        });
+    }
+    void Dungeon::clearAllProjectiles(){
+        projectiles.clear();
     }
 
 
