@@ -1,10 +1,11 @@
 #include "engine/sound.h"
 
 namespace Audio {
+    SoundManager* instance = 0;
+
     void SoundManager::loadSound(std::string path){
         std::string name = path.substr(path.find_last_of("/")+1);
         name = name.substr(0, name.find_last_of("."));   
-
         loadedSounds[name] = LoadSound(path.c_str());
     }
 
@@ -18,8 +19,16 @@ namespace Audio {
         PlaySound(loadedSounds[name]);
     }
 
+    void SoundManager::loadAllSounds(std::string soundsPath){
+        std::vector<std::string> sounds = Utils::getFilesInFolder(soundsPath);
+        for (std::string& s : sounds){
+            loadSound(s);
+        }
+    }
+
+
     void SoundManager::playSound(std::string name, float volume){
-        playSound(name, volume, 1 + getRandomFloat(-maxPitchRandomization, maxPitchRandomization), GAME);
+        playSound(name, volume, 1 + Utils::getRandomFloat(-maxPitchRandomization, maxPitchRandomization), GAME);
     }
 
     void SoundManager::setPitchRandomization(int number){
@@ -27,8 +36,10 @@ namespace Audio {
     }
 
     SoundManager::SoundManager(){
-        
+        InitAudioDevice();
     }
+
+    
 
     SoundManager::~SoundManager(){
         // unload sounds
@@ -37,5 +48,15 @@ namespace Audio {
         }
 
         CloseAudioDevice();
+    }
+
+
+    SoundManager* get(){
+        if (!instance) instance = new SoundManager;
+        return instance;
+    }
+
+    void dispose(){
+        delete instance;
     }
 }

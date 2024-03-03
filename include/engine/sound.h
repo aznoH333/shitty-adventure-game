@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "raylib.h"
+#include "engine/utils.h"
 
 
 namespace Audio{
@@ -14,7 +15,6 @@ namespace Audio{
         MUSIC,
         INTERFACE,
     };
-
 
     class SoundManager{
         private:
@@ -27,9 +27,10 @@ namespace Audio{
                 {INTERFACE, 0.5},
             };
 
+            void loadSound(std::string path);
 
         public:
-            void loadSound(std::string path);
+            void loadAllSounds(std::string soundsPath);
             void playSound(std::string name);
             void playSound(std::string name, float volume);
             void playSound(std::string name, float volume, float pitch ,SoundChannel channel);
@@ -37,6 +38,10 @@ namespace Audio{
             SoundManager();
             ~SoundManager();
     };
+    SoundManager* get();
+    void dispose();
+
+
 }
 
 #endif

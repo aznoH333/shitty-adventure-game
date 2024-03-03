@@ -11,6 +11,7 @@
 #include "dungeonTileLookup.h"
 #include "raylib.h"
 #include "game/ui/ui.h"
+#include "engine/sound.h"
 
 namespace DungeonCode {
 

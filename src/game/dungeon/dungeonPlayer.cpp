@@ -235,7 +235,7 @@ void DungeonPlayer::updateGun(){
 
         // spawn shotgun shell
         if (gunState.shouldSpawnShell == true && reloadPercentage > 0.25f){
-            // TODO
+            Audio::get()->playSound("gunReload");
             gunState.shouldSpawnShell = false;
             Dungeon::get()->addGiblet(
                 {"bullet_2", 
@@ -257,6 +257,8 @@ void DungeonPlayer::updateGun(){
             Vector2 bulletOrigin = gunState.position;
             bulletOrigin.x += std::cos(gunState.direction * DEG2RAD) * BULLET_SPAWN_OFFSET;
             bulletOrigin.y += std::sin(gunState.direction * DEG2RAD) * BULLET_SPAWN_OFFSET;
+
+            Audio::get()->playSound("gun");
 
 
             for (int i = 0; i < TEMPORARY_PROJECTILE_COUNT; i++){
