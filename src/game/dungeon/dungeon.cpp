@@ -552,12 +552,14 @@ namespace DungeonCode {
 
     // --== enemies ==--
     void Dungeon::addEnemy(Vector2 position, DungeonSection& section){
-        section.enemies.push_back({position});
+        // TODO
+        section.enemies.push_back(DungeonEnemy(position, 0, 0, 0));
     }
 
     void Dungeon::updateEnemies(DungeonSection& section){
         for (DungeonEnemy& enemy : section.enemies){
-            Drawing::get()->drawTexture("dungeon_test_3", enemy.position, false, 1, 0, WHITE, LAYER_ENEMY);
+            enemy.update();
+            Drawing::get()->drawTexture(enemy.getSprite(), enemy.getPosition(), enemy.getFlip(), 1, 0, WHITE, LAYER_ENEMY);
         }
     }
 

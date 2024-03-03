@@ -12,6 +12,7 @@
 #include "raylib.h"
 #include "game/ui/ui.h"
 #include "engine/sound.h"
+#include "dungeonEnemy.h"
 
 namespace DungeonCode {
 
@@ -43,10 +44,7 @@ namespace DungeonCode {
         DungeonPlatformSpawner* spawner;
     };
 
-    struct DungeonEnemy{
-        Vector2 position;
-        // temporary placeholder
-    };
+    
 
     struct DungeonDoor{
         Vector2 position;
@@ -205,6 +203,10 @@ namespace DungeonCode {
         bool alliedWithPlayer;
     };
 
+
+
+
+
     class Dungeon{
 
         private:
@@ -312,6 +314,8 @@ namespace DungeonCode {
             void updateProjectiles();
             void clearAllProjectiles();
 
+            
+
         public:
             Dungeon();
             static Dungeon* get();
@@ -326,11 +330,11 @@ namespace DungeonCode {
             void exitDungeon();
             void addGiblet(Giblet giblet);
             void addProjectile(Projectile giblet);
-
-
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
-
+            DungeonPlayer& getPlayer();
     };
+
+
 }
 
 
