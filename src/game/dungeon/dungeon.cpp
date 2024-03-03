@@ -549,11 +549,16 @@ namespace DungeonCode {
         platforms.clear();
     }
 
+    // --== misc ==--
+    DungeonPlayer* Dungeon::getPlayer(){
+        return player;
+    }
+
 
     // --== enemies ==--
     void Dungeon::addEnemy(Vector2 position, DungeonSection& section){
         // TODO
-        section.enemies.push_back(DungeonEnemy(position, 0, 0, 0));
+        section.enemies.push_back(DungeonEnemy(position, 0, 0, 0, 2));
     }
 
     void Dungeon::updateEnemies(DungeonSection& section){

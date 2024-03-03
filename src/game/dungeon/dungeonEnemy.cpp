@@ -3,11 +3,12 @@
 #include "game/dungeon/enemyAi.h"
 
 namespace DungeonCode {
-    DungeonEnemy::DungeonEnemy(Vector2 position, int behaviourType, int attackType, int sprieBase){
+    DungeonEnemy::DungeonEnemy(Vector2 position, int behaviourType, int attackType, int sprieBase, float moveSpeed){
         this->position = position;
         this->spriteBase = sprieBase;
         this->sprite = 3;
         this->ai = getEnemyAi(behaviourType);
+        this->moveSpeed = moveSpeed;
     }
 
     std::string DungeonEnemy::getSprite(){
@@ -28,5 +29,9 @@ namespace DungeonCode {
 
     int& DungeonEnemy::getHealth(){
         return health;
+    }
+
+    float DungeonEnemy::getMovementSpeed(){
+        return moveSpeed;
     }
 }

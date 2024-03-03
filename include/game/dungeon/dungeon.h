@@ -331,7 +331,7 @@ namespace DungeonCode {
             void addGiblet(Giblet giblet);
             void addProjectile(Projectile giblet);
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
-            DungeonPlayer& getPlayer();
+            DungeonPlayer* getPlayer();
     };
 
 
