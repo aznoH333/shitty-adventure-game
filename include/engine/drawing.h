@@ -62,7 +62,11 @@ class Drawing{
 
         const int gameScreenWidth = 1280;
         const int gameScreenHeight = 720;
+
+        
         float screenScale = 1;
+        int screenShake = 0;
+        const int SCREEN_SHAKE_MAX = 20;
 
 
 
@@ -80,6 +84,7 @@ class Drawing{
         void drawTexture(std::string sprite, Vector2 pos, int flipSprite, float scale, float rotation, Color color, int layer);
         void drawTextureStatic(std::string sprite, Vector2 pos, bool flipSprite, float scale, float rotation, Color color);
         void drawText(std::string text, Vector2 pos, float scale, Color color);
+        void addScreenShaker(int ammount);
 
 
 

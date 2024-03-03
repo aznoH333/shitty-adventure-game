@@ -65,7 +65,7 @@ void Drawing::loadAllTexturesFromDirectory(std::string spritesPath){
 }
 
 // --== rendering ==--
-void renderTexture(RenderData& data){
+void renderTexture(RenderData& data, float screenShakeOffset){
     Vector2 calculatedWidth = {
         abs(data.texture->width) * data.scale, abs(data.texture->height) * data.scale
     };
@@ -87,7 +87,7 @@ void renderTexture(RenderData& data){
         
     DrawTexturePro(*data.texture, 
         source, 
-        {pos.x, pos.y , calculatedWidth.x, calculatedWidth.y},
+        {pos.x + screenShakeOffset, pos.y , calculatedWidth.x, calculatedWidth.y},
         {0.0f,0.0f + (data.texture->height * flipVerticaly)}, data.rotation, data.color);
 }
 
@@ -96,9 +96,9 @@ void Drawing::renderText(TextRenderData& text){
 }
 
 
-void renderLayer(std::queue<RenderData>& layer){
+void renderLayer(std::queue<RenderData>& layer, float screenShakeOffset){
     while (!layer.empty()){
-        renderTexture(layer.front());
+        renderTexture(layer.front(), screenShakeOffset);
         layer.pop();
     }
 }
@@ -106,13 +106,19 @@ void renderLayer(std::queue<RenderData>& layer){
 
 void Drawing::render(){
 
+    // screen shake
+    float screenShakeOffset = 0.0;
+    screenShake -= screenShake > 0;
+    screenShakeOffset = std::sin(screenShake) * screenShake;
+
+
      // draw to texture
     BeginTextureMode(targetTexture);
         BeginMode2D(camera);
         ClearBackground(backgroundColor);
         
         for (int i = 0; i < renderLayerCount; i++){
-            renderLayer(renderQueue[i]);
+            renderLayer(renderQueue[i], screenShakeOffset);
         }
 
         while (!textQueue.empty()){
@@ -123,7 +129,7 @@ void Drawing::render(){
         EndMode2D();
         // render statics
         BeginMode2D(staticCamera);
-            renderLayer(staticQueue);
+            renderLayer(staticQueue, 0.0f);
         EndMode2D();
 
     EndTextureMode();
@@ -160,4 +166,8 @@ Camera2D& Drawing::getCamera(){
 
 Vector2 Drawing::getInworldMousePosition(){
     return GetScreenToWorld2D(GetMousePosition(), camera);
+}
+
+void Drawing::addScreenShaker(int ammount){
+    screenShake = std::min(screenShake + ammount, SCREEN_SHAKE_MAX);
 }

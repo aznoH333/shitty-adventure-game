@@ -259,6 +259,7 @@ void DungeonPlayer::updateGun(){
             bulletOrigin.y += std::sin(gunState.direction * DEG2RAD) * BULLET_SPAWN_OFFSET;
 
             Audio::get()->playSound("gun");
+            Drawing::get()->addScreenShaker(5);
 
 
             for (int i = 0; i < TEMPORARY_PROJECTILE_COUNT; i++){
