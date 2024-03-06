@@ -558,7 +558,7 @@ namespace DungeonCode {
     // --== enemies ==--
     void Dungeon::addEnemy(Vector2 position, DungeonSection& section){
         // TODO
-        section.enemies.push_back(DungeonEnemy(position, 0, 0, 0, 2));
+        section.enemies.push_back(DungeonEnemy(position, 0, 0, 0, 1));
     }
 
     void Dungeon::updateEnemies(DungeonSection& section){

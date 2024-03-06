@@ -1,6 +1,8 @@
 #include "game/dungeon/dungeon.h"
+#include "game/dungeon/dungeonUtils.h"
 
 using namespace DungeonCode;
+using namespace DungeonUtils;
 
 
 DungeonPlayer::DungeonPlayer(Vector2 position){
@@ -91,22 +93,12 @@ void DungeonPlayer::tryMove(){
 
     velocity.x = (walkVal * WALK_SPEED) + additionalHorizontalVelocity;
 
-    if (!Dungeon::get()->collidesWithDungeon({position.x + velocity.x, position.y}, SIZE, false)){
-        position.x += velocity.x;
-    }else {
-        //position.x = position.x - std::fmod(position.x, DUNGEON_TILE_SIZE) + (Utils::relu(velocity.x) * DUNGEON_TILE_SIZE);
-        velocity.x = 0.0f;
-        walkVal = 0.0f;
+    universalDungeonCollidingUpdate(position, velocity, SIZE, false);
+    if (velocity.x == 0){
+        walkVal = 0.0f; // left over jank from previous implementation
     }
 
-    if (!Dungeon::get()->collidesWithDungeon({position.x, position.y + velocity.y}, SIZE, false)){
-        position.y += velocity.y;
-    }else {
-        // snap position to nearest tile
-        //position.y = position.y - std::fmod(position.y, DUNGEON_TILE_SIZE) + (Utils::relu(velocity.y) * DUNGEON_TILE_SIZE);
-        velocity.y = 0.0f;
-        
-    }
+
 
 }
 

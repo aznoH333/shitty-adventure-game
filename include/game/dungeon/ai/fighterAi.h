@@ -7,7 +7,7 @@
 namespace EnemyAiCode {
     class FighterAi : public DungeonCode::EnemyAi{
         private:
-            float velocityY = 0.0f;
+            Vector2 velocity = {0.0f, 0.0f};
         public:
             void update(DungeonCode::DungeonEnemy* self);
     };

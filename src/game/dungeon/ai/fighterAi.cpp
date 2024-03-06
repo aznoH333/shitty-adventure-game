@@ -1,35 +1,61 @@
 #include "game/dungeon/ai/fighterAi.h"
 #include "game/dungeon/dungeon.h"
+#include "game/dungeon/dungeonUtils.h"
+
+
 
 
 namespace EnemyAiCode{
     using namespace DungeonCode;
+    using namespace DungeonUtils;
+
+    constexpr Vector2 DETECTION_BOX_SIZE = {DungeonEnemy::ENEMY_SIZE.x, DungeonEnemy::ENEMY_SIZE.y - 1};
 
     void FighterAi::update(DungeonEnemy* self){
         DungeonPlayer* p = Dungeon::get()->getPlayer();
         Dungeon* d = Dungeon::get();
 
 
-        //bool isNearPlayer = Utils::pythagoras(p.getPosition().x, p.getPosition().y, self->getPosition().x, self->getPosition().y) < 400;
+        bool isNearPlayer = Utils::pythagoras(p->getPosition().x, p->getPosition().y, self->getPosition().x, self->getPosition().y) < 180;
 
-        float move = self->getMovementSpeed() * self->getFlip() * 2 - 1;
+        float moveBy = self->getMovementSpeed() * (self->getFlip() * 2 - 1);
+        float detectPosition = (DungeonEnemy::ENEMY_SIZE.x * (self->getFlip() * 2 - 1));
 
-        if (d->collidesWithDungeon({self->getPosition().x - move, self->getPosition().y}, DungeonEnemy::ENEMY_SIZE), false){
-            // touched wall
-            velocityY = -3.5;
-        }else if (d->collidesWithDungeon({self->getPosition().x - move, self->getPosition().y + DungeonEnemy::ENEMY_SIZE.y}, DungeonEnemy::ENEMY_SIZE), false){
-            self->getFlip() = !self->getFlip();
+        bool isOnGround = d->collidesWithDungeon({self->getPosition().x, self->getPosition().y + DungeonEnemy::ENEMY_SIZE.y + 1.0f}, {DungeonEnemy::ENEMY_SIZE.x, 1.0f}, true);
+        
+
+        if (d->collidesWithDungeon({self->getPosition().x + detectPosition, self->getPosition().y}, DETECTION_BOX_SIZE, false) || 
+           !d->collidesWithDungeon({self->getPosition().x + detectPosition, self->getPosition().y + DungeonEnemy::ENEMY_SIZE.y}, DETECTION_BOX_SIZE, false))
+        {
+            if (isNearPlayer){
+                if (isOnGround){
+                    velocity.y -= 3.5f;
+                    isOnGround = false;
+                }
+                
+            }else {
+                self->getFlip() = !self->getFlip();
+            }
         }else {
-            self->getPosition().x += move;
+            velocity.x = moveBy;
+        }
+
+        if (isNearPlayer){
+            self->getFlip() = self->getPosition().x < p->getPosition().x;
         }
 
 
-        self->getPosition().y += velocityY;
-        if (d->collidesWithDungeon({self->getPosition().x, self->getPosition().y + 1.0f}, DungeonEnemy::ENEMY_SIZE, true)){
-            velocityY = 0;
+
+        if (isOnGround){
+            velocity.y = 0;
         }else{
-            velocityY += 0.1;
+            velocity.y += 0.1;
         }
+
+
+        universalDungeonCollidingUpdate(self->getPosition(), velocity, DungeonEnemy::ENEMY_SIZE, false);
+
+        
 
 
         

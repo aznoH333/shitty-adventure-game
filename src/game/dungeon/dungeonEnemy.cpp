@@ -5,6 +5,7 @@
 namespace DungeonCode {
     DungeonEnemy::DungeonEnemy(Vector2 position, int behaviourType, int attackType, int sprieBase, float moveSpeed){
         this->position = position;
+        this->position.y -= 1.0f; // unstick enemies from ground
         this->spriteBase = sprieBase;
         this->sprite = 3;
         this->ai = getEnemyAi(behaviourType);
