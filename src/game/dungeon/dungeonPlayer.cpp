@@ -60,6 +60,7 @@ void DungeonPlayer::readPlayerInput(){
     buttonJump = IsKeyDown(KEY_SPACE);
     buttonInteractPressed = IsKeyPressed(KEY_E);
     buttonFirePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+    buttonReloadPressed = IsKeyPressed(KEY_R);
     
 
     // no button or both buttons pressed
@@ -217,16 +218,18 @@ void DungeonPlayer::updateGun(){
         Vector2 mousePosition = Drawing::get()->getInworldMousePosition();
         
 
-        float reloadPercentage = ((float) (TEMPORARY_RELOAD_TIME - gunState.reloadTimer) / TEMPORARY_RELOAD_TIME);
+        float loadPercentage = ((float) (TEMPORARY_RELOAD_TIME - gunState.shotLoadTimer) / TEMPORARY_RELOAD_TIME);
         float flipRotation = flipSprite * 2.0f - 1.0f;
-        float reloadOffset = reloadPercentage * 360.0f * flipRotation;
+        float loadOffset = loadPercentage * 360.0f * flipRotation;
         float recoilOffset = ((float) (RECOIL_TIME - (RECOIL_TIME - gunState.recoilTimer)) / RECOIL_TIME) * RECOIL_OFFSET * flipRotation;
-        gunState.direction = std::atan2(gunState.position.y - mousePosition.y, gunState.position.x - mousePosition.x) * RAD2DEG - 180 + reloadOffset + recoilOffset;
+        float reloadPrepOffset = ((RELOAD_PREP_MAX - (float)(RELOAD_PREP_MAX - gunState.reloadPrepTimer)) / RELOAD_PREP_MAX) * RELOAD_PREP_OFFSET * flipRotation;
+        float reloadInsertOffset = ((TEMPORARY_RELOAD_TIMER_MAX - (float)(TEMPORARY_RELOAD_TIMER_MAX - gunState.reloadTimer)) / TEMPORARY_RELOAD_TIMER_MAX) * RELOAD_INSERT_OFFSET * flipRotation;
+        gunState.direction = std::atan2(gunState.position.y - mousePosition.y, gunState.position.x - mousePosition.x) * RAD2DEG - 180 + loadOffset + recoilOffset + reloadPrepOffset + reloadInsertOffset;
         flipSprite = position.x > mousePosition.x;
 
 
         // spawn shotgun shell
-        if (gunState.shouldSpawnShell == true && reloadPercentage > 0.25f){
+        if (gunState.shouldSpawnShell == true && loadPercentage > 0.25f){
             Audio::get()->playSound("gunReload");
             gunState.shouldSpawnShell = false;
             Dungeon::get()->addGiblet(
@@ -238,12 +241,44 @@ void DungeonPlayer::updateGun(){
                 0});
         }
     }
+
+    // reloading
+    {
+        UICode::Text::renderGameText(std::to_string(gunState.currentState), {0,0}, WHITE, 1);
+        if (buttonReloadPressed && gunState.currentState == IDLE && gunState.currentAmmo != TEMPORARY_AMMO_CAPACITY){
+            gunState.currentState = RELOADING;
+            gunState.reloadTimer = TEMPORARY_RELOAD_TIMER_MAX;
+        }
+
+        if (gunState.currentState == RELOADING){
+            gunState.reloadPrepTimer += gunState.reloadPrepTimer < RELOAD_PREP_MAX;
+        }else{
+            gunState.reloadPrepTimer -= gunState.reloadPrepTimer > 0;
+        }
+        
+        
+        if (gunState.currentState == RELOADING && gunState.reloadPrepTimer == RELOAD_PREP_MAX){
+            gunState.reloadTimer--;
+            if (gunState.reloadTimer == 0){
+                gunState.currentAmmo++;
+                if (gunState.currentAmmo == TEMPORARY_AMMO_CAPACITY){
+                    gunState.currentState = IDLE;
+                }else {
+                    gunState.reloadTimer = TEMPORARY_RELOAD_TIMER_MAX;
+                }
+            }else if (buttonFirePressed){
+                gunState.reloadTimer = 0;
+                gunState.currentState = IDLE;
+            }
+        }
+    }
     
 
 
     // shooting logic
     {
-        if (buttonFirePressed && gunState.reloadTimer == 0){
+        if (buttonFirePressed && gunState.shotLoadTimer == 0 && gunState.currentAmmo > 0 && gunState.currentState == IDLE && gunState.reloadPrepTimer == 0){
+            gunState.currentState = FIRING;
             // shoot
             Dungeon* d = Dungeon::get();
             Vector2 bulletOrigin = gunState.position;
@@ -252,6 +287,8 @@ void DungeonPlayer::updateGun(){
 
             Audio::get()->playSound("gun");
             Drawing::get()->addScreenShaker(5);
+
+            gunState.currentAmmo--;
 
 
             for (int i = 0; i < TEMPORARY_PROJECTILE_COUNT; i++){
@@ -268,12 +305,18 @@ void DungeonPlayer::updateGun(){
             }
 
 
-            gunState.reloadTimer = TEMPORARY_RELOAD_TIME;
+            gunState.shotLoadTimer = TEMPORARY_RELOAD_TIME;
             gunState.recoilTimer = RECOIL_TIME;
             gunState.shouldSpawnShell = true;
+        }else if (gunState.currentAmmo == 0){
+            // TOOD play click sound
         }
+
         gunState.recoilTimer -= gunState.recoilTimer > 0;
-        gunState.reloadTimer -= gunState.recoilTimer == 0 && gunState.reloadTimer > 0;
+        gunState.shotLoadTimer -= gunState.recoilTimer == 0 && gunState.shotLoadTimer > 0;
+        if (gunState.shotLoadTimer == 0 && gunState.reloadPrepTimer == 0){
+            gunState.currentState = IDLE;
+        }
     }
 
 
