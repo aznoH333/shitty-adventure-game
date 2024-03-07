@@ -109,6 +109,7 @@ namespace DungeonCode {
                 GunOperationState currentState = IDLE;
                 int reloadTimer = 0;
                 int reloadPrepTimer = 0;
+                bool playRackSoundEffect = false;
 
 
             };

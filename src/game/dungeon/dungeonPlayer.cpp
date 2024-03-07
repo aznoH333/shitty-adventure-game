@@ -261,6 +261,9 @@ void DungeonPlayer::updateGun(){
             gunState.reloadTimer--;
             if (gunState.reloadTimer == 0){
                 gunState.currentAmmo++;
+                gunState.playRackSoundEffect = true;
+                Audio::get()->playSound("shellLoad");
+
                 if (gunState.currentAmmo == TEMPORARY_AMMO_CAPACITY){
                     gunState.currentState = IDLE;
                 }else {
@@ -315,8 +318,16 @@ void DungeonPlayer::updateGun(){
         gunState.recoilTimer -= gunState.recoilTimer > 0;
         gunState.shotLoadTimer -= gunState.recoilTimer == 0 && gunState.shotLoadTimer > 0;
         if (gunState.shotLoadTimer == 0 && gunState.reloadPrepTimer == 0){
+            if (gunState.playRackSoundEffect){
+                gunState.playRackSoundEffect = false;
+                Audio::get()->playSound("shotgunRack");
+
+            }
+            
             gunState.currentState = IDLE;
         }
+        
+
     }
 
 
