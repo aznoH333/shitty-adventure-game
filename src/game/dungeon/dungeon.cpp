@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace DungeonCode {
-
+    using namespace Utils;
 
     // --== Boiler plate ==--
     Dungeon* Dungeon::instance = 0;
@@ -558,14 +558,42 @@ namespace DungeonCode {
     // --== enemies ==--
     void Dungeon::addEnemy(Vector2 position, DungeonSection& section){
         // TODO
-        section.enemies.push_back(DungeonEnemy(position, 0, 0, 0, 1));
+        section.enemies.push_back(DungeonEnemy(position, 0, 0, 0, 1, 100.0f));
     }
 
     void Dungeon::updateEnemies(DungeonSection& section){
-        for (DungeonEnemy& enemy : section.enemies){
+        
+        section.enemies.remove_if([this](DungeonEnemy& enemy){
             enemy.update();
             Drawing::get()->drawTexture(enemy.getSprite(), enemy.getPosition(), enemy.getFlip(), 1, 0, WHITE, LAYER_ENEMY);
-        }
+
+            projectiles.remove_if([&enemy, this](Projectile& p){
+                if (p.alliedWithPlayer && Utils::squaresCollide(enemy.getPosition(), p.position, DungeonEnemy::ENEMY_SIZE, PROJECTILE_SIZE)){
+                    enemy.health -= p.damage;
+                    enemy.lastHitDirection = p.rotation;
+                    return true;
+                }
+                return false;
+            });
+
+            if (enemy.health <= 0.0f){
+                // spawn giblets
+                for (int i = 0; i < 10; i++){
+                    float gibletSpeed = Utils::getRandomFloat(1,2.5f);
+                    float direction = enemy.lastHitDirection * DEG2RAD + Utils::getRandomFloat(-0.2f, 0.2f);
+                    addGiblet({
+                        concatSprite("giblet_", GetRandomValue(1, 3)),
+                        enemy.getPosition(), 
+                        {std::cos(direction) * gibletSpeed + Utils::getRandomFloat(-2.5,2.2), std::sin(direction) * gibletSpeed + Utils::getRandomFloat(-2.5,2.2)}, 
+                        0.0f, 
+                        0.0f, 
+                        0
+                    });
+                }
+                return true;
+            }
+            return false;
+        });
     }
 
     
@@ -718,7 +746,7 @@ namespace DungeonCode {
             for (int i = 0; i < p.extraUpdates; i++){
                 p.position.x += p.velocity.x;
                 p.position.y += p.velocity.y;
-                if (collidesWithDungeon(p.position, {8.0f, 8.0f}, false)){
+                if (collidesWithDungeon(p.position, PROJECTILE_SIZE, false)){
                     return true;
                 }
                 d->drawTexture(p.sprite, p.position, 0, 1.0f, p.rotation, WHITE, DrawingLayers::LAYER_PROJECTILES);

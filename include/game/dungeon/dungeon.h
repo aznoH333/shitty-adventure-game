@@ -201,6 +201,7 @@ namespace DungeonCode {
         float rotation;
         int extraUpdates = 1;
         bool alliedWithPlayer;
+        float damage;
     };
 
 
@@ -217,7 +218,7 @@ namespace DungeonCode {
 
 
 
-            const float CAMERA_Y = 86.0f;
+            const float CAMERA_Y = 109.0f;
             const float MIN_CAMERA_X = 256.0f; 
             const Vector2 PLATFORM_SIZE = {48.0f, 10.0f};       
 
@@ -237,6 +238,7 @@ namespace DungeonCode {
 
             // projectiles
             std::list<Projectile> projectiles;
+            const Vector2 PROJECTILE_SIZE = {8.0f, 8.0f};
 
             const float WATERFALL_PLATFORM_SPEED = 0.6f;
             const float PLATFORM_ACCELERATION = 0.1f;
@@ -329,7 +331,7 @@ namespace DungeonCode {
             void enterDoor(DungeonDoor* door);
             void exitDungeon();
             void addGiblet(Giblet giblet);
-            void addProjectile(Projectile giblet);
+            void addProjectile(Projectile projectile);
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
             DungeonPlayer* getPlayer();
     };

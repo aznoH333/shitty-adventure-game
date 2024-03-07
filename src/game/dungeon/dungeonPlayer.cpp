@@ -263,6 +263,7 @@ void DungeonPlayer::updateGun(){
                 p.sprite = "bullet_1";
                 p.alliedWithPlayer = true;
                 p.extraUpdates = 3;
+                p.damage = 10.0f;
                 d->addProjectile(p);
             }
 

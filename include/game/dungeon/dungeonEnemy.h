@@ -16,19 +16,22 @@ namespace DungeonCode {
             int spriteBase = 0;
             bool flipSprite = false;
             EnemyAi* ai;
-            int health = 100;
             bool isActive = false;
             float moveSpeed = 0;
+
+            
         
         public:
-            static constexpr Vector2 ENEMY_SIZE = {16.0f, 16.0f};
+            static constexpr Vector2 ENEMY_SIZE = {16.0f, 32.0f};
+            float health = 0;
+            float lastHitDirection = 0.0f;
 
-            DungeonEnemy(Vector2 position, int behaviourType, int attackType, int spriteBase, float moveSpeed);
+
+            DungeonEnemy(Vector2 position, int behaviourType, int attackType, int spriteBase, float moveSpeed, float health);
             std::string getSprite();
             Vector2& getPosition();
             bool& getFlip();
             int& getSpr();
-            int& getHealth();
             float getMovementSpeed();
             void update();
 
@@ -36,7 +39,7 @@ namespace DungeonCode {
 
 
     const std::vector<std::string> enemySprites = {
-        "dungeon_test_",
+        "testEnemy_",
     };
 }
 

@@ -159,13 +159,19 @@ namespace Utils {
         return result;
     }
 
+    
+    // --== sprites and other string functions ==--
+
+    std::string animatedSprite(std::string& base, int start, int end, int frameDuration){
+        return base + std::to_string(animationTimer(start, end, frameDuration));
+    }
+
     int animationTimer(int start, int end, int frameTime){
         int time = gameTickCounter / frameTime;
         return start + (time % (end - start + 1));
     }
 
-
-    
-
-
+    std::string concatSprite(const char* base, int number){
+        return base + std::to_string(number);
+    }
 }

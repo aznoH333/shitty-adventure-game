@@ -1,15 +1,17 @@
 #include "game/dungeon/dungeonEnemy.h"
 #include <string>
+#include "game/dungeon/dungeon.h"
 #include "game/dungeon/enemyAi.h"
 
 namespace DungeonCode {
-    DungeonEnemy::DungeonEnemy(Vector2 position, int behaviourType, int attackType, int sprieBase, float moveSpeed){
+    DungeonEnemy::DungeonEnemy(Vector2 position, int behaviourType, int attackType, int sprieBase, float moveSpeed, float health){
         this->position = position;
-        this->position.y -= 1.0f; // unstick enemies from ground
+        this->position.y -= 1.0f + (ENEMY_SIZE.y - DUNGEON_TILE_SIZE); // unstick enemies from ground
         this->spriteBase = sprieBase;
         this->sprite = 3;
         this->ai = getEnemyAi(behaviourType);
         this->moveSpeed = moveSpeed;
+        this->health = health;
     }
 
     std::string DungeonEnemy::getSprite(){
@@ -26,10 +28,6 @@ namespace DungeonCode {
 
     bool& DungeonEnemy::getFlip(){
         return flipSprite;
-    }
-
-    int& DungeonEnemy::getHealth(){
-        return health;
     }
 
     float DungeonEnemy::getMovementSpeed(){

@@ -34,7 +34,6 @@ namespace Utils{
 
     // hacky workarounds
     int dividePosition(int position, int denominator);
-    int animationTimer(int start, int end, int frameTime);
 
     // hashing
     int hashInt(int input);
@@ -56,7 +55,10 @@ namespace Utils{
     };
 
 
-    
+    // strings and stuff for sprites
+    int animationTimer(int start, int end, int frameTime);
+    std::string animatedSprite(std::string& base, int start, int end, int frameDuration);
+    std::string concatSprite(const char* base, int number);
 
 }
 
