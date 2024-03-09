@@ -1,5 +1,7 @@
 #include "game/ui/ui.h"
 
+using namespace Utils;
+
 namespace UICode{
 
 
@@ -18,6 +20,29 @@ namespace UICode{
         hudVisible = state;
         hudProgress = 0;
     }
+   
+   
+    // --== hud drawing ==--
+    void Hud::drawUi(float& hudY){
+        //Drawing::get()->drawTextureStatic("door", {0.0f, hudY}, false, 1.0f, 0.0f, WHITE);
+        drawShells(hudY);
+        drawHealth(hudY);
+    }
+
+
+    void Hud::drawShells(float& hudY){
+        Vector2 vec = {SHELL_START.x, SHELL_START.y + hudY};
+        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, 10, 24);
+    }
+
+
+    void Hud::drawHealth(float& hudY){
+        Vector2 vec = {HP_START.x, HP_START.y + hudY};
+        drawBar(vec, HP_SPRITE, HP_MISSING_SPRITE, HP_OFFSET, 10, 14);
+    }
+   
+   
+   // --== hud update ==-
     void Hud::updateHud(){
         if (hudProgress < 1.0f){
             hudProgress += UICode::Hud::HUD_SPEED;
@@ -32,7 +57,9 @@ namespace UICode{
         }else {
             y = UICode::Hud::HUD_ON_POSITION - positionOffset;
         }
-        Drawing::get()->drawTextureStatic("door", {0.0f, y}, false, 1.0f, 0.0f, WHITE);
+        
+        // draw hud
+        drawUi(y);
         
     }
 

@@ -1,5 +1,6 @@
 
 #include "engine/utils.h"
+#include "engine/drawing.h"
 
 namespace Utils {
 
@@ -174,4 +175,19 @@ namespace Utils {
     std::string concatSprite(const char* base, int number){
         return base + std::to_string(number);
     }
+
+    void drawLineOfSprites(const std::string& sprite, Vector2& startingPosition, int ammount, float spriteOffset){
+        for (int i = 0; i < ammount; i++){
+            Drawing::get()->drawTextureStatic(sprite, {startingPosition.x + i * spriteOffset, startingPosition.y}, false, 1.0f, 0.0f, WHITE);
+        }
+    }
+
+    // --== ui utils ==--
+    void drawBar(Vector2& position, const std::string& onSprite, const std::string& offSprite, float spriteOffset, int onAmmount, int ammount){
+        drawLineOfSprites(onSprite, position, onAmmount, spriteOffset);
+        Vector2 pos = {position.x + (onAmmount * spriteOffset), position.y};
+        drawLineOfSprites(offSprite, pos, ammount - onAmmount, spriteOffset);
+
+    }
+
 }
