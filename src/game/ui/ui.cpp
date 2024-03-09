@@ -1,6 +1,7 @@
 #include "game/ui/ui.h"
 
 using namespace Utils;
+using namespace PlayerStats;
 
 namespace UICode{
 
@@ -32,7 +33,9 @@ namespace UICode{
 
     void Hud::drawShells(float& hudY){
         Vector2 vec = {SHELL_START.x, SHELL_START.y + hudY};
-        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, 10, 24);
+        
+        
+        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats.currentAmmoCount, playerStats.ammoCapacity);
     }
 
 

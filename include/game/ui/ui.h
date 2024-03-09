@@ -3,6 +3,7 @@
 
 #include "engine/utils.h"
 #include "engine/drawing.h"
+#include "game/stats/playerStats.h"
 #include <string>
 
 namespace UICode{

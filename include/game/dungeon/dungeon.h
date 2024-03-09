@@ -13,6 +13,7 @@
 #include "game/ui/ui.h"
 #include "engine/sound.h"
 #include "dungeonEnemy.h"
+#include "game/stats/playerStats.h"
 
 namespace DungeonCode {
 
@@ -105,7 +106,6 @@ namespace DungeonCode {
                 int recoilTimer = 0;
                 bool shouldSpawnShell = false;
                 Vector2 position;
-                int currentAmmo = 4;
                 GunOperationState currentState = IDLE;
                 int reloadTimer = 0;
                 int reloadPrepTimer = 0;
@@ -156,15 +156,15 @@ namespace DungeonCode {
             const float GUN_OFFSET_Y = 10.0f;
             const float GUN_OFFSET_X_1 = 4.0f;
             const float GUN_OFFSET_X_2 = 12.0f;
-            const int TEMPORARY_RELOAD_TIME = 15;
+            //const int TEMPORARY_RELOAD_TIME = 15;
             const int RECOIL_TIME = 15;
             const float RECOIL_OFFSET = 35.5f;
             const Vector2 SHELL_EJECT_VELOCITY = {4.5f, -4.0f};
             const float SHELL_ROTATION_SPEED = 4.0f;
             
             // reloading
-            const int TEMPORARY_AMMO_CAPACITY = 4;
-            const int TEMPORARY_RELOAD_TIMER_MAX = 20;
+            //const int TEMPORARY_AMMO_CAPACITY = 4;
+            //const int TEMPORARY_RELOAD_TIMER_MAX = 20;
             const int RELOAD_PREP_MAX = 10;
             const float RELOAD_PREP_OFFSET = 30.0f;
             const float RELOAD_INSERT_OFFSET = 10.0f;
@@ -172,9 +172,9 @@ namespace DungeonCode {
 
 
 
-            const int TEMPORARY_PROJECTILE_COUNT = 4;
-            const float TEMPORARY_PROJECTILE_SPREAD = 5.0f;
-            const float TEMPORARY_BULLET_SPEED = 6.0f;
+            //const int TEMPORARY_PROJECTILE_COUNT = 4;
+            //const float TEMPORARY_PROJECTILE_SPREAD = 5.0f;
+            //const float TEMPORARY_BULLET_SPEED = 6.0f;
             const float BULLET_SPAWN_OFFSET = 16.0f;
 
 

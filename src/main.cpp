@@ -17,6 +17,7 @@ int main() {
     Audio::get()->loadAllSounds("./assets/sounds/");
     // init game
     State::get()->switchState(STATE_OVERWORLD);
+    PlayerStats::initDefault();
 
 
 
