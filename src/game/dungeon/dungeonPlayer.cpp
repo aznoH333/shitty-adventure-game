@@ -1,9 +1,11 @@
 #include "game/dungeon/dungeon.h"
 #include "game/dungeon/dungeonUtils.h"
+#include <string>
 
 using namespace DungeonCode;
 using namespace DungeonUtils;
 using namespace PlayerStats;
+using namespace Utils;
 
 
 DungeonPlayer::DungeonPlayer(Vector2 position){
@@ -35,6 +37,7 @@ void DungeonPlayer::update(){
 
 void DungeonPlayer::drawSprite(){
     std::string sprite;
+    float absVelocityX = std::abs(velocity.x);
     
     if (isAirborne){
         if (canWallClimb){
@@ -42,8 +45,15 @@ void DungeonPlayer::drawSprite(){
         }else {
             sprite = "player_dungeon_jump";
         }
-    }else if (std::abs(velocity.x) > 0.5f){
-        sprite = "player_dungeon_walk_" + std::to_string(Utils::animationTimer(1, 3, 10));
+    }else if (absVelocityX > 0.5f){
+
+        int dynamicAnimationDuration = WALK_ANIMATION_FRAME_DURATION + (int)(((1.0f - (absVelocityX / WALK_SPEED)) * WALK_ANIMATION_FRAME_DURATION));
+        UICode::Text::renderGameText(std::to_string(dynamicAnimationDuration), {0,0}, WHITE, 1.0f);
+        int spriteNum = animationTimer(WALK_ANIMATION_START_INDEX, WALK_ANIMATION_END_INDEX, dynamicAnimationDuration);
+        bool playAnimationBackwards = velocity.x < 0.5f == !flipSprite;
+        spriteNum = (!playAnimationBackwards * 2 - 1) * spriteNum + (playAnimationBackwards * (WALK_ANIMATION_END_INDEX + 1));
+        sprite = concatSprite("player_dungeon_walk_", spriteNum);
+    
     }else {
         sprite = "player_dungeon";
     }
@@ -245,7 +255,6 @@ void DungeonPlayer::updateGun(){
 
     // reloading
     {
-        UICode::Text::renderGameText(std::to_string(playerStats.currentAmmoCount), {0,0}, WHITE, 1);
         if (buttonReloadPressed && gunState.currentState == IDLE && playerStats.currentAmmoCount != playerStats.ammoCapacity){
             gunState.currentState = RELOADING;
             gunState.reloadTimer = playerStats.shellReloadTime;
