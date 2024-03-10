@@ -28,4 +28,12 @@ namespace PlayerStats {
         playerStats.floats.addValue(HEALTH_f, 100.0f);
         playerStats.floats.addValue(MAX_HEALTH_f, 100.0f);
     }
+
+    bool isStatFloat(int statId){
+        return statId < FLOAT_START; // kys fr
+    }
+
+    int pickRandomValidStat(int seed){
+        
+    }
 }
