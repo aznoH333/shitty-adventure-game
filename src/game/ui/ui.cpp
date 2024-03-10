@@ -35,7 +35,7 @@ namespace UICode{
         Vector2 vec = {SHELL_START.x, SHELL_START.y + hudY};
         
         
-        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats.currentAmmoCount, playerStats.ammoCapacity);
+        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats.ints[AMMO_COUNT_i], playerStats.ints[MAX_AMMO_COUNT_i]);
     }
 
 
