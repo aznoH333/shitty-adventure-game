@@ -314,7 +314,7 @@ void DungeonPlayer::updateGun(){
                 p.sprite = "bullet_1";
                 p.alliedWithPlayer = true;
                 p.extraUpdates = 3;
-                p.damage = 10.0f;
+                p.damage = playerStats.floats[PROJECTILE_DAMAGE_f];
                 d->addProjectile(p);
             }
 

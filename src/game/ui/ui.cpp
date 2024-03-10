@@ -1,4 +1,5 @@
 #include "game/ui/ui.h"
+#include <cmath>
 
 using namespace Utils;
 using namespace PlayerStats;
@@ -33,15 +34,15 @@ namespace UICode{
 
     void Hud::drawShells(float& hudY){
         Vector2 vec = {SHELL_START.x, SHELL_START.y + hudY};
-        
-        
         drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats.ints[AMMO_COUNT_i], playerStats.ints[MAX_AMMO_COUNT_i]);
     }
 
 
     void Hud::drawHealth(float& hudY){
         Vector2 vec = {HP_START.x, HP_START.y + hudY};
-        drawBar(vec, HP_SPRITE, HP_MISSING_SPRITE, HP_OFFSET, 10, 14);
+        int healthSegments = std::ceil(playerStats.floats[HEALTH_f] / playerStats.floats[MAX_HEALTH_f]) * HEALTH_SEGMENT_COUNT;
+        
+        drawBar(vec, HP_SPRITE, HP_MISSING_SPRITE, HP_OFFSET, 10, HEALTH_SEGMENT_COUNT);
     }
    
    

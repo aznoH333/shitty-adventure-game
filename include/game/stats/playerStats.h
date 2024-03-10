@@ -14,6 +14,9 @@ namespace PlayerStats {
         PROJECTILE_COUNT_i,
         PROJECTILE_SPREAD_f,
         PROJECTILE_SPEED_f,
+        PROJECTILE_DAMAGE_f,
+        HEALTH_f,
+        MAX_HEALTH_f,
 
     };
     

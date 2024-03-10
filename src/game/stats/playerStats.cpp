@@ -24,5 +24,8 @@ namespace PlayerStats {
         // floats
         playerStats.floats.addValue(PROJECTILE_SPREAD_f, 5.0f);
         playerStats.floats.addValue(PROJECTILE_SPEED_f, 6.0f);
+        playerStats.floats.addValue(PROJECTILE_DAMAGE_f, 9.0f);
+        playerStats.floats.addValue(HEALTH_f, 100.0f);
+        playerStats.floats.addValue(MAX_HEALTH_f, 100.0f);
     }
 }
