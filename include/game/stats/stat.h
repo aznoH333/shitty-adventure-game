@@ -1,33 +1,58 @@
 #ifndef STAT 
 #define STAT 
 
-#include <map>
+#include <climits> 
 
-
-
-namespace PlayerStats{
+namespace PlayerStats {
     
-    
-    template<class T>
-    class StatManager{
-        private:
-            std::map<int, T> values;
-            std::map<int, T> defaultValues;
-
-        public:
-            StatManager<T>();
-            void resetValue(int index);
-            void resetAll();
-            void addValue(int index, T value);
-            T& operator[](int index);
-
+    enum StatType{
+        INT = 0,
+        FLOAT,
     };
 
-    template class StatManager<int>;
-    template class StatManager<float>;
+    enum StatWeight{
+        LOW = 1,
+        MED = 2,
+        HIGH = 4,
+        HIGHEST = 5,
+        UNUPGRADABLE = INT_MAX,
+    };
+
+    enum StatName{
+        SHELL_RELOAD_TIME_i = 0,
+        AMMO_COUNT_i,
+        MAX_AMMO_COUNT_i,
+        FIRING_SPEED_i,
+        PROJECTILE_COUNT_i,
+       
+       
+        PROJECTILE_SPREAD_f,
+        PROJECTILE_SPEED_f,
+        PROJECTILE_DAMAGE_f,
+        HEALTH_f,
+        MAX_HEALTH_f,
+
+        STAT_COUNT,
+
+
+    };
+    
+    template<class T>
+    class Stat{
+        private:
+            T value;
+            T defaultValue;
+            StatWeight weight;
+        public:
+            Stat<T>(T defaultValue, StatWeight weight);
+            void resetStat();
+            T& get();
+            StatWeight getWeight();
+    };
+
+    template class Stat<int>;
+    template class Stat<float>;
 
 }
-
-
 
 #endif

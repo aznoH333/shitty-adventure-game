@@ -34,18 +34,18 @@ namespace UICode{
 
     void Hud::drawShells(float& hudY){
         Vector2 vec = {SHELL_START.x, SHELL_START.y + hudY};
-        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats.ints[AMMO_COUNT_i], playerStats.ints[MAX_AMMO_COUNT_i]);
+        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats->getI(AMMO_COUNT_i), playerStats->getI(MAX_AMMO_COUNT_i));
     }
 
 
     void Hud::drawHealth(float& hudY){
         Vector2 vec = {HP_START.x, HP_START.y + hudY};
-        int healthSegments = std::ceil(playerStats.floats[HEALTH_f] / playerStats.floats[MAX_HEALTH_f]) * HEALTH_SEGMENT_COUNT;
+        int healthSegments = std::ceil(playerStats->getF(HEALTH_f) / playerStats->getF(MAX_HEALTH_f)) * HEALTH_SEGMENT_COUNT;
         
         drawBar(vec, HP_SPRITE, HP_MISSING_SPRITE, HP_OFFSET, 10, HEALTH_SEGMENT_COUNT);
     }
    
-   
+
    // --== hud update ==-
     void Hud::updateHud(){
         if (hudProgress < 1.0f){
@@ -64,22 +64,17 @@ namespace UICode{
         
         // draw hud
         drawUi(y);
-        
     }
 
 
-
-
-
-
-    bool a = false;
+    bool hudVisibility = false;
 
     void updateUi(){
         UICode::Hud::updateHud();
         UICode::Boxes::updateTextBoxes();
         if (IsKeyPressed(KEY_U)){
-            UICode::Hud::setHudVisibility(a);
-            a = !a;
+            UICode::Hud::setHudVisibility(hudVisibility);
+            hudVisibility = !hudVisibility;
         }
     }
 

@@ -40,6 +40,7 @@ int main() {
     Overworld::get()->dispose();
     DungeonCode::Dungeon::get()->dispose();
     Audio::dispose();
+    PlayerStats::dispose();
     
 
 

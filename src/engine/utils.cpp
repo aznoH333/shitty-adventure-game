@@ -190,4 +190,19 @@ namespace Utils {
 
     }
 
+
+    // --== random array utils ==--
+    template<typename T, typename A>
+    bool isInVec(std::vector<T, A>& vec, T element){
+        for (auto a : vec){
+            if (element == a){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    template bool isInVec<int, std::allocator<int>>(std::vector<int, std::allocator<int>>&, int);
+
+
 }

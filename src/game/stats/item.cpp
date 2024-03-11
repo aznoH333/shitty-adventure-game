@@ -7,18 +7,18 @@ namespace PlayerStats {
     void Item::equipItem(){
         for (std::pair<int, StatModifier> a : modifiers){
             if (a.second.type == INT){
-                playerStats.ints[a.first] += a.second.value.intValue;
+                playerStats->getI(a.first) += a.second.value.intValue;
             }else{
-                playerStats.floats[a.first] += a.second.value.floatValue;
+                playerStats->getF(a.first) += a.second.value.floatValue;
             }
         }
     }
     void Item::unequipItem(){
         for (std::pair<int, StatModifier> a : modifiers){
             if (a.second.type == INT){
-                playerStats.ints[a.first] -= a.second.value.intValue;
+                playerStats->getI(a.first) -= a.second.value.intValue;
             }else{
-                playerStats.floats[a.first] -= a.second.value.floatValue;
+                playerStats->getF(a.first) -= a.second.value.floatValue;
             }
         }
     }

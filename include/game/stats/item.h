@@ -2,12 +2,10 @@
 #define ITEM 
 
 #include <map>
+#include "stat.h"
 namespace PlayerStats{
     
-    enum ModifierType{
-        INT = 0,
-        FLOAT,
-    };
+    
 
     union StatValue{
         int intValue;
@@ -15,7 +13,7 @@ namespace PlayerStats{
     };
 
     struct StatModifier{
-        ModifierType type;
+        StatType type;
         StatValue value;
     };
     

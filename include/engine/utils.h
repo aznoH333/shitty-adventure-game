@@ -2,6 +2,7 @@
 #ifndef UTILS 
 #define UTILS 
 
+#include <memory>
 #include <vector>
 #include <string>
 #include <filesystem>
@@ -64,6 +65,13 @@ namespace Utils{
 
     // --== ui utils ==--
     void drawBar(Vector2& position, const std::string& onSprite, const std::string& offSprite, float spriteOffset, int onAmmount, int ammount);
+
+
+    // --== random array utils ==--
+    template<typename T, typename A>
+    bool isInVec(std::vector<T, A>& vec, T element);
+
+
 }
 
 
