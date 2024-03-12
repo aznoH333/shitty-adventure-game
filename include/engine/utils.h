@@ -21,6 +21,7 @@ namespace Utils{
     int relu(float a);
     float gravitateValue(float value, float goal, float stepSize);
     bool squaresCollide(Vector2 position1, Vector2 position2, Vector2 size1, Vector2 size2);
+    int boolToSign(bool input);
 
     const float RELU_PRECISION = 0.05f;
 

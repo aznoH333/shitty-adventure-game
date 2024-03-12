@@ -46,6 +46,9 @@ namespace Utils {
         return interpolate(x, y, value);
     }
 
+    int boolToSign(bool input){
+        return input * 2 - 1;
+    }
 
     float pythagoras(float x1, float y1, float x2, float y2){
         float a = std::pow(std::abs(x1 - x2), 2);

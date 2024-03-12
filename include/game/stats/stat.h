@@ -42,12 +42,14 @@ namespace PlayerStats {
         private:
             T value;
             T defaultValue;
+            T averageValueChange;
             StatWeight weight;
         public:
-            Stat<T>(T defaultValue, StatWeight weight);
+            Stat<T>(T defaultValue, StatWeight weight, T averageValueChange);
             void resetStat();
             T& get();
             StatWeight getWeight();
+            T getAverageValueChange();
     };
 
     template class Stat<int>;

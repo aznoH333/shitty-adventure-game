@@ -17,18 +17,18 @@ namespace PlayerStats{
         
     StatManager::StatManager(){
         // ints
-        intStats.insert({SHELL_RELOAD_TIME_i, Stat<int>(15, LOW)});
-        intStats.insert({AMMO_COUNT_i, Stat<int>(4, UNUPGRADABLE)});
-        intStats.insert({MAX_AMMO_COUNT_i, Stat<int>(4, MED)});
-        intStats.insert({FIRING_SPEED_i, Stat<int>(20, HIGH)});
-        intStats.insert({PROJECTILE_COUNT_i, Stat<int>(5, HIGH)});
+        intStats.insert({SHELL_RELOAD_TIME_i, Stat<int>(15, LOW, 3)});
+        intStats.insert({AMMO_COUNT_i, Stat<int>(4, UNUPGRADABLE, 0)});
+        intStats.insert({MAX_AMMO_COUNT_i, Stat<int>(4, MED, 2)});
+        intStats.insert({FIRING_SPEED_i, Stat<int>(20, HIGH, 4)});
+        intStats.insert({PROJECTILE_COUNT_i, Stat<int>(5, HIGH, 1)});
 
         // floats
-        floatStats.insert({PROJECTILE_SPREAD_f, Stat<float>(5.0f, MED)});
-        floatStats.insert({PROJECTILE_SPEED_f, Stat<float>(6.0f, LOW)});
-        floatStats.insert({PROJECTILE_DAMAGE_f, Stat<float>(7.0f, HIGH)});
-        floatStats.insert({HEALTH_f, Stat<float>(100.0f, UNUPGRADABLE)});
-        floatStats.insert({MAX_HEALTH_f, Stat<float>(100.0f, MED)});
+        floatStats.insert({PROJECTILE_SPREAD_f, Stat<float>(5.0f, MED, 1.2f)});
+        floatStats.insert({PROJECTILE_SPEED_f, Stat<float>(6.0f, LOW, 3.4f)});
+        floatStats.insert({PROJECTILE_DAMAGE_f, Stat<float>(7.0f, HIGH, 2.4f)});
+        floatStats.insert({HEALTH_f, Stat<float>(100.0f, UNUPGRADABLE, 0.0f)});
+        floatStats.insert({MAX_HEALTH_f, Stat<float>(100.0f, MED, 20.0f)});
     }
 
     void StatManager::resetAll(){
@@ -57,13 +57,13 @@ namespace PlayerStats{
         std::vector<int> possibleOutputs = std::vector<int>();
 
         for (auto a : intStats){
-            if (a.second.getWeight() < weight && !isInVec<int>(excludeStats, a.first)){
+            if (a.second.getWeight() <= weight && !isInVec<int>(excludeStats, a.first)){
                 possibleOutputs.push_back(a.first);
             }
         }
 
         for (auto a : floatStats){
-            if (a.second.getWeight() < weight && !isInVec<int>(excludeStats, a.first)){
+            if (a.second.getWeight() <= weight && !isInVec<int>(excludeStats, a.first)){
                 possibleOutputs.push_back(a.first);
             }
         }
@@ -72,4 +72,21 @@ namespace PlayerStats{
 
         return possibleOutputs[random];
     }
+
+    StatType StatManager::getStatType(int statIndex){
+        if (statIndex < intStats.size()){
+            return INT;
+        }else {
+            return FLOAT;
+        }
+    }
+
+    Stat<int>& StatManager::getIStat(int statId){
+        return intStats.at(statId);
+    }
+
+    Stat<float>& StatManager::getFStat(int statId){
+        return floatStats.at(statId);
+    }
+
 }

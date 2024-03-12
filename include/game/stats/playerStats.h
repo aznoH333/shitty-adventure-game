@@ -8,7 +8,7 @@ namespace PlayerStats {
     
     // leftover file
     // lmao
-    
+
     extern StatManager* playerStats;
 
     void initDefault();

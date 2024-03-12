@@ -23,6 +23,9 @@ namespace PlayerStats{
             float& getF(int index);
             int pickRandomStat(int randomBase, std::vector<int>& excludeStats);
             int pickRandomStatWithWeightLessThan(int randomBase, int weight, std::vector<int>& excludeStats);
+            StatType getStatType(int statIndex);
+            Stat<int>& getIStat(int statId);
+            Stat<float>& getFStat(int statId);
 
 
     };
