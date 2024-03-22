@@ -31,47 +31,61 @@ namespace PlayerStats {
         }
     }
 
-    Item::Item(int itemId, int itemSeed){
+
+
+    Item::Item(int itemId, int itemSeed, float targetItemScore){
         this->itemId = itemId;
         int seedCopy = itemSeed;
-        {
-            std::vector<int> usedIds = std::vector<int>();
-            // generate upsides
-            float itemScore = 0.0f;
-            int upsideCount = getPseudoRandomInt(1, 2, seedCopy++);
-            for (int i = 0; i < upsideCount; i++){
-                int result = playerStats->pickRandomStat(seedCopy++, usedIds);
-                usedIds.push_back(result);
-                StatType type = playerStats->getStatType(result);
+        std::vector<int> usedIds = std::vector<int>();
+        float itemScore = 0.0f;
+        float differentialValue = getPseudoRandomFloat(1, 3, seedCopy++);
 
-                switch(type){
-                    case INT:
-                        addIntStat(result, itemScore, itemSeed, true);
-                        break;
-                    case FLOAT:
-                        addFloatStat(result, itemScore, itemSeed, true);
-                        break;
-                }
-            }
+        {
+            
+            // generate upsides
+            do {
+                generateStat(seedCopy, usedIds, true, itemScore);
+            }while (itemScore < targetItemScore + differentialValue);
 
             // generate downsides
-            while(itemScore > 0.0f){
-                switch(type){
-                    case INT:
-                        addIntStat(result, itemScore, itemSeed, true);
-                        break;
-                    case FLOAT:
-                        addFloatStat(result, itemScore, itemSeed, true);
-                        break;
-                }
+            while (itemScore > targetItemScore){
+                generateStat(seedCopy, usedIds, false, itemScore);
+
             }
+
+
+        }
+
+
+        // print values to console
+        std::cout << "\nItem stats \n";
+        for (std::pair<int, StatModifier> p : modifiers){
+            std::cout << p.first << " : " << (p.second.type == INT ? p.second.value.intValue : p.second.value.floatValue) << "\n";
+        }
+        std::cout << "\nfinal item score " << itemScore << "\n";
+    }
+
+
+    void Item::generateStat(int& seed, std::vector<int>& usedIds, bool shouldBePositive, float& itemScore){
+        int result = playerStats->pickRandomStat(seed++, usedIds);
+        usedIds.push_back(result);
+        StatType type = playerStats->getStatType(result);
+
+        switch(type){
+            case INT:
+                addIntStat(result, itemScore, seed, shouldBePositive);
+                break;
+            case FLOAT:
+                addFloatStat(result, itemScore, seed, shouldBePositive);
+                break;
         }
     }
+
 
     void Item::addIntStat(int id, float& itemScore, int& statSeed, bool isPositive){
         
         Stat<int>& stat = playerStats->getIStat(id);
-        float modifier = getPseudoRandomFloat(0.7f, 1.3f, statSeed++) * 200.0f;
+        float modifier = getPseudoRandomFloat(0.7f, 1.3f, statSeed++);
         int positiveModifier = boolToSign(isPositive);
         int power = stat.getAverageValueChange() * modifier * positiveModifier;
         itemScore += (stat.getWeight() * modifier) * positiveModifier;
@@ -82,12 +96,16 @@ namespace PlayerStats {
     void Item::addFloatStat(int id, float& itemScore, int& statSeed, bool isPositive){
         
         Stat<float>& stat = playerStats->getFStat(id);
-        float modifier = getPseudoRandomFloat(0.7f, 1.3f, statSeed++) * 200.0f;
+        float modifier = getPseudoRandomFloat(0.7f, 1.3f, statSeed++);
         int positiveModifier = boolToSign(isPositive);
         float power = stat.getAverageValueChange() * modifier * positiveModifier;
         itemScore += (stat.getWeight() * modifier) * positiveModifier;
         modifiers[id] = {FLOAT, {.floatValue = power}};
     
+    }
+
+    bool Item::isEmpty(){
+        return isEmptyItem;
     }
 
 }

@@ -4,7 +4,7 @@ namespace PlayerStats {
     ItemManager* ItemManager::instance = 0;
 
     ItemManager::ItemManager(){
-        items.insert({0, Item(0,69)});
+        items.insert({0, Item(0,120, 5)});
 
         items.at(0).equipItem();
     }

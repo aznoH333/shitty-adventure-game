@@ -24,7 +24,7 @@ namespace PlayerStats{
         intStats.insert({PROJECTILE_COUNT_i, Stat<int>(5, HIGH, 1)});
 
         // floats
-        floatStats.insert({PROJECTILE_SPREAD_f, Stat<float>(5.0f, MED, 1.2f)});
+        floatStats.insert({PROJECTILE_SPREAD_f, Stat<float>(5.0f, MED, -1.2f)});
         floatStats.insert({PROJECTILE_SPEED_f, Stat<float>(6.0f, LOW, 3.4f)});
         floatStats.insert({PROJECTILE_DAMAGE_f, Stat<float>(7.0f, HIGH, 2.4f)});
         floatStats.insert({HEALTH_f, Stat<float>(100.0f, UNUPGRADABLE, 0.0f)});

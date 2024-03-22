@@ -39,6 +39,7 @@ namespace DungeonCode {
         updateDoors(section);
         updateGiblets();
         updateProjectiles();
+        updateBoxes();
         player->update();
 
     }
@@ -375,7 +376,7 @@ namespace DungeonCode {
     void Dungeon::generateRewardSection(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation){
         
         int size = section.sectionInfo.isMain ? REWARD_ROOM_SIZE : SMALL_REWARD_ROOM_SIZE;
-
+        
         
         
         for (int i = 0; i < size; i++){
@@ -392,19 +393,19 @@ namespace DungeonCode {
                 patternId = 12;
             }
             
-
             section.levelData.push_back({patternId});
-
+            const SpawnInfo& info = dungeonPatternLookup[patternId].spawnInfo;
+            Vector2 position = {(float) ((section.levelData.size() - 1) * DUNGEON_TILE_SIZE), (float)(TILES_PER_PATTERN - info.spawnY - 1) * DUNGEON_TILE_SIZE};
 
             if (i == 1){
-                const SpawnInfo& info = dungeonPatternLookup[patternId].spawnInfo;
-                
-                Vector2 position = {(float) ((section.levelData.size() - 1) * DUNGEON_TILE_SIZE), (float)(TILES_PER_PATTERN - info.spawnY - 1) * DUNGEON_TILE_SIZE};
-                
                 // spawn door
                 spawnEntity(position, DOOR_SPAWN, section, level, returnSection, returnLoacation, false);
                 // set default position
                 section.defaultEntry = position;
+            }else if (i == size / 2){
+                // spawn box
+                std::cout << "spawned box\n"; 
+                section.boxes.push_back(ItemBox({position.x - DUNGEON_TILE_SIZE, position.y - DUNGEON_TILE_SIZE}, 0));
             }
         }
     }
@@ -762,5 +763,19 @@ namespace DungeonCode {
         projectiles.clear();
     }
 
+    // --== boxes ==--
+    void Dungeon::updateBoxes(){
+        for (ItemBox& box : currentLoadedLevel.sections[currentLoadedLevel.currentSection].boxes){
+            box.update();
+
+            for (Projectile& p : projectiles){
+                if (!box.isBoxOpen() && squaresCollide(box.getPosition(), p.position, BOX_SIZE, PROJECTILE_SIZE)){
+                    box.openBox();
+                }
+            }
+        }
+    }
+
+    
 
 }

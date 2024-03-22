@@ -14,6 +14,7 @@
 #include "engine/sound.h"
 #include "dungeonEnemy.h"
 #include "game/stats/playerStats.h"
+#include "itemBox.h"
 
 namespace DungeonCode {
 
@@ -78,6 +79,7 @@ namespace DungeonCode {
         std::vector<DungeonPlatformSpawner> platfromSpawners;
         std::list<DungeonEnemy> enemies;
         std::list<DungeonDoor> doors;
+        std::list<ItemBox> boxes;
         Vector2 defaultEntry;
     };
 
@@ -88,6 +90,7 @@ namespace DungeonCode {
         int lastId;
     };
 
+    
     
 
 
@@ -285,6 +288,9 @@ namespace DungeonCode {
             const float SIDE_ROOM_CHANCE = 0.03f;
             const int FIGHT_ROOM_SIZE = 35;
 
+            // Boxes
+            const Vector2 BOX_SIZE = {32, 32};
+
             std::map<int, std::vector<int>> dynamicConnectorLookupTable;
 
             // generation
@@ -329,6 +335,9 @@ namespace DungeonCode {
             bool collidesWithLevel(Vector2& position, Vector2& size);
             bool collidesWithPlatform(Vector2& position, Vector2& size);
             bool collidesWithPlatformAdvanced(Vector2& position, Vector2& size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
+
+            // boxes
+            void updateBoxes();
 
             // giblets
             void updateGiblets();
