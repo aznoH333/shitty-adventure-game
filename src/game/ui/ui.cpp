@@ -1,5 +1,6 @@
 #include "game/ui/ui.h"
 #include <cmath>
+#include "game/stats/itemManager.h"
 
 using namespace Utils;
 using namespace PlayerStats;
@@ -48,11 +49,12 @@ namespace UICode{
 
     void Hud::drawItems(float &hudY){
         for (int iterator = 0; iterator < DISPLAY_ITEM_COUNT; iterator++){
-            
+            Item* item = ItemManager::get()->getItem(ItemManager::get()->getItemInSlot(iterator));
             Vector2 drawPosition = {ITEM_DISPLAY_START.x + (iterator * ITEM_FRAME_OFFSET), ITEM_DISPLAY_START.y + hudY};
+            
+            
             Drawing::get()->drawTextureStatic("item_frame", drawPosition, false, 1.0f, 0.0f, WHITE);
-            Drawing::get()->drawTextureStatic("item_icons_22", {drawPosition.x + ITEM_OFFSET.x, drawPosition.y + ITEM_OFFSET.y}, false, 1.0f, 0.0f, WHITE);
-
+            Drawing::get()->drawTextureStatic(item->getSprite(), {drawPosition.x + ITEM_OFFSET.x, drawPosition.y + ITEM_OFFSET.y}, false, 1.0f, 0.0f, WHITE);
         }
     }
    

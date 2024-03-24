@@ -3,6 +3,7 @@
 
 #include "item.h"
 #include <map>
+#include <vector>
 
 namespace PlayerStats {
     
@@ -11,6 +12,8 @@ namespace PlayerStats {
         private:
             static ItemManager* instance;
             std::map<int, Item> items;
+            std::vector<int> equipedItems;
+            const int ITEM_CAPACITY = 5;
 
 
         public:
@@ -20,6 +23,8 @@ namespace PlayerStats {
             void unequipItem(int itemId);
             Item* getItem(int itemId);
             void dispose();
+            int getItemInSlot(int slotId);
+            void equipItemIntoSlot(int slotId, int itemId);
     };
 }
 #endif

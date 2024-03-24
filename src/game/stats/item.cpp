@@ -13,6 +13,8 @@ namespace PlayerStats {
         for (std::pair<int, StatModifier> a : modifiers){
             if (a.second.type == INT){
                 std::cout << "added " << a.second.value.intValue << " to stat with id " << a.first <<"\n";
+                playerStats->getI(a.first) += a.second.value.intValue;
+
             }else{
                 std::cout << "added " << a.second.value.floatValue << " to stat with id " << a.first <<"\n";
                 playerStats->getF(a.first) += a.second.value.floatValue;
@@ -132,5 +134,7 @@ namespace PlayerStats {
     std::string& Item::getSprite(){
         return sprite;
     }
+
+    
 
 }

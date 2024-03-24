@@ -17,10 +17,10 @@ namespace PlayerStats{
         
     StatManager::StatManager(){
         // ints
-        intStats.insert({SHELL_RELOAD_TIME_i, Stat<int>(15, LOW, 3)});
+        intStats.insert({SHELL_RELOAD_TIME_i, Stat<int>(15, LOW, -3)});
         intStats.insert({AMMO_COUNT_i, Stat<int>(4, UNUPGRADABLE, 0)});
         intStats.insert({MAX_AMMO_COUNT_i, Stat<int>(4, MED, 2)});
-        intStats.insert({FIRING_SPEED_i, Stat<int>(20, HIGH, 4)});
+        intStats.insert({FIRING_SPEED_i, Stat<int>(20, HIGH, -4)});
         intStats.insert({PROJECTILE_COUNT_i, Stat<int>(5, HIGH, 1)});
 
         // floats
