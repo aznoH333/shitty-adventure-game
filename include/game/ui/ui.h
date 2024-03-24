@@ -17,24 +17,31 @@ namespace UICode{
         const float HUD_OFF_POSITION = -64.0f;
         const float HUD_ON_POSITION = 0.0f;
 
-
+        // shell counter
         const float SHELLS_OFFSET = 11.0f;
         const Vector2 SHELL_START = {4.0f, 4.0f};
         const std::string SHELL_SPRITE = "ammo_hud_1";
         const std::string SHELL_MISSING_SPRITE = "ammo_hud_2";
 
+        // hp counter
         const float HP_OFFSET = 7.0f;
         const Vector2 HP_START = {4.0f, 27.0f};
         const int HEALTH_SEGMENT_COUNT = 10;
         const std::string HP_SPRITE = "hp_hud_1";
         const std::string HP_MISSING_SPRITE = "hp_hud_2";
 
+        // item display
+        const int DISPLAY_ITEM_COUNT = 5;
+        const Vector2 ITEM_OFFSET = {2.0f, 2.0f};
+        const float ITEM_FRAME_OFFSET = 19.0f;
+        const Vector2 ITEM_DISPLAY_START = {300.0f, 4.0f};
 
         void setHudVisibility(bool state);
         void updateHud();
         void drawUi(float& hudY);
         void drawShells(float& hudY);
         void drawHealth(float& hudY);
+        void drawItems(float& hudY);
 
 
         

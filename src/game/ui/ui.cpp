@@ -29,6 +29,7 @@ namespace UICode{
         //Drawing::get()->drawTextureStatic("door", {0.0f, hudY}, false, 1.0f, 0.0f, WHITE);
         drawShells(hudY);
         drawHealth(hudY);
+        drawItems(hudY);
     }
 
 
@@ -43,6 +44,16 @@ namespace UICode{
         int healthSegments = std::ceil(playerStats->getF(HEALTH_f) / playerStats->getF(MAX_HEALTH_f)) * HEALTH_SEGMENT_COUNT;
         
         drawBar(vec, HP_SPRITE, HP_MISSING_SPRITE, HP_OFFSET, 10, HEALTH_SEGMENT_COUNT);
+    }
+
+    void Hud::drawItems(float &hudY){
+        for (int iterator = 0; iterator < DISPLAY_ITEM_COUNT; iterator++){
+            
+            Vector2 drawPosition = {ITEM_DISPLAY_START.x + (iterator * ITEM_FRAME_OFFSET), ITEM_DISPLAY_START.y + hudY};
+            Drawing::get()->drawTextureStatic("item_frame", drawPosition, false, 1.0f, 0.0f, WHITE);
+            Drawing::get()->drawTextureStatic("item_icons_22", {drawPosition.x + ITEM_OFFSET.x, drawPosition.y + ITEM_OFFSET.y}, false, 1.0f, 0.0f, WHITE);
+
+        }
     }
    
 
