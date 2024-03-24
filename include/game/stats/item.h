@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 #include "stat.h"
 namespace PlayerStats{
     
@@ -20,7 +21,12 @@ namespace PlayerStats{
         private:
             std::map<int, StatModifier> modifiers;
             bool isEmptyItem = false;
+            const int MAX_SPRITE_INDEX = 21;
+            const int EMPTY_SPRITE_INDEX = 22;
+            const char* SPRITE_NAME = "item_icons_";
             int itemId;
+            std::string sprite;
+            std::string name;
 
             void addIntStat(int id, float& itemScore, int& statSeed, bool positive);
             void addFloatStat(int id, float& itemScore, int& statSeed, bool positive);
@@ -29,6 +35,9 @@ namespace PlayerStats{
 
         public:
             Item(int itemId, int itemSeed, float targetItemScore);
+            Item(int itemId);
+            std::string& getName();
+            std::string& getSprite();
             void equipItem();
             void unequipItem();
             bool isEmpty();

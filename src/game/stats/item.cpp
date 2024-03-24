@@ -34,6 +34,7 @@ namespace PlayerStats {
 
 
     Item::Item(int itemId, int itemSeed, float targetItemScore){
+        bool isEmpty = false;
         this->itemId = itemId;
         int seedCopy = itemSeed;
         std::vector<int> usedIds = std::vector<int>();
@@ -41,7 +42,6 @@ namespace PlayerStats {
         float differentialValue = getPseudoRandomFloat(1, 3, seedCopy++);
 
         {
-            
             // generate upsides
             do {
                 generateStat(seedCopy, usedIds, true, itemScore);
@@ -52,10 +52,19 @@ namespace PlayerStats {
                 generateStat(seedCopy, usedIds, false, itemScore);
 
             }
-
-
         }
 
+
+
+        // generate name and sprite
+        {
+            // name
+            name = concatSprite("item id : ", itemId);
+
+            // sprite
+            int randomSpriteIndex = getPseudoRandomInt(1, MAX_SPRITE_INDEX, seedCopy++);
+            sprite = concatSprite(SPRITE_NAME, randomSpriteIndex);
+        }
 
         // print values to console
         std::cout << "\nItem stats \n";
@@ -65,6 +74,15 @@ namespace PlayerStats {
         std::cout << "\nfinal item score " << itemScore << "\n";
     }
 
+
+    Item::Item(int itemId){
+        this->itemId = itemId;
+        sprite = concatSprite(SPRITE_NAME, EMPTY_SPRITE_INDEX);
+        name = "Nothing";
+        bool isEmpty = true;
+    }
+
+    
 
     void Item::generateStat(int& seed, std::vector<int>& usedIds, bool shouldBePositive, float& itemScore){
         int result = playerStats->pickRandomStat(seed++, usedIds);
@@ -106,6 +124,13 @@ namespace PlayerStats {
 
     bool Item::isEmpty(){
         return isEmptyItem;
+    }
+
+    std::string& Item::getName(){
+        return name;
+    }
+    std::string& Item::getSprite(){
+        return sprite;
     }
 
 }

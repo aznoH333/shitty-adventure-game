@@ -18,6 +18,7 @@ namespace PlayerStats {
             ItemManager();
             void equitItem(int itemId);
             void unequipItem(int itemId);
+            Item* getItem(int itemId);
             void dispose();
     };
 }

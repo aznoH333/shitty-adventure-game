@@ -16,6 +16,10 @@ namespace PlayerStats {
         }
         return instance;
     }
+
+    Item* ItemManager::getItem(int itemId){
+        return &items.at(itemId);
+    }
     
     
     void ItemManager::dispose(){

@@ -185,6 +185,11 @@ namespace Utils {
         }
     }
 
+    float sin(int time, float timeMultiplier, float valueMultiplier){
+        return std::sin(time * timeMultiplier) * valueMultiplier;
+    }
+
+
     // --== ui utils ==--
     void drawBar(Vector2& position, const std::string& onSprite, const std::string& offSprite, float spriteOffset, int onAmmount, int ammount){
         drawLineOfSprites(onSprite, position, onAmmount, spriteOffset);

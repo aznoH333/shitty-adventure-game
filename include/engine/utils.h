@@ -62,7 +62,7 @@ namespace Utils{
     std::string animatedSprite(std::string& base, int start, int end, int frameDuration);
     std::string concatSprite(const char* base, int number);
     void drawLineOfSprites(const std::string& sprite, Vector2& startingPosition, int ammount, float spriteOffset);
-
+    float sin(int time, float timeMultiplier, float valueMultiplier);
 
     // --== ui utils ==--
     void drawBar(Vector2& position, const std::string& onSprite, const std::string& offSprite, float spriteOffset, int onAmmount, int ammount);
