@@ -95,18 +95,16 @@ namespace DungeonCode {
         }
 
         overworldDungeon = dungeon;
-        
-        
-
 
         loadDungeon(overworldDungeon->dungeonId, dungeon->position);
 
+        UICode::Hud::setHudVisibility(true);
     }
 
 
     void Dungeon::exitDungeon(){
         unloadDungeon();
-
+        UICode::Hud::setHudVisibility(false);
         State::get()->switchState(GameState::STATE_OVERWORLD);
         
     }
@@ -404,8 +402,8 @@ namespace DungeonCode {
                 section.defaultEntry = position;
             }else if (i == size / 2){
                 // spawn box
-                std::cout << "spawned box\n"; 
-                section.boxes.push_back(ItemBox({position.x - DUNGEON_TILE_SIZE, position.y - DUNGEON_TILE_SIZE}, 1));
+                int itemId = PlayerStats::ItemManager::get()->generateNewItem(currentSeed++, 3.0f);
+                section.boxes.push_back(ItemBox({position.x - DUNGEON_TILE_SIZE, position.y - DUNGEON_TILE_SIZE}, itemId));
             }
         }
     }
@@ -572,6 +570,7 @@ namespace DungeonCode {
                 if (p.alliedWithPlayer && Utils::squaresCollide(enemy.getPosition(), p.position, DungeonEnemy::ENEMY_SIZE, PROJECTILE_SIZE)){
                     enemy.health -= p.damage;
                     enemy.lastHitDirection = p.rotation;
+                    enemy.dispose();
                     return true;
                 }
                 return false;

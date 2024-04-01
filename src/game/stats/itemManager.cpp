@@ -11,7 +11,7 @@ namespace PlayerStats {
         
         // insert empty item
         items.insert({0, Item(0)});
-        items.insert({1, Item(1,120, 5)});
+
 
         //equipItemIntoSlot(0, 1);
     }
@@ -50,5 +50,13 @@ namespace PlayerStats {
         if (currentlySelectedSlot > ITEM_CAPACITY){
             currentlySelectedSlot = 0;
         }
+    }
+
+    int ItemManager::generateNewItem(int itemSeed, float targetItemScore){
+        items.insert({nextItemId, Item(nextItemId, itemSeed, targetItemScore)});
+        int i = nextItemId;
+        nextItemId++;
+        return i;
+
     }
 }

@@ -34,6 +34,7 @@ namespace DungeonCode {
             int& getSpr();
             float getMovementSpeed();
             void update();
+            void dispose();
 
     };
 

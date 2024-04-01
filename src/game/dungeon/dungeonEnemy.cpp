@@ -33,4 +33,10 @@ namespace DungeonCode {
     float DungeonEnemy::getMovementSpeed(){
         return moveSpeed;
     }
+
+    void DungeonEnemy::dispose(){
+        // this causes a double free?
+        // some memory magic is going on here
+        //delete ai;
+    }
 }

@@ -68,7 +68,7 @@ namespace PlayerStats{
             }
         }
 
-        int random = getPseudoRandomInt(0, possibleOutputs.size(), randomBase);
+        int random = getPseudoRandomInt(0, possibleOutputs.size() - 1, randomBase);
 
         return possibleOutputs[random];
     }

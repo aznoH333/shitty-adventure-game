@@ -15,6 +15,7 @@ namespace PlayerStats {
             std::vector<int> equipedItems;
             const int ITEM_CAPACITY = 5;
             int currentlySelectedSlot = 0;
+            int nextItemId = 1;
 
 
         public:
@@ -28,6 +29,7 @@ namespace PlayerStats {
             void equipItemIntoSlot(int slotId, int itemId);
             int getCurrentlySelectedSlot();
             void incrementSelectedSlot();
+            int generateNewItem(int itemSeed, float targetScore);
     };
 }
 #endif
