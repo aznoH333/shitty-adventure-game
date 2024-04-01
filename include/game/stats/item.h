@@ -4,22 +4,10 @@
 #include <map>
 #include <vector>
 #include <string>
-#include "stat.h"
 namespace PlayerStats{
-    
-    union StatValue{
-        int intValue;
-        float floatValue;
-    };
-
-    struct StatModifier{
-        StatType type;
-        StatValue value;
-    };
-    
     class Item{
         private:
-            std::map<int, StatModifier> modifiers;
+            std::map<int, int> modifiers;
             bool isEmptyItem = false;
             const int MAX_SPRITE_INDEX = 21;
             const int EMPTY_SPRITE_INDEX = 22;
@@ -28,17 +16,15 @@ namespace PlayerStats{
             std::string sprite;
             std::string name;
 
-            void addIntStat(int id, float& itemScore, int& statSeed, bool positive);
-            void addFloatStat(int id, float& itemScore, int& statSeed, bool positive);
+            void addStat(int id, float& itemScore, int& statSeed, bool positive);
             void generateStat(int& seed, std::vector<int>& usedIds, bool shouldBePositive, float& itemScore);
-
 
         public:
             Item(int itemId, int itemSeed, float targetItemScore);
             Item(int itemId);
             std::string& getName();
             std::string& getSprite();
-            std::map<int, StatModifier>& getModifierList();
+            std::map<int, int>& getModifierList();
             void equipItem();
             void unequipItem();
             bool isEmpty();

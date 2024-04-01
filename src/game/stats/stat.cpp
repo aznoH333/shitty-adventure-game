@@ -1,38 +1,62 @@
 #include "game/stats/stat.h"
+#include <cmath>
 
 
 namespace PlayerStats {
-    template<typename T>
-    Stat<T>::Stat(T defaultValue, StatWeight weight, T averageValueChange, std::string textName){
+    Stat::Stat(int defaultValue, int maxValue, float upperBound, float multiplierValue, std::string textName){
         this->defaultValue = defaultValue;
-        this->weight = weight;
+        this->maxValue = maxValue;
+        this->upperBound = upperBound;
+        this->isSutractive = true;
         this->value = defaultValue;
-        this->averageValueChange = averageValueChange;
+        this->multiplierValue = multiplierValue;
         this->textName = textName;
     }
-    template<typename T>
-    void Stat<T>::resetStat(){
+
+    Stat::Stat(int defaultValue, int maxValue, float multiplierValue, std::string textName){
+        this->defaultValue = defaultValue;
+        this->maxValue = maxValue;
+        this->upperBound = 0.0f;
+        this->isSutractive = false;
+        this->value = defaultValue;
+        this->multiplierValue = multiplierValue;
+        this->textName = textName;
+    }
+    void Stat::resetStat(){
         this->value = this->defaultValue;
     }
 
-    template<typename T>
-    T& Stat<T>::get(){
-        return value;
+    int Stat::getValueInBounds(){
+        return std::max(std::min(value, maxValue), 1);
+    }
+    int Stat::get(){
+        if (isSutractive){
+            return upperBound - (int)std::ceil(getValueInBounds() * multiplierValue);
+        }
+        
+        return (int)std::ceil(getValueInBounds() * multiplierValue);
     }
 
-    template<typename T>
-    StatWeight Stat<T>::getWeight(){
-        return weight;
+    float Stat::getF(){
+        if (isSutractive){
+            return upperBound - (getValueInBounds() * multiplierValue);
+        }
+        
+        return value * multiplierValue;
     }
 
-    template <typename T>
-    T Stat<T>::getAverageValueChange(){
-        return this->averageValueChange;
+    void Stat::addToValue(int value){
+        this->value += value;
     }
+    
 
-    template <typename T>
-    std::string& Stat<T>::getTextName(){
+    std::string& Stat::getTextName(){
         return this->textName;
     }
+
+    bool Stat::isUpgradable(){
+        return true;
+    }
+
 
 }

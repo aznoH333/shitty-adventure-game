@@ -1,62 +1,49 @@
 #ifndef STAT 
 #define STAT 
 
-#include <climits> 
 #include <string>
 
 namespace PlayerStats {
-    
-    enum StatType{
-        INT = 0,
-        FLOAT,
-    };
-
-    enum StatWeight{
-        LOW = 1,
-        MED = 2,
-        HIGH = 4,
-        HIGHEST = 5,
-        UNUPGRADABLE = INT_MAX,
-    };
 
     enum StatName{
-        SHELL_RELOAD_TIME_i = 0,
-        AMMO_COUNT_i,
-        MAX_AMMO_COUNT_i,
-        FIRING_SPEED_i,
-        PROJECTILE_COUNT_i,
-       
-       
-        PROJECTILE_SPREAD_f,
-        PROJECTILE_SPEED_f,
-        PROJECTILE_DAMAGE_f,
-        HEALTH_f,
-        MAX_HEALTH_f,
-
+        SHELL_RELOAD_TIME = 0,
+        AMMO_COUNT,
+        MAX_AMMO_COUNT,
+        FIRING_SPEED,
+        PROJECTILE_COUNT,
+        PROJECTILE_SPREAD,
+        PROJECTILE_SPEED,
+        PROJECTILE_DAMAGE,
+        HEALTH,
+        MAX_HEALTH,
         STAT_COUNT,
 
 
     };
     
-    template<class T>
     class Stat{
-        private:
-            T value;
-            T defaultValue;
-            T averageValueChange;
-            StatWeight weight;
-            std::string textName;
-        public:
-            Stat<T>(T defaultValue, StatWeight weight, T averageValueChange, std::string textName);
-            void resetStat();
-            T& get();
-            StatWeight getWeight();
-            T getAverageValueChange();
-            std::string& getTextName();
-    };
+        protected:
+            const int MIN_STAT_VALUE = 1;
 
-    template class Stat<int>;
-    template class Stat<float>;
+            int value;
+            int defaultValue;
+            int maxValue;
+            float multiplierValue;
+            float upperBound;
+            bool isSutractive;
+            std::string textName;
+            int getValueInBounds();
+        public:
+            Stat(int defaultValue, int maxValue, float upperBound, float multiplierValue, std::string textName);
+            Stat(int defaultValue, int maxValue, float multiplierValue, std::string textName);
+
+            void resetStat();
+            void addToValue(int value);
+            virtual int get();
+            virtual float getF();
+            std::string& getTextName();
+            virtual bool isUpgradable();
+    };
 
 }
 

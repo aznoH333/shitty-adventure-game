@@ -36,13 +36,13 @@ namespace UICode{
 
     void Hud::drawShells(float& hudY){
         Vector2 vec = {SHELL_START.x, SHELL_START.y + hudY};
-        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats->getI(AMMO_COUNT_i), playerStats->getI(MAX_AMMO_COUNT_i));
+        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats->get(AMMO_COUNT), playerStats->get(MAX_AMMO_COUNT));
     }
 
 
     void Hud::drawHealth(float& hudY){
         Vector2 vec = {HP_START.x, HP_START.y + hudY};
-        int healthSegments = std::ceil(playerStats->getF(HEALTH_f) / playerStats->getF(MAX_HEALTH_f)) * HEALTH_SEGMENT_COUNT;
+        int healthSegments = std::ceil(playerStats->getF(HEALTH) / playerStats->getF(MAX_HEALTH)) * HEALTH_SEGMENT_COUNT;
         
         drawBar(vec, HP_SPRITE, HP_MISSING_SPRITE, HP_OFFSET, 10, HEALTH_SEGMENT_COUNT);
     }
@@ -281,26 +281,19 @@ namespace UICode{
                 UICode::Text::renderGameText(item->getName(), ITEM_TEXT_POSITION, textColor, 0.7f);
                 // showcase stats
                 int iteration = 1;
-                for (std::pair<const int, StatModifier>& modifier : item->getModifierList()){
+                for (std::pair<const int, int>& modifier : item->getModifierList()){
                     // i did this to myself
                     // i regret this
                     std::string text;
                     std::string value;
                     bool isPositive;
                     
-                    if (modifier.second.type == INT){
-                        Stat<int>& s = StatManager::get()->getIStat(modifier.first);
-                        text = s.getTextName();
-                        value = std::to_string(modifier.second.value.intValue);
-                        isPositive = modifier.second.value.intValue >= 0;
-                    }else{
-                        Stat<float>& s = StatManager::get()->getFStat(modifier.first);
-                        text = s.getTextName();
-                        value = std::to_string((int) std::floor(modifier.second.value.floatValue));
-                        value += ".";
-                        value += std::to_string((int)((modifier.second.value.floatValue - std::floor(modifier.second.value.floatValue)) * 100));
-                        isPositive = modifier.second.value.floatValue >= 0;
-                    }
+                    
+                    Stat& s = StatManager::get()->getStat(modifier.first);
+                    text = s.getTextName();
+                    value = std::to_string(modifier.second);
+                    isPositive = modifier.second >= 0;
+                    
                     
                     value = (isPositive ? "+" : "") + value;
                     // print

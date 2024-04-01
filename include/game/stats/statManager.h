@@ -11,23 +11,19 @@ namespace PlayerStats{
     
     class StatManager{
         private:
-            std::map<int, Stat<int>> intStats;
-            std::map<int, Stat<float>> floatStats;
+            std::map<int, Stat*> stats;
             static StatManager* instance;
 
         public:
             static StatManager* get();
             StatManager();
+            ~StatManager();
             void resetAll();
-            int& getI(int index);
-            float& getF(int index);
             int pickRandomStat(int randomBase, std::vector<int>& excludeStats);
-            int pickRandomStatWithWeightLessThan(int randomBase, int weight, std::vector<int>& excludeStats);
-            StatType getStatType(int statIndex);
-            Stat<int>& getIStat(int statId);
-            Stat<float>& getFStat(int statId);
-
-
+            int pickRandomStatWithWeightLessThan(int randomBase, std::vector<int>& excludeStats);
+            Stat& getStat(int statId);
+            int get(int statId);
+            float getF(int statId); 
     };
 
     

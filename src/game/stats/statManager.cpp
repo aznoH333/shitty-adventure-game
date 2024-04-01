@@ -1,5 +1,6 @@
 #include "game/stats/statManager.h"
 #include "engine/utils.h"
+#include "game/stats/statVariable.h"
 #include <vector>
 
 
@@ -16,54 +17,52 @@ namespace PlayerStats{
     }
         
     StatManager::StatManager(){
-        // ints
-        intStats.insert({SHELL_RELOAD_TIME_i, Stat<int>(15, LOW, -3, "reload speed")});
-        intStats.insert({AMMO_COUNT_i, Stat<int>(4, UNUPGRADABLE, 0, "")});
-        intStats.insert({MAX_AMMO_COUNT_i, Stat<int>(4, MED, 2, "max ammo")});
-        intStats.insert({FIRING_SPEED_i, Stat<int>(20, HIGH, -4, "fire rate")});
-        intStats.insert({PROJECTILE_COUNT_i, Stat<int>(5, HIGH, 2, "projectiles")});
+        stats.insert({SHELL_RELOAD_TIME, new Stat(10, 19, 30.0f, 1.5f, "reload speed")});
+        stats.insert({AMMO_COUNT, new StatVariable(4, "ammo")});
+        stats.insert({MAX_AMMO_COUNT, new Stat(4, 12, 1.0f, "max ammo")});
+        stats.insert({FIRING_SPEED, new Stat(10, 19, 40.0f, 2.0f, "fire rate")});
+        stats.insert({PROJECTILE_COUNT, new Stat(5, 15, 1.0f, "projectiles")});
 
-        // floats
-        floatStats.insert({PROJECTILE_SPREAD_f, Stat<float>(5.0f, MED, -0.5f, "spread")});
-        floatStats.insert({PROJECTILE_SPEED_f, Stat<float>(6.0f, LOW, 3.4f, "bullet speed")});
-        floatStats.insert({PROJECTILE_DAMAGE_f, Stat<float>(7.0f, HIGH, 1.0f, "damage")});
-        floatStats.insert({HEALTH_f, Stat<float>(100.0f, UNUPGRADABLE, 0.0f, "")});
-        floatStats.insert({MAX_HEALTH_f, Stat<float>(100.0f, MED, 20.0f, "health")});
+        stats.insert({PROJECTILE_SPREAD, new Stat(10, 19, 40.0f, 3.5, "spread")});
+        stats.insert({PROJECTILE_SPEED, new Stat(5, 10, 1.0f, "bullet speed")});
+        stats.insert({PROJECTILE_DAMAGE, new Stat(10, 19, 0.7, "damage")});
+        stats.insert({HEALTH, new StatVariable(100, "health")});
+        stats.insert({MAX_HEALTH, new Stat(5, 20, 20.0f, "max health")});
+    }
+
+    StatManager::~StatManager(){
+        for (auto a : stats){
+            delete a.second;
+        }
     }
 
     void StatManager::resetAll(){
-        for(auto a : intStats){
-            a.second.resetStat();
-        }
-
-        for(auto a : floatStats){
-            a.second.resetStat();
+        for (auto a : stats){
+            a.second->resetStat();
         }
     }
 
-    int& StatManager::getI(int index){
-        return intStats.at(index).get();
+    Stat& StatManager::getStat(int statId){
+        return *stats.at(statId);
     }
 
-    float& StatManager::getF(int index){
-        return floatStats.at(index).get();
+    int StatManager::get(int statId){
+        return stats.at(statId)->get();
+    }
+
+    float StatManager::getF(int statId){
+        return stats.at(statId)->getF();
     }
 
     int StatManager::pickRandomStat(int randomBase, std::vector<int>& excludeStats){
-        return pickRandomStatWithWeightLessThan(randomBase, HIGHEST, excludeStats);
+        return pickRandomStatWithWeightLessThan(randomBase, excludeStats);
     }
 
-    int StatManager::pickRandomStatWithWeightLessThan(int randomBase, int weight, std::vector<int>& excludeStats){
+    int StatManager::pickRandomStatWithWeightLessThan(int randomBase, std::vector<int>& excludeStats){
         std::vector<int> possibleOutputs = std::vector<int>();
 
-        for (auto a : intStats){
-            if (a.second.getWeight() <= weight && !isInVec<int>(excludeStats, a.first)){
-                possibleOutputs.push_back(a.first);
-            }
-        }
-
-        for (auto a : floatStats){
-            if (a.second.getWeight() <= weight && !isInVec<int>(excludeStats, a.first)){
+        for (auto a : stats){
+            if (a.second->isUpgradable() && !isInVec(excludeStats, a.first)){
                 possibleOutputs.push_back(a.first);
             }
         }
@@ -71,22 +70,6 @@ namespace PlayerStats{
         int random = getPseudoRandomInt(0, possibleOutputs.size() - 1, randomBase);
 
         return possibleOutputs[random];
-    }
-
-    StatType StatManager::getStatType(int statIndex){
-        if (statIndex < intStats.size()){
-            return INT;
-        }else {
-            return FLOAT;
-        }
-    }
-
-    Stat<int>& StatManager::getIStat(int statId){
-        return intStats.at(statId);
-    }
-
-    Stat<float>& StatManager::getFStat(int statId){
-        return floatStats.at(statId);
     }
 
 }
