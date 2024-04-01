@@ -157,6 +157,11 @@ namespace UICode{
                             break;
                         case ']':
                             output.textData[output.length++] = 54;
+                        case '+':
+                            output.textData[output.length++] = 55;
+                        case '-':
+                            output.textData[output.length++] = 56;
+
                     }
                 }
                 
@@ -234,11 +239,14 @@ namespace UICode{
         }
 
 
-        void displayPrompt(std::string text){
+        void displayDefaultTextPrompt(std::string text){
             currentPrompt.isActive = true;
             currentPrompt.isVisible = true;
             currentPrompt.text = text;
+            currentPrompt.displayItem = nullptr;
 
+            currentPrompt.position = {DEFAULT_PROMPT_X, DEFAULT_PROMPT_Y};
+            currentPrompt.scale = {DEFAULT_PROMPT_WIDTH, DEFAULT_PROMPT_HEIGHT};
         }
 
 
@@ -261,13 +269,61 @@ namespace UICode{
             Color textColor = boxColor;
             boxColor.a /= 1.2f;
 
-            // draw prompt
-            drawBox({DEFAULT_PROMPT_X, DEFAULT_PROMPT_Y}, DEFAULT_PROMPT_WIDTH, DEFAULT_PROMPT_HEIGHT, boxColor);
-            UICode::Text::renderGameText(currentPrompt.text, DEFAULT_TEXT_POSITION, textColor, 0.7f);
 
-            
+            drawBox(currentPrompt.position, currentPrompt.scale.x, currentPrompt.scale.y, boxColor);
+            if (currentPrompt.displayItem == nullptr){
+                // draw prompt
+                UICode::Text::renderGameText(currentPrompt.text, DEFAULT_TEXT_POSITION, textColor, 0.7f);
+            }else {
+                // draw item display
+                Item* item = currentPrompt.displayItem;
+                // header
+                UICode::Text::renderGameText(item->getName(), ITEM_TEXT_POSITION, textColor, 0.7f);
+                // showcase stats
+                int iteration = 1;
+                for (std::pair<const int, StatModifier>& modifier : item->getModifierList()){
+                    // i did this to myself
+                    // i regret this
+                    std::string text;
+                    std::string value;
+                    bool isPositive;
+                    
+                    if (modifier.second.type == INT){
+                        Stat<int>& s = StatManager::get()->getIStat(modifier.first);
+                        text = s.getTextName();
+                        value = std::to_string(modifier.second.value.intValue);
+                        isPositive = modifier.second.value.intValue >= 0;
+                    }else{
+                        Stat<float>& s = StatManager::get()->getFStat(modifier.first);
+                        text = s.getTextName();
+                        value = std::to_string((int) std::floor(modifier.second.value.floatValue));
+                        value += ".";
+                        value += std::to_string((int)((modifier.second.value.floatValue - std::floor(modifier.second.value.floatValue)) * 100));
+                        isPositive = modifier.second.value.floatValue >= 0;
+                    }
+                    
+                    value = (isPositive ? "+" : "") + value;
+                    // print
+                    UICode::Text::renderGameText(text, {ITEM_TEXT_POSITION.x, ITEM_TEXT_POSITION.y + (ITEM_TEXT_LINE_HEIGHT * iteration)}, textColor, 0.7f);
+                    UICode::Text::renderGameText(value, {ITEM_STAT_VALUE_START, ITEM_TEXT_POSITION.y + (ITEM_TEXT_LINE_HEIGHT * iteration)}, textColor, 0.7f);
+
+                    iteration++;
+                }
+                // this code is genuine dog shit i hate c++
+                UICode::Text::renderGameText("press e to pickup", {ITEM_TEXT_POSITION.x, ITEM_TEXT_POSITION.y + (ITEM_TEXT_LINE_HEIGHT * SOME_ARBITRARY_VALUE)}, textColor, 0.7f);
+            }
+
 
             currentPrompt.isActive = false;
+        }
+
+        void displayItemPrompt(PlayerStats::Item* itemToDisplay){
+            currentPrompt.isActive = true;
+            currentPrompt.isVisible = true;
+            //currentPrompt.text = text;
+            currentPrompt.displayItem = itemToDisplay;
+            currentPrompt.position = {ITEM_PROMPT_X, ITEM_PROMPT_Y};
+            currentPrompt.scale = {ITEM_PROMPT_WIDTH, ITEM_PROMPT_HEIGHT};
         }
     }
 

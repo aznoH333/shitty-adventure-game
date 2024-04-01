@@ -13,7 +13,7 @@ namespace PlayerStats {
         items.insert({0, Item(0)});
         items.insert({1, Item(1,120, 5)});
 
-        equipItemIntoSlot(0, 1);
+        //equipItemIntoSlot(0, 1);
     }
 
 
@@ -40,5 +40,15 @@ namespace PlayerStats {
     
     void ItemManager::dispose(){
         delete instance;
+    }
+
+    int ItemManager::getCurrentlySelectedSlot(){
+        return currentlySelectedSlot;
+    }
+    void ItemManager::incrementSelectedSlot(){
+        currentlySelectedSlot++;
+        if (currentlySelectedSlot > ITEM_CAPACITY){
+            currentlySelectedSlot = 0;
+        }
     }
 }

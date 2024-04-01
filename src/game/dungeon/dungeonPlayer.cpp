@@ -26,7 +26,7 @@ void DungeonPlayer::update(){
     
     tryMove();
     updateMovementValues();
-    
+    updateBoxInteraction();
     updateGun();
     drawGun();
 
@@ -70,7 +70,7 @@ void DungeonPlayer::readPlayerInput(){
     buttonJumpPressed = IsKeyPressed(KEY_SPACE);
     buttonJump = IsKeyDown(KEY_SPACE);
     buttonInteractPressed = IsKeyPressed(KEY_E);
-    buttonFirePressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+    buttonFirePressed = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
     buttonReloadPressed = IsKeyPressed(KEY_R);
     
 
@@ -200,7 +200,7 @@ void DungeonPlayer::updateDoorInteraction(){
     }
 
     // display interaction prompt
-    UICode::Boxes::displayPrompt("press e to enter");
+    UICode::Boxes::displayDefaultTextPrompt("press e to enter");
 
     if (buttonInteractPressed){
         Dungeon::get()->enterDoor(nearbyDoor);
@@ -344,3 +344,25 @@ void DungeonPlayer::drawGun(){
 
 }
 
+
+// --== box stuff ==--
+void DungeonPlayer::updateBoxInteraction(){
+    ItemBox* box = Dungeon::get()->lookForNearbyBoxes(position);
+
+    if (box == nullptr || isAirborne || !box->isBoxOpen()){
+        return;
+    }
+
+    // display interaction prompt
+    UICode::Boxes::displayItemPrompt(ItemManager::get()->getItem(box->getItemId()));
+
+    if (buttonInteractPressed){
+        ItemManager* m = ItemManager::get();
+        
+        int thisId = m->getItemInSlot(m->getCurrentlySelectedSlot());
+        m->equipItemIntoSlot(m->getCurrentlySelectedSlot(), box->getItemId());
+        box->setItemId(thisId);
+        m->incrementSelectedSlot();
+    }
+
+}

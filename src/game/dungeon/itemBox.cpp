@@ -24,16 +24,16 @@ namespace DungeonCode {
             
             
             Drawing::get()->drawTexture("chest_2", position, 0, 1.0f, 0.0f, WHITE, DrawingLayers::LAYER_OBJECT);
-            Drawing::get()->drawTexture(item->getSprite(), {position.x + OFFSET_X, position.y - (offset * OFFSET_IN_PIXELS)}, 0, 1.0f, 0.0f, WHITE, DrawingLayers::LAYER_OBJECT);
+            if (item->isEmpty() == false){
+                Drawing::get()->drawTexture(item->getSprite(), {position.x + OFFSET_X, position.y - (offset * OFFSET_IN_PIXELS)}, 0, 1.0f, 0.0f, WHITE, DrawingLayers::LAYER_OBJECT);
+            }
         }
     }
 
 
-    void ItemBox::switchItem(int* otherItem){
-        this->item = ItemManager::get()->getItem(*otherItem);
-        int temp = *otherItem;
-        *otherItem = itemId;
-        itemId = temp;
+    void ItemBox::setItemId(int itemId){
+        this->itemId = itemId;
+        this->item = ItemManager::get()->getItem(itemId);
     }
 
     
@@ -44,11 +44,16 @@ namespace DungeonCode {
     }
 
     bool ItemBox::isBoxOpen(){
+        if (item->isEmpty()) return false;
         return isOpen;
     }
 
     Vector2& ItemBox::getPosition(){
         return position;
+    }
+
+    int ItemBox::getItemId(){
+        return itemId;
     }
 
 }

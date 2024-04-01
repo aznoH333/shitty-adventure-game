@@ -4,6 +4,7 @@
 #include "engine/utils.h"
 #include "engine/drawing.h"
 #include "game/stats/playerStats.h"
+#include "game/stats/itemManager.h"
 #include <string>
 
 namespace UICode{
@@ -68,11 +69,15 @@ namespace UICode{
             bool isVisible = false;
             bool isActive = false;
             bool dismissable = false;
+            PlayerStats::Item* displayItem;
             float fadePercentage = 0.0f;
             std::string text = "";
+            
+            Vector2 position = {0.0f, 0.0f};
+            Vector2 scale = {0.0f, 0.0f};
         };
 
-
+        // Default text prompt
         const float DEFAULT_PROMPT_X = 109.0f;
         const float DEFAULT_PROMPT_Y = 156.0f;
         const int DEFAULT_PROMPT_WIDTH = 192;
@@ -80,11 +85,22 @@ namespace UICode{
         const Vector2 DEFAULT_TEXT_POSITION = {117.0f, 182.0f};
         const float FADE_SPEED = 0.05f;
 
+        // item display prompt
+        const float ITEM_PROMPT_X = 93.0f;
+        const float ITEM_PROMPT_Y = 20.0f;
+        const float ITEM_PROMPT_WIDTH = 224.0f;
+        const float ITEM_PROMPT_HEIGHT = 200.0f;
+        const Vector2 ITEM_TEXT_POSITION = {117.0f, 52.0f};
+        const float ITEM_TEXT_LINE_HEIGHT = 16.0f;
+        const float ITEM_STAT_VALUE_START = 261.0f;
+        const int SOME_ARBITRARY_VALUE = 9;
+
 
         const int BOX_SCALE = 32;
         void drawBox(Vector2 position, int width, int height, Color color);
-        void displayPrompt(std::string text);
+        void displayDefaultTextPrompt(std::string text);
         void displayDismissPrompt(std::string text);
+        void displayItemPrompt(PlayerStats::Item* itemToDisplay);
         void updateTextBoxes();
     };
 

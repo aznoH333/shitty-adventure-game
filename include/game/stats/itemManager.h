@@ -14,6 +14,7 @@ namespace PlayerStats {
             std::map<int, Item> items;
             std::vector<int> equipedItems;
             const int ITEM_CAPACITY = 5;
+            int currentlySelectedSlot = 0;
 
 
         public:
@@ -25,6 +26,8 @@ namespace PlayerStats {
             void dispose();
             int getItemInSlot(int slotId);
             void equipItemIntoSlot(int slotId, int itemId);
+            int getCurrentlySelectedSlot();
+            void incrementSelectedSlot();
     };
 }
 #endif

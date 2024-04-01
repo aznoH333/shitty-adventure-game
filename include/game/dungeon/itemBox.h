@@ -23,10 +23,11 @@ namespace DungeonCode {
         public:
             ItemBox(Vector2 position, int item);
             void update();
-            void switchItem(int* otherItem);
+            void setItemId(int itemId);
             Vector2& getPosition();
             void openBox();
             bool isBoxOpen();
+            int getItemId();
     };
 }
 

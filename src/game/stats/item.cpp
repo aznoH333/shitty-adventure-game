@@ -80,8 +80,8 @@ namespace PlayerStats {
     Item::Item(int itemId){
         this->itemId = itemId;
         sprite = concatSprite(SPRITE_NAME, EMPTY_SPRITE_INDEX);
-        name = "Nothing";
-        bool isEmpty = true;
+        name = "nothing";
+        this->isEmptyItem = true;
     }
 
     
@@ -133,6 +133,10 @@ namespace PlayerStats {
     }
     std::string& Item::getSprite(){
         return sprite;
+    }
+
+    std::map<int, StatModifier>& Item::getModifierList(){
+        return modifiers;
     }
 
     

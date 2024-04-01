@@ -38,6 +38,7 @@ namespace PlayerStats{
             Item(int itemId);
             std::string& getName();
             std::string& getSprite();
+            std::map<int, StatModifier>& getModifierList();
             void equipItem();
             void unequipItem();
             bool isEmpty();

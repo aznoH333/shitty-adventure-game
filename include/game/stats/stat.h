@@ -2,6 +2,7 @@
 #define STAT 
 
 #include <climits> 
+#include <string>
 
 namespace PlayerStats {
     
@@ -44,12 +45,14 @@ namespace PlayerStats {
             T defaultValue;
             T averageValueChange;
             StatWeight weight;
+            std::string textName;
         public:
-            Stat<T>(T defaultValue, StatWeight weight, T averageValueChange);
+            Stat<T>(T defaultValue, StatWeight weight, T averageValueChange, std::string textName);
             void resetStat();
             T& get();
             StatWeight getWeight();
             T getAverageValueChange();
+            std::string& getTextName();
     };
 
     template class Stat<int>;

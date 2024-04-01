@@ -405,7 +405,7 @@ namespace DungeonCode {
             }else if (i == size / 2){
                 // spawn box
                 std::cout << "spawned box\n"; 
-                section.boxes.push_back(ItemBox({position.x - DUNGEON_TILE_SIZE, position.y - DUNGEON_TILE_SIZE}, 0));
+                section.boxes.push_back(ItemBox({position.x - DUNGEON_TILE_SIZE, position.y - DUNGEON_TILE_SIZE}, 1));
             }
         }
     }
@@ -775,6 +775,18 @@ namespace DungeonCode {
             }
         }
     }
+
+    ItemBox* Dungeon::lookForNearbyBoxes(Vector2 position){
+        for (ItemBox& box : currentLoadedLevel.sections[currentLoadedLevel.currentSection].boxes){
+            float distance = pythagoras(position.x, position.y, box.getPosition().x, box.getPosition().y);
+
+            if (distance < MAX_DISTANCE_TO_BOX && box.isBoxOpen()){
+                return &box;
+            }
+        }
+        return nullptr;
+    }
+
 
     
 

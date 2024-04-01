@@ -173,7 +173,8 @@ namespace DungeonCode {
             const float RELOAD_PREP_OFFSET = 30.0f;
             const float RELOAD_INSERT_OFFSET = 10.0f;
 
-
+            // box interaction
+            void updateBoxInteraction();
 
 
             const float BULLET_SPAWN_OFFSET = 16.0f;
@@ -290,6 +291,7 @@ namespace DungeonCode {
 
             // Boxes
             const Vector2 BOX_SIZE = {32, 32};
+            const float MAX_DISTANCE_TO_BOX = 32.0f;
 
             std::map<int, std::vector<int>> dynamicConnectorLookupTable;
 
@@ -364,6 +366,7 @@ namespace DungeonCode {
             void addGiblet(Giblet giblet);
             void addProjectile(Projectile projectile);
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
+            ItemBox* lookForNearbyBoxes(Vector2 position);
             DungeonPlayer* getPlayer();
     };
 
