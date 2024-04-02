@@ -20,6 +20,13 @@ Overworld::Overworld(){
     terrain = new TerrainGeneration::OverworldTerrain();
 }
 
+void Overworld::init(int seed){
+    delete player;
+    player = new OverworldPlayer({0, 0});
+    terrain->init(seed);
+    
+}
+
 void Overworld::dispose(){
     delete player;
     delete terrain;

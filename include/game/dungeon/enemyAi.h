@@ -3,6 +3,8 @@
 
 #include "dungeonEnemy.h"
 namespace DungeonCode{
+    
+    
     class EnemyAi{
         private:
         public:
@@ -11,6 +13,7 @@ namespace DungeonCode{
 
     enum EnemyAiTypes{
         FIGHTER = 0,
+        ENEMY_AI_COUNT,
     };
 
     EnemyAi* getEnemyAi(int aiType);

@@ -6,6 +6,7 @@
 
 const int windowWidth = 1280;
 const int windowHeight = 720;
+const int SEED = 42069;
 
 int Utils::gameTickCounter = 0; // lmao
 
@@ -18,8 +19,8 @@ int main() {
     // init game
     State::get()->switchState(STATE_OVERWORLD);
     PlayerStats::initDefault();
-
-
+    Overworld::get()->init(SEED);
+    DungeonCode::EnemyManager::get()->init(SEED);
 
 
     SetTargetFPS(60);

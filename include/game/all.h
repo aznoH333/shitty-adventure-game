@@ -2,3 +2,4 @@
 #include "state.h"
 #include "ui/ui.h"
 #include "game/stats/playerStats.h"
+#include "game/dungeon/enemyManager.h"

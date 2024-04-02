@@ -1,6 +1,7 @@
 #include "game/dungeon/dungeon.h"
 #include "game/state.h"
 #include <iostream>
+#include "game/dungeon/enemyManager.h"
 
 namespace DungeonCode {
     using namespace Utils;
@@ -557,7 +558,7 @@ namespace DungeonCode {
     // --== enemies ==--
     void Dungeon::addEnemy(Vector2 position, DungeonSection& section){
         // TODO
-        section.enemies.push_back(DungeonEnemy(position, 0, 0, 0, 1, 100.0f));
+        section.enemies.push_back(EnemyManager::get()->initEnemy(position, 1, currentSeed));
     }
 
     void Dungeon::updateEnemies(DungeonSection& section){

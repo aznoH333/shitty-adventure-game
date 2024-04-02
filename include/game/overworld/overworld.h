@@ -46,7 +46,7 @@ class Overworld{
         static Overworld* get();
 
 
-        void init();
+        void init(int seed);
         void dispose();
         void setPlayerChunk(TerrainGeneration::ChunkCoordinates coordinates);
         bool collidesWithTerrain(Vector2 position, Vector2 size);

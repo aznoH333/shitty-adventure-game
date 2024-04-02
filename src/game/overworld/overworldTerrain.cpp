@@ -4,19 +4,22 @@ namespace TerrainGeneration {
 
 
     OverworldTerrain::OverworldTerrain(){
-        
-        // dumbass tried to generate the chunks before the noise
-        noiseMap = new ValueNoiseMap(1020);
-        mountainNoiseMap = new SpotNoiseMap(960);
-        treeNoiseMap = new ValueNoiseMap(3547);
-        biomeMap = new BiomeNoiseMap(1972, BIOME_SIZE);
-        structureNoiseMap = new SpotNoiseMap(1984);
         worldLoadingThread = std::thread(&OverworldTerrain::worldLoadingFunction, this);
+        
+
+    }
+
+    void OverworldTerrain::init(int seed){
+        
+        noiseMap = new ValueNoiseMap(seed);
+        mountainNoiseMap = new SpotNoiseMap(seed);
+        treeNoiseMap = new ValueNoiseMap(seed);
+        biomeMap = new BiomeNoiseMap(seed, BIOME_SIZE);
+        structureNoiseMap = new SpotNoiseMap(seed);
         // init some garbage data
         for (int i = 0; i < DISPLAYED_CHUNK_COUNT; i++){
             displayedChunks[i] = generateChunk({i % 3,i/3});
         }
-
     }
 
     OverworldTerrain::~OverworldTerrain(){

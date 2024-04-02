@@ -7,6 +7,14 @@
 
 namespace DungeonCode {
     class EnemyAi;
+
+    struct EnemyInitializer{
+        int aiId;
+        int attackType; 
+        int sprieBase; 
+        float moveSpeed; 
+        float health;
+    };
     
     class DungeonEnemy{
         private:
@@ -28,6 +36,7 @@ namespace DungeonCode {
 
 
             DungeonEnemy(Vector2 position, int behaviourType, int attackType, int spriteBase, float moveSpeed, float health);
+            DungeonEnemy(Vector2 position, EnemyInitializer initializer);
             std::string getSprite();
             Vector2& getPosition();
             bool& getFlip();

@@ -61,6 +61,7 @@ namespace TerrainGeneration{
             void drawTile(const OverworldTile& tile, Vector2& position);
         public:
             void update();
+            void init(int seed);
             void chunkLoadingUpdate();
             void reloadChunksAroundPoint(ChunkCoordinates coordinates);
             bool isTileBlocking(ChunkCoordinates chunkPosition, int x, int y);

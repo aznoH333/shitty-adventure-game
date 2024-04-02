@@ -14,6 +14,17 @@ namespace DungeonCode {
         this->health = health;
     }
 
+    DungeonEnemy::DungeonEnemy(Vector2 position, EnemyInitializer initializer){
+        this->position = position;
+        this->position.y -= 1.0f + (ENEMY_SIZE.y - DUNGEON_TILE_SIZE);
+
+        this->spriteBase = initializer.sprieBase;
+        this->sprite = 3;
+        this->ai = getEnemyAi(initializer.aiId);
+        this->moveSpeed = initializer.moveSpeed;
+        this->health = initializer.health;
+    }
+
     std::string DungeonEnemy::getSprite(){
         return enemySprites[spriteBase] + std::to_string(sprite);
     }
