@@ -27,15 +27,14 @@ namespace PlayerStats {
 
             int value;
             int defaultValue;
+            int baseValue;
             int maxValue;
-            float multiplierValue;
-            float upperBound;
+            float pointValue;
             bool isSutractive;
             std::string textName;
             int getValueInBounds();
         public:
-            Stat(int defaultValue, int maxValue, float upperBound, float multiplierValue, std::string textName);
-            Stat(int defaultValue, int maxValue, float multiplierValue, std::string textName);
+            Stat(int defaultValue, int maxValue, int baseValue, float pointValue, std::string textName);
 
             void resetStat();
             void addToValue(int value);

@@ -17,17 +17,17 @@ namespace PlayerStats{
     }
         
     StatManager::StatManager(){
-        stats.insert({SHELL_RELOAD_TIME, new Stat(10, 19, 30.0f, 1.5f, "reload speed")});
+        stats.insert({SHELL_RELOAD_TIME, new Stat(4, 10, 30, -2.0f, "reload speed")});
         stats.insert({AMMO_COUNT, new StatVariable(4, "ammo")});
-        stats.insert({MAX_AMMO_COUNT, new Stat(4, 12, 1.0f, "max ammo")});
-        stats.insert({FIRING_SPEED, new Stat(10, 19, 40.0f, 2.0f, "fire rate")});
-        stats.insert({PROJECTILE_COUNT, new Stat(5, 15, 1.0f, "projectiles")});
+        stats.insert({MAX_AMMO_COUNT, new Stat(4, 15, 0, 1.0f, "max ammo")});
+        stats.insert({FIRING_SPEED, new Stat(5, 10, 30, -2.0f, "fire rate")});
+        stats.insert({PROJECTILE_COUNT, new Stat(5, 15, 0, 1.0f, "projectiles")});
 
-        stats.insert({PROJECTILE_SPREAD, new Stat(10, 19, 40.0f, 3.5, "spread")});
-        stats.insert({PROJECTILE_SPEED, new Stat(5, 10, 1.0f, "bullet speed")});
-        stats.insert({PROJECTILE_DAMAGE, new Stat(10, 19, 0.7, "damage")});
+        stats.insert({PROJECTILE_SPREAD, new Stat(5, 15, 20, -1.5, "spread")});
+        stats.insert({PROJECTILE_SPEED, new Stat(5, 10, 5, 0.5f, "bullet speed")});
+        stats.insert({PROJECTILE_DAMAGE, new Stat(5, 15, 5, 0.7, "damage")});
         stats.insert({HEALTH, new StatVariable(100, "health")});
-        stats.insert({MAX_HEALTH, new Stat(5, 20, 20.0f, "max health")});
+        stats.insert({MAX_HEALTH, new Stat(5, 15, 50, 10.0f, "max health")});
     }
 
     StatManager::~StatManager(){

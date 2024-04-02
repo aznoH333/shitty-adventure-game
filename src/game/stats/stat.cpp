@@ -3,25 +3,16 @@
 
 
 namespace PlayerStats {
-    Stat::Stat(int defaultValue, int maxValue, float upperBound, float multiplierValue, std::string textName){
+    Stat::Stat(int defaultValue, int maxValue, int baseValue, float pointValue, std::string textName){
         this->defaultValue = defaultValue;
         this->maxValue = maxValue;
-        this->upperBound = upperBound;
+        this->baseValue = baseValue;
         this->isSutractive = true;
         this->value = defaultValue;
-        this->multiplierValue = multiplierValue;
+        this->pointValue = pointValue;
         this->textName = textName;
     }
 
-    Stat::Stat(int defaultValue, int maxValue, float multiplierValue, std::string textName){
-        this->defaultValue = defaultValue;
-        this->maxValue = maxValue;
-        this->upperBound = 0.0f;
-        this->isSutractive = false;
-        this->value = defaultValue;
-        this->multiplierValue = multiplierValue;
-        this->textName = textName;
-    }
     void Stat::resetStat(){
         this->value = this->defaultValue;
     }
@@ -30,19 +21,11 @@ namespace PlayerStats {
         return std::max(std::min(value, maxValue), 1);
     }
     int Stat::get(){
-        if (isSutractive){
-            return upperBound - (int)std::ceil(getValueInBounds() * multiplierValue);
-        }
-        
-        return (int)std::ceil(getValueInBounds() * multiplierValue);
+        return baseValue + (int)std::ceil(getValueInBounds() * pointValue);
     }
 
     float Stat::getF(){
-        if (isSutractive){
-            return upperBound - (getValueInBounds() * multiplierValue);
-        }
-        
-        return value * multiplierValue;
+        return baseValue + (getValueInBounds() * pointValue);
     }
 
     void Stat::addToValue(int value){
