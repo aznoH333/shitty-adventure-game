@@ -15,7 +15,7 @@ namespace DungeonCode {
             const float ENEMY_HEALTH_POWER_MULTIPLIER = 40.0f;
             const float ENEMY_HEALTH_DEVIATION = 0.2;
             const float MIN_MOVE_SPEED = 0.7f;
-            const float MAX_MOVE_SPEED = 3.0f;
+            const float MAX_MOVE_SPEED = 2.3f;
 
             
             static EnemyManager* instance;
