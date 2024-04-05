@@ -104,3 +104,7 @@ std::vector<TerrainGeneration::OverworldObject*> Overworld::getNearbyObjects(Ter
 Vector2 overworldPosToVec(TerrainGeneration::OverworldPosition position){
     return {position.x * OVERWORLD_TILE_SIZE, position.y * OVERWORLD_TILE_SIZE};
 }
+
+TerrainGeneration::OverworldTerrain* Overworld::getTerrain(){
+    return terrain;
+}

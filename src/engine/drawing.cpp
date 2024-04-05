@@ -5,6 +5,7 @@
 #include <raylib-cpp.hpp>
 #include <vector>
 #include "engine/utils.h"
+#include <iostream>
 
 Drawing* Drawing::instance = 0;
 
@@ -66,6 +67,7 @@ void Drawing::loadAllTexturesFromDirectory(std::string spritesPath){
 
 // --== rendering ==--
 void renderTexture(RenderData& data, float screenShakeOffset){
+    
     Vector2 calculatedWidth = {
         abs(data.texture->width) * data.scale, abs(data.texture->height) * data.scale
     };
@@ -146,6 +148,9 @@ void Drawing::render(){
 
 // --== Drawing functions
 void Drawing::drawTexture(std::string sprite, Vector2 pos, int flipSprite, float scale, float rotation, Color color, int layer){
+    if (textures.find(sprite) == textures.end()){
+        std::cout << sprite << " NOT FOUND\n";
+    }
     renderQueue[layer].push(RenderData{&textures.at(sprite), pos, scale, color, rotation, flipSprite});
 }
 

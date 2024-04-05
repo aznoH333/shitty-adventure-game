@@ -33,6 +33,7 @@ void OverworldPlayer::update(){
     }
 
     
+    
     if (IsKeyDown(KEY_W)){
         tryMove({0.0f, -MOVE_SPEED});
     }

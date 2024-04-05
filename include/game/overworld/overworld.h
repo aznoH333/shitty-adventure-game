@@ -55,6 +55,7 @@ class Overworld{
 
 
         void update();
+        TerrainGeneration::OverworldTerrain* getTerrain();
 
 };
 

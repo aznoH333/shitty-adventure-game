@@ -55,16 +55,23 @@ namespace TerrainGeneration{
             void addGenerationPattern(std::vector<PatternGenerationObject>& patterns, ChunkCoordinates& chunkPosition, int x, int y);
             OverworldChunk* generateChunk(ChunkCoordinates position);
             int generateTile(float terrainHeightValue, const TerrainBiome& biome);
-            void applyPattern(int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], std::vector<OverworldObject>& objects, PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition);
+            void applyPattern(InWorldTile tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE], std::vector<OverworldObject>& objects, PatternGenerationObject& pattern, ChunkCoordinates& chunkPosition);
             OverworldObject generateOverworldObject(const TerrainBiome& biome, ObjectType type, OverworldPosition position);
             float getTerrainHeightValue(OverworldPosition position, const TerrainBiome& biome);
-            void drawTile(const OverworldTile& tile, Vector2& position);
+            void drawTile(const InWorldTile& tile, Vector2& position);
+            void updateTileVariantsInChunk(ChunkCoordinates position, bool recurse);
+            void updateTileVariant(OverworldPosition position);
+            TileSurroundInfo getTileSurroundInfo(OverworldPosition position);
+            
         public:
             void update();
             void init(int seed);
             void chunkLoadingUpdate();
             void reloadChunksAroundPoint(ChunkCoordinates coordinates);
             bool isTileBlocking(ChunkCoordinates chunkPosition, int x, int y);
+            OverworldChunk* getChunk(ChunkCoordinates position);
+            InWorldTile* getTile(OverworldPosition position);
+            
             bool isDoneLoading();
             std::vector<OverworldObject*> getNearbyObjects(OverworldPosition position, float radius);
             ~OverworldTerrain();

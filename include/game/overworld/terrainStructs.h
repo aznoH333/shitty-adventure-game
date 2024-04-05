@@ -66,13 +66,24 @@ namespace TerrainGeneration {
         PatternGenrationType patern;
     };
 
+    struct InWorldTile{
+        int tileId;
+        int spriteVariant;
+    };
 
     struct OverworldChunk{
         ChunkCoordinates coordinates;
-        int tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE];
+        InWorldTile tiles[OVERWORLD_CHUNK_SIZE][OVERWORLD_CHUNK_SIZE];
         std::vector<OverworldObject> worldObjects;
         std::vector<PatternGenerationObject> patterns;
         int terrainBiome;
+    };
+
+    struct TileSurroundInfo{
+        bool up;
+        bool down;
+        bool left;
+        bool right;
     };
 }
 
