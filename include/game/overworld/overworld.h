@@ -8,7 +8,12 @@
 #include "game/ui/ui.h"
 
 
-
+enum Direction{
+    DIRECTION_UP,
+    DIRECTION_DOWN,
+    DIRECTION_LEFT,
+    DIRECTION_RIGHT,
+};
 
 
 class OverworldPlayer{
@@ -17,17 +22,24 @@ class OverworldPlayer{
         TerrainGeneration::OverworldPosition position;
         const float MOVE_SPEED = 0.05f;
         const float OBJECT_REACH = 2.0f;
+        Direction direction = DIRECTION_DOWN;
+        bool isMoving = false;
+
+        
 
         TerrainGeneration::OverworldObject* nearbyDungeon;
         bool isDungeonNearby = false;
 
 
         void movedToAnotherTile();
-        void tryMove(Vector2 moveBy);
+        void tryMove(Vector2 moveBy);\
+        void draw();
+        int getWalkSprite(int input);
 
     public:
         OverworldPlayer(TerrainGeneration::OverworldPosition position);
         void update();
+
 };
 
 

@@ -33,25 +33,26 @@ void OverworldPlayer::update(){
     }
 
     
-    
+    isMoving = false;
     if (IsKeyDown(KEY_W)){
         tryMove({0.0f, -MOVE_SPEED});
+        direction = DIRECTION_UP;
     }
     if (IsKeyDown(KEY_S)){
         tryMove({0.0f, +MOVE_SPEED});
+        direction = DIRECTION_DOWN;
     }
     if (IsKeyDown(KEY_A)){
         tryMove({-MOVE_SPEED, 0.0f});
+        direction = DIRECTION_LEFT;
     }
     if (IsKeyDown(KEY_D)){
         tryMove({MOVE_SPEED, 0.0f});
+        direction = DIRECTION_RIGHT;
     }
 
-    Drawing::get()->getCamera().target ={position.x * OVERWORLD_TILE_SIZE + (subPosition.x * OVERWORLD_TILE_SIZE), position.y * OVERWORLD_TILE_SIZE + (subPosition.y * OVERWORLD_TILE_SIZE)};
-    Drawing::get()->drawTexture("overworld_player", {position.x * OVERWORLD_TILE_SIZE + (subPosition.x * OVERWORLD_TILE_SIZE), position.y * OVERWORLD_TILE_SIZE + (subPosition.y * OVERWORLD_TILE_SIZE)}, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
-    //Drawing::get()->drawTexture("overworld_player", {position.x * OVERWORLD_TILE_SIZE, position.y * OVERWORLD_TILE_SIZE}, false, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
 
-
+    draw();
 }
 
 
@@ -69,8 +70,58 @@ void OverworldPlayer::movedToAnotherTile(){
             break;
         }
     }
+}
+
+void OverworldPlayer::draw(){
+    // camera target
+    Drawing::get()->getCamera().target ={position.x * OVERWORLD_TILE_SIZE + (subPosition.x * OVERWORLD_TILE_SIZE), position.y * OVERWORLD_TILE_SIZE + (subPosition.y * OVERWORLD_TILE_SIZE)};
+    
+    
+    int flip = 0;
+    std::string sprite;
+
+    switch (direction) {
+        case DIRECTION_DOWN:
+            sprite = "player_overworld_";
+            break;
+        case DIRECTION_LEFT:
+            sprite = "player_overworld_side_";
+            flip = 1;
+            break;
+        case DIRECTION_RIGHT:
+            sprite = "player_overworld_side_";
+            flip = 0;
+            break;
+        case DIRECTION_UP:
+            sprite = "player_overworld_backwards_";
+            break;
+    }
+
+    int walkSprite = 1;
+
+    if (isMoving){
+        walkSprite = Utils::animationTimer(1, 4, 7);
+        walkSprite = getWalkSprite(walkSprite);
+    }
+
+    sprite = Utils::concatSprite(sprite.c_str(), walkSprite);
+
+    Drawing::get()->drawTexture(sprite, {position.x * OVERWORLD_TILE_SIZE + (subPosition.x * OVERWORLD_TILE_SIZE), position.y * OVERWORLD_TILE_SIZE + (subPosition.y * OVERWORLD_TILE_SIZE)}, flip, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
+
+}
 
 
+int OverworldPlayer::getWalkSprite(int input){
+    switch (input) {
+        case 1:
+        case 3:
+            return 1;
+        case 2:
+            return 2;
+        case 4:
+            return 3;
+    }
+    return 0;
 }
 
 
@@ -84,7 +135,7 @@ void OverworldPlayer::tryMove(Vector2 moveBy){
 
     if (!overworld->collidesWithTerrain({currentPos.x + moveBy.x + xDir, currentPos.y}, {OVERWORLD_TILE_SIZE, OVERWORLD_TILE_SIZE})){
         subPosition.x += moveBy.x;
-
+        isMoving = true;
         if (std::abs(subPosition.x) > 0.5f){
             position.x += xDir;
             subPosition.x -= xDir;

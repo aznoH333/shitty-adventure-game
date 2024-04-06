@@ -309,17 +309,6 @@ namespace TerrainGeneration {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     // --== Drawing ==--
     void OverworldTerrain::draw(){
         for (int i = 0; i < DISPLAYED_CHUNK_COUNT; i++){
