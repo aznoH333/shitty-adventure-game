@@ -30,12 +30,18 @@ namespace DungeonCode{
 
     void EnemyManager::generateEnemy(int powerLevel, int& seed){
         EnemyInitializer initializer = {};
+        float weight = getPseudoRandomFloat(1.0f - ENEMY_WEIGHT_DEVIATION, 1.0f + ENEMY_WEIGHT_DEVIATION, seed++);
         initializer.aiId = getPseudoRandomInt(0, EnemyAiTypes::ENEMY_AI_COUNT - 1, seed++);
         initializer.attackType = 0; // TODO attack types
-        initializer.health = (ENEMY_HEALTH_BASELINE + (powerLevel * ENEMY_HEALTH_POWER_MULTIPLIER)) * getPseudoRandomFloat(1.0f - ENEMY_HEALTH_DEVIATION, 1.0f + ENEMY_HEALTH_DEVIATION, seed++);
-        initializer.moveSpeed = getPseudoRandomFloat(MIN_MOVE_SPEED, MAX_MOVE_SPEED, seed++);
+        initializer.health = (ENEMY_HEALTH_BASELINE + (powerLevel * ENEMY_HEALTH_POWER_MULTIPLIER)) * weight;
+        initializer.moveSpeed = getPseudoRandomFloat(MIN_MOVE_SPEED, MAX_MOVE_SPEED, seed++) / weight;
         initializer.sprieBase = getPseudoRandomInt(0, enemySprites.size() - 1, seed++);
-        std::cout << initializer.health << "\n";
+        initializer.color = {
+            (unsigned char) getPseudoRandomInt(MIN_COLOR, MAX_COLOR, seed++),
+            (unsigned char) getPseudoRandomInt(MIN_COLOR, MAX_COLOR, seed++),
+            (unsigned char) getPseudoRandomInt(MIN_COLOR, MAX_COLOR, seed++),
+            255
+        };
         
         enemyInitializerMap.at(powerLevel).push_back(initializer);
     }

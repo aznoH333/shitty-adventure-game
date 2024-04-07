@@ -14,6 +14,7 @@ namespace DungeonCode {
         int sprieBase; 
         float moveSpeed; 
         float health;
+        Color color;
     };
     
     class DungeonEnemy{
@@ -26,6 +27,7 @@ namespace DungeonCode {
             EnemyAi* ai;
             bool isActive = false;
             float moveSpeed = 0;
+            Color color;
 
             
         
@@ -40,6 +42,7 @@ namespace DungeonCode {
             std::string getSprite();
             Vector2& getPosition();
             bool& getFlip();
+            Color& getColor();
             int& getSpr();
             float getMovementSpeed();
             void update();
@@ -49,7 +52,17 @@ namespace DungeonCode {
 
 
     const std::vector<std::string> enemySprites = {
-        "testEnemy_",
+        "skeleton_1_",
+        "skeleton_2_",
+        "skeleton_3_",
+        "skeleton_4_",
+        "skeleton_5_",
+        "slime_1_",
+        "slime_2_",
+        "slime_3_",
+
+
+
     };
 }
 

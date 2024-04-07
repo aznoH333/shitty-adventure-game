@@ -1,0 +1,13 @@
+[ ] More enemy ais
+    [ ] VVVVVV
+    [ ] Slime
+
+[ ] Enemy projectiles
+[X] Enemy weight
+[ ] Enemy sprites
+    [ ] Zombie
+    [X] Skeleton
+    [X] Slime
+[X] Enemy color variants
+[ ] Fix item generation
+[ ] Fix item box

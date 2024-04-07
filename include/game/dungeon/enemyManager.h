@@ -13,9 +13,11 @@ namespace DungeonCode {
             const int MAX_POWER_LEVEL = 10;
             const float ENEMY_HEALTH_BASELINE = 80.0f;
             const float ENEMY_HEALTH_POWER_MULTIPLIER = 40.0f;
-            const float ENEMY_HEALTH_DEVIATION = 0.2;
-            const float MIN_MOVE_SPEED = 0.7f;
-            const float MAX_MOVE_SPEED = 2.3f;
+            const float ENEMY_WEIGHT_DEVIATION = 0.2;
+            const float MIN_MOVE_SPEED = 0.1f;
+            const float MAX_MOVE_SPEED = 1.5f;
+            const int MIN_COLOR = 50;
+            const int MAX_COLOR = 200;
 
             
             static EnemyManager* instance;

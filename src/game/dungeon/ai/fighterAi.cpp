@@ -53,9 +53,16 @@ namespace EnemyAiCode{
         }
 
 
+
+
         universalDungeonCollidingUpdate(self->getPosition(), velocity, DungeonEnemy::ENEMY_SIZE, false);
 
-        
+        // animatie
+        if (isOnGround){
+            self->getSpr() = Utils::animationTimer(1, 3, 5 / self->getMovementSpeed());
+        }else {
+            self->getSpr() = 4;
+        }
 
 
         

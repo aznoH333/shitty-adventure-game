@@ -565,7 +565,9 @@ namespace DungeonCode {
         
         section.enemies.remove_if([this](DungeonEnemy& enemy){
             enemy.update();
-            Drawing::get()->drawTexture(enemy.getSprite(), enemy.getPosition(), enemy.getFlip(), 1, 0, WHITE, LAYER_ENEMY);
+            Vector2 pos = enemy.getPosition();
+            pos.x -= 8.0f;
+            Drawing::get()->drawTexture(enemy.getSprite(), pos, enemy.getFlip(), 1, 0, enemy.getColor(), LAYER_ENEMY);
 
             projectiles.remove_if([&enemy, this](Projectile& p){
                 if (p.alliedWithPlayer && Utils::squaresCollide(enemy.getPosition(), p.position, DungeonEnemy::ENEMY_SIZE, PROJECTILE_SIZE)){
