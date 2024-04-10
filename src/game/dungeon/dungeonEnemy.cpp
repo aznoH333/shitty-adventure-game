@@ -24,6 +24,10 @@ namespace DungeonCode {
         this->moveSpeed = initializer.moveSpeed;
         this->health = initializer.health;
         this->color = initializer.color;
+        this->rangedAttackCooldownMax = initializer.rangedAttackCooldown;
+        this->rangedAttackCooldown = this->rangedAttackCooldownMax;
+        this->hasRangedAttack = initializer.hasRangedAttack;
+        this->rangedDamage = initializer.rangedDamage;
     }
 
     std::string DungeonEnemy::getSprite(){
@@ -40,6 +44,7 @@ namespace DungeonCode {
 
     void DungeonEnemy::update(){
         ai->update(this);
+        rangedAttackCooldown -= rangedAttackCooldown > 0;
     }
 
     bool& DungeonEnemy::getFlip(){
@@ -63,5 +68,46 @@ namespace DungeonCode {
     int DungeonEnemy::getContactDamage(){
         return contactDamage;
     }
+
+    Vector2 DungeonEnemy::getAttackPosition(){
+        return {position.x + 8.0f, position.y + 16.0f};
+    }
+
+    int DungeonEnemy::getAttackSpriteIndex(){
+        return 0;
+    }
+
+    bool DungeonEnemy::isAttacking(){
+        return rangedAttackCooldown > (rangedAttackCooldownMax >> 1);
+    }
+
+    void DungeonEnemy::tryShooting(){
+        if (!hasRangedAttack || rangedAttackCooldown != 0){
+            return;
+        }
+
+        if (Utils::getRandomFloat() >= CHANCE_TO_SHOOT){
+            return;
+        }
+        // cooldown
+        rangedAttackCooldown = rangedAttackCooldownMax;
+
+        Dungeon* d = Dungeon::get();
+
+        // this sucks write a propper constructor
+        // spawn projectile
+        Projectile p;
+        p.position = getAttackPosition();
+        p.rotation = Utils::directionTowards(getPosition(), d->getPlayer()->getPosition());
+        p.velocity.x = std::cos(p.rotation * DEG2RAD) * 2;
+        p.velocity.y = std::sin(p.rotation * DEG2RAD) * 2;
+        p.sprite = enemyAttackSprites.at(getAttackSpriteIndex());
+        p.alliedWithPlayer = false;
+        p.extraUpdates = 1;
+        p.damage = rangedDamage;
+
+        d->addProjectile(p);
+    }
+
 
 }

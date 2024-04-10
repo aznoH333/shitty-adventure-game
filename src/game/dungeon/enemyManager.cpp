@@ -36,7 +36,7 @@ namespace DungeonCode{
         initializer.health = (ENEMY_HEALTH_BASELINE + (powerLevel * ENEMY_HEALTH_POWER_MULTIPLIER)) * weight;
         initializer.moveSpeed = getPseudoRandomFloat(MIN_MOVE_SPEED, MAX_MOVE_SPEED, seed++) / weight;
         initializer.sprieBase = getPseudoRandomInt(0, enemySprites.size() - 1, seed++);
-        initializer.contactDamage = getPseudoRandomInt(MIN_CONTACT_DAMAGE, MAX_CONTACT_DAMAGE, seed++) * (powerLevel * CONTACT_DAMAGE_MULTIPLIER);
+        initializer.contactDamage = getPseudoRandomInt(MIN_CONTACT_DAMAGE, MAX_CONTACT_DAMAGE, seed++) * (powerLevel * DAMAGE_MULTIPLIER);
         initializer.color = {
             (unsigned char) getPseudoRandomInt(MIN_COLOR, MAX_COLOR, seed++),
             (unsigned char) getPseudoRandomInt(MIN_COLOR, MAX_COLOR, seed++),
@@ -44,6 +44,13 @@ namespace DungeonCode{
             255
         };
         
+        // ranged attack
+        initializer.hasRangedAttack = getPseudoRandomFloat(seed++) <= PROBABILITY_OF_RANGED_ATTACK;
+        initializer.rangedDamage = getPseudoRandomInt(MIN_RANGED_DAMAGE, MAX_RANGED_DAMAGE, seed++) * (powerLevel * DAMAGE_MULTIPLIER);
+        initializer.rangedAttackCooldown = getPseudoRandomInt(MIN_RANGED_COOLDOWN, MAX_RANGED_COOLDOWN, seed++);
+
+
+
         enemyInitializerMap.at(powerLevel).push_back(initializer);
     }
 
@@ -52,6 +59,7 @@ namespace DungeonCode{
         EnemyInitializer& initializer = vec.at(getPseudoRandomInt(0, vec.size() - 1, seed++));
         return DungeonEnemy(position, initializer);
     }
+
 
     void EnemyManager::dispose(){
         delete instance;

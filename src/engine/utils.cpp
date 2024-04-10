@@ -33,7 +33,9 @@ namespace Utils {
         }
     }
 
-
+    float directionTowards(Vector2 start, Vector2 dest){
+        return std::atan2(start.y - dest.y, start.x - dest.x) * RAD2DEG - 180;
+    }
 
     float interpolate(float a, float b, float w){
         return (b - a) * w + a;
@@ -162,6 +164,7 @@ namespace Utils {
         result -= negative;
         return result;
     }
+
 
     
     // --== sprites and other string functions ==--

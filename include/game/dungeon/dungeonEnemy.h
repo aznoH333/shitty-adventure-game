@@ -16,6 +16,9 @@ namespace DungeonCode {
         float health;
         Color color;
         int contactDamage;
+        bool hasRangedAttack;
+        int rangedAttackCooldown;
+        int rangedDamage;
     };
     
     class DungeonEnemy{
@@ -30,19 +33,26 @@ namespace DungeonCode {
             float moveSpeed = 0;
             int contactDamage = 0;
             Color color;
-
+            bool hasRangedAttack;
+            int rangedAttackCooldownMax;
+            int rangedDamage;
+            int rangedAttackCooldown;
             
         
         public:
             static constexpr Vector2 ENEMY_SIZE = {16.0f, 32.0f};
             float health = 0;
             float lastHitDirection = 0.0f;
+            const float CHANCE_TO_SHOOT = 0.1f;
 
 
             DungeonEnemy(Vector2 position, int behaviourType, int attackType, int spriteBase, float moveSpeed, float health);
             DungeonEnemy(Vector2 position, EnemyInitializer initializer);
             std::string getSprite();
             Vector2& getPosition();
+            Vector2 getAttackPosition();
+            int getAttackSpriteIndex();
+            bool isAttacking();
             bool& getFlip();
             Color& getColor();
             int& getSpr();
@@ -50,6 +60,7 @@ namespace DungeonCode {
             void update();
             void dispose();
             int getContactDamage();
+            void tryShooting();
 
     };
 
@@ -67,6 +78,10 @@ namespace DungeonCode {
         "spider_2_",
         "squid_1_",
         "squid_2_",
+    };
+
+    const std::vector<std::string> enemyAttackSprites = {
+        "bullet_1",
     };
 }
 

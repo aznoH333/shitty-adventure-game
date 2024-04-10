@@ -36,12 +36,14 @@ namespace EnemyAiCode{
             }else {
                 self->getFlip() = !self->getFlip();
             }
-        }else {
-            velocity.x = moveBy;
+        }else{
+
+            velocity.x = self->isAttacking() ? 0 : moveBy;
         }
 
         if (isNearPlayer){
             self->getFlip() = self->getPosition().x < p->getPosition().x;
+            self->tryShooting();
         }
 
 
@@ -58,7 +60,10 @@ namespace EnemyAiCode{
         universalDungeonCollidingUpdate(self->getPosition(), velocity, DungeonEnemy::ENEMY_SIZE, false);
 
         // animatie
-        if (isOnGround){
+        if (self->isAttacking()){
+            self->getSpr() = 5;
+        }
+        else if (isOnGround){
             self->getSpr() = Utils::animationTimer(1, 3, 5 / self->getMovementSpeed());
         }else {
             self->getSpr() = 4;
