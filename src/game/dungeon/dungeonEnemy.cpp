@@ -17,7 +17,7 @@ namespace DungeonCode {
     DungeonEnemy::DungeonEnemy(Vector2 position, EnemyInitializer initializer){
         this->position = position;
         this->position.y -= 1.0f + (ENEMY_SIZE.y - DUNGEON_TILE_SIZE);
-
+        this->contactDamage = initializer.contactDamage;
         this->spriteBase = initializer.sprieBase;
         this->sprite = 3;
         this->ai = getEnemyAi(initializer.aiId);
@@ -58,6 +58,10 @@ namespace DungeonCode {
 
     Color& DungeonEnemy::getColor(){
         return color;
+    }
+
+    int DungeonEnemy::getContactDamage(){
+        return contactDamage;
     }
 
 }

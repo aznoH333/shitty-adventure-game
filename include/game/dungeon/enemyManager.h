@@ -18,6 +18,9 @@ namespace DungeonCode {
             const float MAX_MOVE_SPEED = 1.5f;
             const int MIN_COLOR = 180;
             const int MAX_COLOR = 255;
+            const float CONTACT_DAMAGE_MULTIPLIER = 1.2f;
+            const int MIN_CONTACT_DAMAGE = 10;
+            const int MAX_CONTACT_DAMAGE = 22;
 
             
             static EnemyManager* instance;

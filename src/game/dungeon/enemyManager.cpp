@@ -36,6 +36,7 @@ namespace DungeonCode{
         initializer.health = (ENEMY_HEALTH_BASELINE + (powerLevel * ENEMY_HEALTH_POWER_MULTIPLIER)) * weight;
         initializer.moveSpeed = getPseudoRandomFloat(MIN_MOVE_SPEED, MAX_MOVE_SPEED, seed++) / weight;
         initializer.sprieBase = getPseudoRandomInt(0, enemySprites.size() - 1, seed++);
+        initializer.contactDamage = getPseudoRandomInt(MIN_CONTACT_DAMAGE, MAX_CONTACT_DAMAGE, seed++) * (powerLevel * CONTACT_DAMAGE_MULTIPLIER);
         initializer.color = {
             (unsigned char) getPseudoRandomInt(MIN_COLOR, MAX_COLOR, seed++),
             (unsigned char) getPseudoRandomInt(MIN_COLOR, MAX_COLOR, seed++),

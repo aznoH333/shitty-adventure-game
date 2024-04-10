@@ -1,6 +1,6 @@
 #include "game/stats/stat.h"
 #include <cmath>
-
+#include <iostream>
 
 namespace PlayerStats {
     Stat::Stat(int defaultValue, int maxValue, int baseValue, float pointValue, std::string textName){

@@ -119,7 +119,6 @@ namespace DungeonCode {
             
             Vector2 position;
             Vector2 velocity = {0,0};
-            const Vector2 SIZE = {16.0f, 25.0f};
 
             const float GRAVITY = 0.3f;
             const float JUMP_FORCE = 3.0f;
@@ -176,6 +175,10 @@ namespace DungeonCode {
             // box interaction
             void updateBoxInteraction();
 
+            // post hit invincibility
+            int postHitInvincibility = 0;
+            const int MAX_POST_HIT_INVINCIBILITY = 90;
+
 
             const float BULLET_SPAWN_OFFSET = 16.0f;
 
@@ -203,10 +206,13 @@ namespace DungeonCode {
             void drawGun();
 
         public:
+            static constexpr Vector2 SIZE = {16.0f, 25.0f};
+
             DungeonPlayer(Vector2 position);
             Vector2& getPosition();
             void setNearbyDoor(DungeonDoor* door);
             void update();
+            void takeDamage(int damage);
     };
 
     const int DUNGEON_TILE_SIZE = 16;

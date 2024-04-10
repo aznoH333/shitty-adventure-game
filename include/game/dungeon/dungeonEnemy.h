@@ -15,6 +15,7 @@ namespace DungeonCode {
         float moveSpeed; 
         float health;
         Color color;
+        int contactDamage;
     };
     
     class DungeonEnemy{
@@ -27,6 +28,7 @@ namespace DungeonCode {
             EnemyAi* ai;
             bool isActive = false;
             float moveSpeed = 0;
+            int contactDamage = 0;
             Color color;
 
             
@@ -47,6 +49,7 @@ namespace DungeonCode {
             float getMovementSpeed();
             void update();
             void dispose();
+            int getContactDamage();
 
     };
 

@@ -29,9 +29,12 @@ void DungeonPlayer::update(){
     updateBoxInteraction();
     updateGun();
     drawGun();
+    postHitInvincibility -= postHitInvincibility > 0;
 
     Dungeon::get()->setCameraPosition(position);
-    drawSprite();
+    if (postHitInvincibility % 4 < 2){
+        drawSprite();
+    }
 }
 
 
@@ -344,6 +347,13 @@ void DungeonPlayer::drawGun(){
 
 }
 
+
+void DungeonPlayer::takeDamage(int damage){
+    if (postHitInvincibility == 0){
+        playerStats->getStat(HEALTH).addToValue(-damage);
+        postHitInvincibility = MAX_POST_HIT_INVINCIBILITY;
+    }
+}
 
 // --== box stuff ==--
 void DungeonPlayer::updateBoxInteraction(){

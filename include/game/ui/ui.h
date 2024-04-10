@@ -27,7 +27,7 @@ namespace UICode{
         // hp counter
         const float HP_OFFSET = 7.0f;
         const Vector2 HP_START = {4.0f, 27.0f};
-        const int HEALTH_SEGMENT_COUNT = 10;
+        const float HEALTH_SEGMENT_COUNT = 10;
         const std::string HP_SPRITE = "hp_hud_1";
         const std::string HP_MISSING_SPRITE = "hp_hud_2";
 

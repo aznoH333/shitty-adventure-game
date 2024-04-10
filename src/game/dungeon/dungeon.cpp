@@ -579,6 +579,11 @@ namespace DungeonCode {
                 return false;
             });
 
+            // player collisions
+            if (squaresCollide(enemy.getPosition(), player->getPosition(), DungeonEnemy::ENEMY_SIZE, DungeonPlayer::SIZE)){
+                player->takeDamage(enemy.getContactDamage());
+            }
+
             if (enemy.health <= 0.0f){
                 // spawn giblets
                 for (int i = 0; i < 10; i++){
