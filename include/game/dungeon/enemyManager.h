@@ -16,8 +16,8 @@ namespace DungeonCode {
             const float ENEMY_WEIGHT_DEVIATION = 0.2;
             const float MIN_MOVE_SPEED = 0.1f;
             const float MAX_MOVE_SPEED = 1.5f;
-            const int MIN_COLOR = 50;
-            const int MAX_COLOR = 200;
+            const int MIN_COLOR = 180;
+            const int MAX_COLOR = 255;
 
             
             static EnemyManager* instance;

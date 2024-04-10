@@ -60,9 +60,10 @@ namespace DungeonCode {
         "slime_1_",
         "slime_2_",
         "slime_3_",
-
-
-
+        "spider_1_",
+        "spider_2_",
+        "squid_1_",
+        "squid_2_",
     };
 }
 
