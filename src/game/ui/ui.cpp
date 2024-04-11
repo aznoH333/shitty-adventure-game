@@ -42,8 +42,7 @@ namespace UICode{
 
     void Hud::drawHealth(float& hudY){
         Vector2 vec = {HP_START.x, HP_START.y + hudY};
-        int healthSegments = (int)(playerStats->getF(HEALTH) / playerStats->getF(MAX_HEALTH) * HEALTH_SEGMENT_COUNT);
-        Text::renderGameText(std::to_string(healthSegments), {0, 128}, WHITE, 1.0f);
+        int healthSegments = (int)std::ceil(playerStats->getF(HEALTH) / playerStats->getF(MAX_HEALTH) * HEALTH_SEGMENT_COUNT);
         drawBar(vec, HP_SPRITE, HP_MISSING_SPRITE, HP_OFFSET, healthSegments, HEALTH_SEGMENT_COUNT);
     }
 

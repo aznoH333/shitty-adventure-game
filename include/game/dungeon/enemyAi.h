@@ -13,6 +13,7 @@ namespace DungeonCode{
 
     enum EnemyAiTypes{
         FIGHTER = 0,
+        SLIME,
         ENEMY_AI_COUNT,
     };
 
