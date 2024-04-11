@@ -6,7 +6,7 @@
 
 const int windowWidth = 1280;
 const int windowHeight = 720;
-const int SEED = 7010;
+const int SEED = 704641;
 
 int Utils::gameTickCounter = 0; // lmao
 

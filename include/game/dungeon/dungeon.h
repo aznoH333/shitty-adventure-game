@@ -15,6 +15,7 @@
 #include "dungeonEnemy.h"
 #include "game/stats/playerStats.h"
 #include "itemBox.h"
+#include "dungeonTheme.h"
 
 namespace DungeonCode {
 
@@ -69,7 +70,7 @@ namespace DungeonCode {
 
     struct LevelSlice{
         int geometryPattern;
-        int tilesetModifier;
+        int tiles[TILES_PER_PATTERN];
     };
 
     struct DungeonSection{
@@ -295,6 +296,9 @@ namespace DungeonCode {
             const float SIDE_ROOM_CHANCE = 0.03f;
             const int FIGHT_ROOM_SIZE = 35;
 
+            // theme
+            DungeonTheme theme = DungeonTheme("default_castle_", 2);
+
             // Boxes
             const Vector2 BOX_SIZE = {32, 32};
             const float MAX_DISTANCE_TO_BOX = 32.0f;
@@ -308,6 +312,7 @@ namespace DungeonCode {
             DungeonSection generateSection(SectionInfo info, Level& level, int returnValue, int sectionId, Vector2 returnLoacation);
             std::vector<int>& getPossibleConnectors(int currentId);
             SectionInfo getNextPurpose(SectionInfo info);
+            LevelSlice generateSliceBasedOnPattern(int patternId);
 
             // tile generating functions
             void addPadding(DungeonSection& section);

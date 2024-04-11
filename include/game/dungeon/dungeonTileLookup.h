@@ -9,6 +9,7 @@ const int TILES_PER_PATTERN = 15;
     struct DungeonTile{
         std::string sprite;
         bool isSolid;
+        bool isSpike;
     };
 
     const DungeonTile dungeonTileLookup[] = {

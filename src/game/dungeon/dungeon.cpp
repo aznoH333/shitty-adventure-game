@@ -52,16 +52,15 @@ namespace DungeonCode {
 
 
     // --== drawing ==--
-
     void Dungeon::draw(DungeonSection& section){
         
         for (int x = 0; x < section.levelData.size(); x++){
             const LevelSlice& slice = section.levelData[x];
 
             for (int y = 0; y < TILES_PER_PATTERN; y++){
-                const DungeonTile& tile = dungeonTileLookup[dungeonPatternLookup[slice.geometryPattern].tiles[y]];
+                const DungeonTile& tile = theme.getTile(slice.tiles[y]);
 
-                if (dungeonPatternLookup[slice.geometryPattern].tiles[y] != 0){
+                if (slice.tiles[y] != 0){
                     Drawing::get()->drawTexture(tile.sprite, {(float) x * DUNGEON_TILE_SIZE, (float) y * DUNGEON_TILE_SIZE}, false, 1, 0, WHITE, DrawingLayers::LAYER_WORLD);
                 }
 
@@ -232,7 +231,7 @@ namespace DungeonCode {
     
     void Dungeon::addPadding(DungeonSection& section){
         for (int i = 0; i < DUNGEON_PADDING; i++){
-            section.levelData.push_back({0});
+            section.levelData.push_back(generateSliceBasedOnPattern(0));
         }
     }
 
@@ -253,6 +252,18 @@ namespace DungeonCode {
                 generateRewardSection(section, level, returnSection, sectionId, returnLoacation);
                 break;
         }
+    }
+
+
+    LevelSlice Dungeon::generateSliceBasedOnPattern(int patternId){
+        LevelSlice l = {};
+        l.geometryPattern = patternId;
+        const DungeonPattern& pattern = dungeonPatternLookup[patternId];
+        for (int i = 0; i < TILES_PER_PATTERN; i++){
+            l.tiles[i] = theme.translateTileId(pattern.tiles[i]);
+        }
+
+        return l;
     }
 
     void Dungeon::generateGeneric(DungeonSection& section, Level& level, int returnSection, int sectionId, Vector2 returnLoacation, bool isMain){
@@ -289,7 +300,7 @@ namespace DungeonCode {
                     break;
                 }
             }
-            section.levelData.push_back({currentSegment});
+            section.levelData.push_back(generateSliceBasedOnPattern(currentSegment));
 
 
             if (nextSpawn == 0){
@@ -392,7 +403,7 @@ namespace DungeonCode {
                 patternId = 12;
             }
             
-            section.levelData.push_back({patternId});
+            section.levelData.push_back(generateSliceBasedOnPattern(patternId));
             const SpawnInfo& info = dungeonPatternLookup[patternId].spawnInfo;
             Vector2 position = {(float) ((section.levelData.size() - 1) * DUNGEON_TILE_SIZE), (float)(TILES_PER_PATTERN - info.spawnY - 1) * DUNGEON_TILE_SIZE};
 
@@ -415,7 +426,7 @@ namespace DungeonCode {
 
             int patternId = 8;
 
-            section.levelData.push_back({patternId});
+            section.levelData.push_back(generateSliceBasedOnPattern(patternId));
 
 
             if (i == 1){
