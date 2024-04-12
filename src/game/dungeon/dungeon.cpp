@@ -58,7 +58,7 @@ namespace DungeonCode {
             const LevelSlice& slice = section.levelData[x];
 
             for (int y = 0; y < TILES_PER_PATTERN; y++){
-                const DungeonTile& tile = theme.getTile(slice.tiles[y]);
+                const DungeonTile& tile = theme->getTile(slice.tiles[y]);
 
                 if (slice.tiles[y] != 0){
                     Drawing::get()->drawTexture(tile.sprite, {(float) x * DUNGEON_TILE_SIZE, (float) y * DUNGEON_TILE_SIZE}, false, 1, 0, WHITE, DrawingLayers::LAYER_WORLD);
@@ -95,7 +95,7 @@ namespace DungeonCode {
         }
 
         overworldDungeon = dungeon;
-
+        theme = dungeon->theme;
         loadDungeon(overworldDungeon->dungeonId, dungeon->position);
 
         UICode::Hud::setHudVisibility(true);
@@ -260,7 +260,7 @@ namespace DungeonCode {
         l.geometryPattern = patternId;
         const DungeonPattern& pattern = dungeonPatternLookup[patternId];
         for (int i = 0; i < TILES_PER_PATTERN; i++){
-            l.tiles[i] = theme.translateTileId(pattern.tiles[i]);
+            l.tiles[i] = theme->translateTileId(pattern.tiles[i]);
         }
 
         return l;

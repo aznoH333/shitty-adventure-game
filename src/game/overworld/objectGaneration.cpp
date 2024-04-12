@@ -1,13 +1,20 @@
 #include "game/overworld/overworldTerrain.h"
+#include "engine/utils.h"
 
+using namespace Utils;
 namespace TerrainGeneration {
 
     OverworldObject generateDungeon(const TerrainBiome& biome, OverworldPosition position){
         
+        int themeMax = biome.dungeonTypes.size() - 1;
+        int seed = hashVector(position.x, position.y);
+        DungeonCode::DungeonTheme* theme = &DungeonCode::themeLookup.at(biome.dungeonTypes.at(getPseudoRandomInt(0, themeMax, seed)));
+
         return {
-            .sprite = "dungeon_1",
+            .sprite = theme->getOverworldSprite(),
             .position = position,
             .type = OBJECT_DUNGEON,
+            .theme = theme,
         };
     }
 
@@ -21,6 +28,7 @@ namespace TerrainGeneration {
             .sprite = "overworld_tree_0",
             .position = position,
             .type = OBJECT_TREE,
+            .theme = nullptr,
         };
         
         switch (treeType){

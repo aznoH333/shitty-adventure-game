@@ -3,9 +3,10 @@
 
 using namespace Utils;
 namespace DungeonCode {
-    DungeonTheme::DungeonTheme(std::string namePrefix, int defaultVariations){
+    DungeonTheme::DungeonTheme(std::string namePrefix, int defaultVariations, std::string overworldSprite){
         this->tileLookup = std::vector<DungeonTile>();
         this->defaultVariations = defaultVariations;
+        this->overworldSprite = overworldSprite;
         // add air
         tileLookup.push_back({"", false, false});
         
@@ -38,4 +39,16 @@ namespace DungeonCode {
                 return defaultVariations * 2 + 2;
         }
     }
+
+    std::string DungeonTheme::getOverworldSprite(){
+        return overworldSprite;
+    }
+
+    std::map<DungeonThemeType, DungeonTheme> themeLookup = {
+        {THEME_DEFAULT, DungeonTheme("default_castle_", 2, "dungeon_2")},
+        {THEME_ALT, DungeonTheme("alt_castle_", 2, "dungeon_4")},
+        {THEME_GREEN, DungeonTheme("green_castle_", 4, "dungeon_3")},
+        {THEME_MUD, DungeonTheme("mud_castle_", 2, "dungeon_5")},
+        {THEME_SAND, DungeonTheme("sand_castle_", 2, "dungeon_1")}
+    };
 }

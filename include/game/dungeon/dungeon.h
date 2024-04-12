@@ -297,7 +297,7 @@ namespace DungeonCode {
             const int FIGHT_ROOM_SIZE = 35;
 
             // theme
-            DungeonTheme theme = DungeonTheme("default_castle_", 2);
+            DungeonTheme* theme;
 
             // Boxes
             const Vector2 BOX_SIZE = {32, 32};

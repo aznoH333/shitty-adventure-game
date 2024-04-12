@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-
+#include "game/dungeon/dungeonTheme.h"
 
 
 namespace TerrainGeneration {
@@ -52,6 +52,8 @@ namespace TerrainGeneration {
         ObjectType type;
         int dungeonId = 0;
         bool hasAssignedId = false;
+        DungeonCode::DungeonTheme* theme;
+
     };
 
     enum PatternGenrationType{

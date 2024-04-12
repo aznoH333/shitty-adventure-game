@@ -1,7 +1,8 @@
 #ifndef BIOME_LOOKUP
 #define BIOME_LOOKUP
 
-
+#include "game/dungeon/dungeonTheme.h"
+#include <vector>
 
 namespace TerrainGeneration {
 
@@ -28,6 +29,8 @@ namespace TerrainGeneration {
         int waterTile;
         int structureType;
         int treeType;
+        std::vector<DungeonCode::DungeonThemeType> dungeonTypes;
+        
     };
 
 
@@ -49,12 +52,13 @@ namespace TerrainGeneration {
 
             .mountainTile = 2,
             .stoneTile = 4,
-            .shoreTile = 5,
+            .shoreTile = 0,
             .defaultTile = 0,
             .sandTile = 1,
             .waterTile = 3,
             .structureType = 0,
             .treeType = 0,
+            .dungeonTypes = {DungeonCode::THEME_DEFAULT,DungeonCode::THEME_ALT,DungeonCode::THEME_GREEN,DungeonCode::THEME_MUD},
         },
         // desert biome
         {
@@ -78,6 +82,8 @@ namespace TerrainGeneration {
             .waterTile = 3,
             .structureType = 0,
             .treeType = 1,
+            .dungeonTypes = {DungeonCode::THEME_DEFAULT, DungeonCode::THEME_MUD, DungeonCode::THEME_SAND},
+
         },
     };
 
