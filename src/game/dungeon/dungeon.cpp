@@ -218,7 +218,7 @@ namespace DungeonCode {
             {},
             {},
             {},
-            DungeonBackground::generateBasedOnTheme(0)
+            DungeonBackground::generateBasedOnTheme(theme->getId())
         };
         
         

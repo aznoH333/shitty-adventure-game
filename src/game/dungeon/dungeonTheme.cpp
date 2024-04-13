@@ -3,10 +3,11 @@
 
 using namespace Utils;
 namespace DungeonCode {
-    DungeonTheme::DungeonTheme(std::string namePrefix, int defaultVariations, std::string overworldSprite){
+    DungeonTheme::DungeonTheme(DungeonThemeType id, std::string namePrefix, int defaultVariations, std::string overworldSprite){
         this->tileLookup = std::vector<DungeonTile>();
         this->defaultVariations = defaultVariations;
         this->overworldSprite = overworldSprite;
+        this->id = id;
         // add air
         tileLookup.push_back({"", false, false});
         
@@ -44,11 +45,15 @@ namespace DungeonCode {
         return overworldSprite;
     }
 
+    int DungeonTheme::getId(){
+        return id;
+    }
+
     std::map<DungeonThemeType, DungeonTheme> themeLookup = {
-        {THEME_DEFAULT, DungeonTheme("default_castle_", 2, "dungeon_2")},
-        {THEME_ALT, DungeonTheme("alt_castle_", 2, "dungeon_4")},
-        {THEME_GREEN, DungeonTheme("green_castle_", 4, "dungeon_3")},
-        {THEME_MUD, DungeonTheme("mud_castle_", 2, "dungeon_5")},
-        {THEME_SAND, DungeonTheme("sand_castle_", 2, "dungeon_1")}
+        {THEME_DEFAULT, DungeonTheme(THEME_DEFAULT, "default_castle_", 2, "dungeon_2")},
+        {THEME_ALT, DungeonTheme(THEME_ALT, "alt_castle_", 2, "dungeon_4")},
+        {THEME_GREEN, DungeonTheme(THEME_GREEN, "green_castle_", 4, "dungeon_3")},
+        {THEME_MUD, DungeonTheme(THEME_MUD, "mud_castle_", 2, "dungeon_5")},
+        {THEME_SAND, DungeonTheme(THEME_SAND, "sand_castle_", 2, "dungeon_1")}
     };
 }

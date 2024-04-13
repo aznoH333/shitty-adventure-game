@@ -21,12 +21,14 @@ namespace DungeonCode {
             int defaultVariations;
             std::vector<DungeonTile> tileLookup;
             std::string overworldSprite;
+            DungeonThemeType id;
         
         public:
-            DungeonTheme(std::string namePrefix, int defaultVariations, std::string overworldSprite);
+            DungeonTheme(DungeonThemeType id, std::string namePrefix, int defaultVariations, std::string overworldSprite);
             DungeonTile& getTile(const int& tileId);
             int translateTileId(const int& type);
             std::string getOverworldSprite();
+            int getId();
     };
 
 

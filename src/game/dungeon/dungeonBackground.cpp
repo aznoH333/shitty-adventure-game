@@ -1,7 +1,7 @@
 #include "game/dungeon/dungeonBackground.h"
 #include "engine/utils.h"
 #include "engine/drawing.h"
-
+#include "game/dungeon/dungeonTheme.h"
 
 using namespace Utils;
 namespace DungeonCode{
@@ -15,23 +15,47 @@ namespace DungeonCode{
     }
 
     void DungeonBackground::draw(float cameraOffset){
-        for (BackgroundLayer layer : layers){
-            layer.draw(cameraOffset);
+        
+        // render backwards
+        for (int i = layers.size() - 1 ; i >= 0; i--){
+            layers.at(i).draw(cameraOffset);
         }
+        
     }
     
     DungeonBackground DungeonBackground::generateBasedOnTheme(int themeId){
+        DungeonBackground output = DungeonBackground();
+        
         switch(themeId){
-            default:
-                DungeonBackground output = DungeonBackground();
-                
-                const std::vector<std::string> s = {"mud_background_1", "mud_background_2"};
-                BackgroundLayer layer = BackgroundLayer(0.4f);
-                for(int i = 0; i < 10; i++){
-                    layer.addPattern(s.at(GetRandomValue(0, s.size() - 1)));
+            case DungeonThemeType::THEME_DEFAULT:
+                {
+                    // layer 1
+                    BackgroundLayer l1 = BackgroundLayer(0.25f);
+                    for (int i = 0; i < 4; i++){
+                        l1.addPattern("castle_background_1");
+                        l1.addPattern("castle_background_2");
+                    }
+                    output.addLayer(l1);
+                    // layer 2
+                    BackgroundLayer l2 = BackgroundLayer(0.6f);
+                    for (int i = 0; i < 10; i++){
+                        l2.addPattern("castle_background_3");
+                    }
+                    output.addLayer(l2);
+
+                    return output;
                 }
-                output.addLayer(layer);
-                return output;
+            default:
+                {
+                    const std::vector<std::string> s = {"mud_background_1", "mud_background_2"};
+                    BackgroundLayer layer = BackgroundLayer(0.4f);
+                    for(int i = 0; i < 10; i++){
+                        layer.addPattern(s.at(GetRandomValue(0, s.size() - 1)));
+                    }
+                    output.addLayer(layer);
+                    return output;
+                }
+            
         }
     }
 
