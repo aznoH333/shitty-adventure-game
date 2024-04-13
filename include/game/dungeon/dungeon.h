@@ -2,6 +2,7 @@
 #define DUNGEON 
 
 
+#include "dungeonBackground.h"
 #include "game/overworld/terrainStructs.h"
 #include <vector>
 #include <list>
@@ -16,6 +17,7 @@
 #include "game/stats/playerStats.h"
 #include "itemBox.h"
 #include "dungeonTheme.h"
+#include "dungeonBackground.h"
 
 namespace DungeonCode {
 
@@ -82,6 +84,7 @@ namespace DungeonCode {
         std::list<DungeonDoor> doors;
         std::list<ItemBox> boxes;
         Vector2 defaultEntry;
+        DungeonBackground background;
     };
 
     struct Level {

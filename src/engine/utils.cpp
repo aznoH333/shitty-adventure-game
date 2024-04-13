@@ -192,6 +192,10 @@ namespace Utils {
         return std::sin(time * timeMultiplier) * valueMultiplier;
     }
 
+    
+
+
+
 
     // --== ui utils ==--
     void drawBar(Vector2& position, const std::string& onSprite, const std::string& offSprite, float spriteOffset, int onAmmount, int ammount){

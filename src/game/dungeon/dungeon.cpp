@@ -32,7 +32,7 @@ namespace DungeonCode {
 
     void Dungeon::update(){
         
-        DungeonSection& section = currentLoadedLevel.sections[currentLoadedLevel.currentSection];
+        DungeonSection& section = currentLoadedLevel.sections.at(currentLoadedLevel.currentSection);
         draw(section);
 
         updatePlatforms(section);
@@ -53,7 +53,7 @@ namespace DungeonCode {
 
     // --== drawing ==--
     void Dungeon::draw(DungeonSection& section){
-        
+        section.background.draw(Drawing::get()->getCamera().target.x);
         for (int x = 0; x < section.levelData.size(); x++){
             const LevelSlice& slice = section.levelData[x];
 
@@ -75,7 +75,7 @@ namespace DungeonCode {
         Vector2 cameraPosition = {playerPosition.x, CAMERA_Y};
         
         cameraPosition.x = std::max(cameraPosition.x, MIN_CAMERA_X);
-        cameraPosition.x = std::min(cameraPosition.x, (currentLoadedLevel.sections[currentLoadedLevel.currentSection].sectionLength - 1) * DUNGEON_TILE_SIZE - MIN_CAMERA_X);
+        cameraPosition.x = std::min(cameraPosition.x, (currentLoadedLevel.sections.at(currentLoadedLevel.currentSection).sectionLength - 1) * DUNGEON_TILE_SIZE - MIN_CAMERA_X);
 
         Drawing::get()->getCamera().target = cameraPosition;
     }
@@ -144,7 +144,7 @@ namespace DungeonCode {
             0
         };
 
-        output.sections[0] = generateSection({MAIN_SECTION, true}, output, -1, 0, {0.0f,0.0f});
+        output.sections.insert({0,generateSection({MAIN_SECTION, true}, output, -1, 0, {0.0f,0.0f})});
         
 
         return output;
@@ -215,7 +215,10 @@ namespace DungeonCode {
             info,
             {},
             {},
-            {}
+            {},
+            {},
+            {},
+            DungeonBackground::generateBasedOnTheme(0)
         };
         
         
@@ -332,7 +335,7 @@ namespace DungeonCode {
                         doorTarget = nextId;
                         SectionInfo nextInfo = getNextPurpose(section.sectionInfo);
                         
-                        level.sections[nextId] = generateSection(nextInfo, level, sectionId, nextId, position);
+                        level.sections.insert({nextId, generateSection(nextInfo, level, sectionId, nextId, position)});
                         generatedEndDoor = true;
                     }else if (rng < SIDE_ROOM_CHANCE){
                         // spawn side door
@@ -342,7 +345,7 @@ namespace DungeonCode {
                         doorTarget = nextId;
                         SectionInfo nextInfo = getNextPurpose({section.sectionInfo.purpose, false});
                         
-                        level.sections[nextId] = generateSection(nextInfo, level, sectionId, nextId, position);
+                        level.sections.insert({nextId, generateSection(nextInfo, level, sectionId, nextId, position)});
                     }
                 }
                 
@@ -449,7 +452,7 @@ namespace DungeonCode {
                 // spawn side door
                 int nextId = ++level.lastId;
                 SectionInfo nextInfo = getNextPurpose(section.sectionInfo);
-                level.sections[nextId] = generateSection(nextInfo, level, sectionId, nextId, position);
+                level.sections.insert({nextId, generateSection(nextInfo, level, sectionId, nextId, position)});
             
                 spawnEntity(position, DOOR_SPAWN, section, level, nextId, returnLoacation, true);
 
@@ -629,7 +632,7 @@ namespace DungeonCode {
 
     bool Dungeon::collidesWithLevel(Vector2& position, Vector2& size){
         
-        DungeonSection& currentSection = currentLoadedLevel.sections[currentLoadedLevel.currentSection];
+        DungeonSection& currentSection = currentLoadedLevel.sections.at(currentLoadedLevel.currentSection);
         
         int xEnd = std::floor(position.x + size.x) / DUNGEON_TILE_SIZE;
         int yEnd = std::floor(position.y + size.y) / DUNGEON_TILE_SIZE;
@@ -717,7 +720,7 @@ namespace DungeonCode {
 
         clearTemporaryObjects();
         currentLoadedLevel.currentSection = door->target;
-        Vector2 position = door->useDefaultEntry ? currentLoadedLevel.sections[currentLoadedLevel.currentSection].defaultEntry : door->exitLocation;
+        Vector2 position = door->useDefaultEntry ? currentLoadedLevel.sections.at(currentLoadedLevel.currentSection).defaultEntry : door->exitLocation;
         player = new DungeonPlayer(position);
 
 
@@ -783,7 +786,7 @@ namespace DungeonCode {
 
     // --== boxes ==--
     void Dungeon::updateBoxes(){
-        for (ItemBox& box : currentLoadedLevel.sections[currentLoadedLevel.currentSection].boxes){
+        for (ItemBox& box : currentLoadedLevel.sections.at(currentLoadedLevel.currentSection).boxes){
             box.update();
 
             for (Projectile& p : projectiles){
@@ -795,7 +798,7 @@ namespace DungeonCode {
     }
 
     ItemBox* Dungeon::lookForNearbyBoxes(Vector2 position){
-        for (ItemBox& box : currentLoadedLevel.sections[currentLoadedLevel.currentSection].boxes){
+        for (ItemBox& box : currentLoadedLevel.sections.at(currentLoadedLevel.currentSection).boxes){
             float distance = pythagoras(position.x, position.y, box.getPosition().x, box.getPosition().y);
 
             if (distance < MAX_DISTANCE_TO_BOX && box.isBoxOpen()){
