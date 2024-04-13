@@ -1,5 +1,6 @@
 #include "game/ui/ui.h"
 #include <cmath>
+#include <string>
 #include "game/stats/itemManager.h"
 
 using namespace Utils;
@@ -156,10 +157,13 @@ namespace UICode{
                             break;
                         case ']':
                             output.textData[output.length++] = 54;
+                            break;
                         case '+':
                             output.textData[output.length++] = 55;
+                            break;
                         case '-':
                             output.textData[output.length++] = 56;
+                            break;
 
                     }
                 }
@@ -281,8 +285,7 @@ namespace UICode{
                 // showcase stats
                 int iteration = 1;
                 for (std::pair<const int, int>& modifier : item->getModifierList()){
-                    // i did this to myself
-                    // i regret this
+                    
                     std::string text;
                     std::string value;
                     bool isPositive;
@@ -290,11 +293,9 @@ namespace UICode{
                     
                     Stat& s = StatManager::get()->getStat(modifier.first);
                     text = s.getTextName();
-                    value = std::to_string(modifier.second);
                     isPositive = modifier.second >= 0;
                     
-                    
-                    value = (isPositive ? "+" : "") + value;
+                    value = (isPositive ? "+" : "-") + std::to_string(std::abs(modifier.second));
                     // print
                     UICode::Text::renderGameText(text, {ITEM_TEXT_POSITION.x, ITEM_TEXT_POSITION.y + (ITEM_TEXT_LINE_HEIGHT * iteration)}, textColor, 0.7f);
                     UICode::Text::renderGameText(value, {ITEM_STAT_VALUE_START, ITEM_TEXT_POSITION.y + (ITEM_TEXT_LINE_HEIGHT * iteration)}, textColor, 0.7f);

@@ -16,8 +16,8 @@ namespace PlayerStats{
             std::string sprite;
             std::string name;
 
-            void addStat(int id, float& itemScore, int& statSeed, bool positive);
-            void generateStat(int& seed, std::vector<int>& usedIds, bool shouldBePositive, float& itemScore);
+            void addStat(int id, int modifierValue, int& statSeed, bool positive);
+            void generateStat(int& seed, std::vector<int>& usedIds, bool shouldBePositive, int modifierValue);
 
         public:
             Item(int itemId, int itemSeed, float targetItemScore);
@@ -28,6 +28,7 @@ namespace PlayerStats{
             void equipItem();
             void unequipItem();
             bool isEmpty();
+            bool isPositive();
     };
 }
 

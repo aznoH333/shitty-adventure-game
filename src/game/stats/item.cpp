@@ -27,20 +27,20 @@ namespace PlayerStats {
         this->itemId = itemId;
         int seedCopy = itemSeed;
         std::vector<int> usedIds = std::vector<int>();
-        float itemScore = 0.0f;
-        float differentialValue = getPseudoRandomFloat(1, 3, seedCopy++);
+        // item power
+        int modifierValue = 1 + (targetItemScore * 1.8f);
+
 
         {
-            // generate upsides
-            do {
-                generateStat(seedCopy, usedIds, true, itemScore);
-            }while (itemScore < targetItemScore + differentialValue);
-
-            // generate downsides
-            while (itemScore > targetItemScore){
-                generateStat(seedCopy, usedIds, false, itemScore);
-
+            int positiveCount = getPseudoRandomInt(1, 2, itemSeed++);
+            
+            // generate positive
+            for (int i = 0; i < positiveCount; i++){
+                generateStat(itemSeed, usedIds, true, modifierValue);
             }
+            // generate negative
+            generateStat(itemSeed, usedIds, false, modifierValue);
+
         }
         // generate name and sprite
         {
@@ -63,20 +63,23 @@ namespace PlayerStats {
 
     
 
-    void Item::generateStat(int& seed, std::vector<int>& usedIds, bool shouldBePositive, float& itemScore){
+    void Item::generateStat(int& seed, std::vector<int>& usedIds, bool shouldBePositive, int modifierValue){
         int result = playerStats->pickRandomStat(seed++, usedIds);
         usedIds.push_back(result);
-        addStat(result, itemScore, seed, shouldBePositive);
+        addStat(result, modifierValue, seed, shouldBePositive);
     }
 
-    void Item::addStat(int id, float& itemScore, int& statSeed, bool isPositive){
+    void Item::addStat(int id, int modifierValue, int& statSeed, bool isPositive){
         Stat& stat = playerStats->getStat(id);
-        float modifier = getPseudoRandomInt(1, 2, statSeed++);
+        float modifier = modifierValue + getPseudoRandomInt(0, 1, statSeed++);
         int positiveModifier = boolToSign(isPositive);
         int power = modifier * positiveModifier;
-        itemScore += power;
         modifiers[id] = power;
     }
+    
+    
+
+
 
 
     bool Item::isEmpty(){
