@@ -631,7 +631,10 @@ namespace DungeonCode {
     }
 
     bool Dungeon::collidesWithLevel(Vector2& position, Vector2& size){
-        
+        return lambdaTileCheck(position, size, [](int tileId){return tileId != 0;});
+    }
+
+    bool Dungeon::lambdaTileCheck(Vector2& position, Vector2& size, std::function<bool(int)> tileCheckFunction){
         DungeonSection& currentSection = currentLoadedLevel.sections.at(currentLoadedLevel.currentSection);
         
         int xEnd = std::floor(position.x + size.x) / DUNGEON_TILE_SIZE;
@@ -643,8 +646,8 @@ namespace DungeonCode {
 
 
 
-                if (x < 0 || x > currentSection.sectionLength || y < 0 || y > TILES_PER_PATTERN ||
-                    dungeonPatternLookup[currentSection.levelData[x].geometryPattern].tiles[y] != 0){
+                if (x < 0 || x > currentSection.sectionLength || y < 0 || y >= TILES_PER_PATTERN ||
+                    tileCheckFunction(dungeonPatternLookup[currentSection.levelData[x].geometryPattern].tiles[y])){
                     return true;
                 }
 
@@ -652,6 +655,14 @@ namespace DungeonCode {
         }
 
         return false;
+    }
+
+
+    bool Dungeon::collidesWithSpikes(Vector2 position, Vector2 size){
+        return lambdaTileCheck(position, size, 
+        [](int tileId){
+            return dungeonTileLookup[tileId].isSpike;
+        });
     }
 
     bool Dungeon::collidesWithPlatformAdvanced(Vector2& position, Vector2& size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef){

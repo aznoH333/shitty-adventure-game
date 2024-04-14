@@ -29,6 +29,7 @@ void DungeonPlayer::update(){
     updateBoxInteraction();
     updateGun();
     updateHealing();
+    updateSpikeDamage();
     drawGun();
     postHitInvincibility -= postHitInvincibility > 0;
 
@@ -118,7 +119,6 @@ void DungeonPlayer::tryMove(){
 
 
 }
-#include <iostream>
 // --== healing ==--
 void DungeonPlayer::updateHealing(){
     healthTimer.progress();
@@ -369,6 +369,14 @@ void DungeonPlayer::takeDamage(int damage){
         postHitInvincibility = MAX_POST_HIT_INVINCIBILITY;
     }
 }
+
+// --== dungeon spikes ==--
+void DungeonPlayer::updateSpikeDamage(){
+    if (Dungeon::get()->collidesWithSpikes(Vector2{position.x, position.y + SIZE.y}, {SIZE.x, 3.0f})){
+        takeDamage((playerStats->get(MAX_HEALTH) / 4));
+    }
+}
+
 
 // --== box stuff ==--
 void DungeonPlayer::updateBoxInteraction(){

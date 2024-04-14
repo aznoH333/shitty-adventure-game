@@ -18,6 +18,7 @@
 #include "itemBox.h"
 #include "dungeonTheme.h"
 #include "dungeonBackground.h"
+#include <functional>
 
 namespace DungeonCode {
 
@@ -212,6 +213,7 @@ namespace DungeonCode {
             void drawSprite();
             void updateGun();
             void updateHealing();
+            void updateSpikeDamage();
             void drawGun();
 
         public:
@@ -356,6 +358,7 @@ namespace DungeonCode {
             bool collidesWithLevel(Vector2& position, Vector2& size);
             bool collidesWithPlatform(Vector2& position, Vector2& size);
             bool collidesWithPlatformAdvanced(Vector2& position, Vector2& size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
+            bool lambdaTileCheck(Vector2& position, Vector2& size, std::function<bool(int)> tileCheckFunction);
 
             // boxes
             void updateBoxes();
@@ -385,6 +388,7 @@ namespace DungeonCode {
             void addGiblet(Giblet giblet);
             void addProjectile(Projectile projectile);
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
+            bool collidesWithSpikes(Vector2 position, Vector2 size);
             ItemBox* lookForNearbyBoxes(Vector2 position);
             DungeonPlayer* getPlayer();
     };
