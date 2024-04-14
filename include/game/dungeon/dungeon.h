@@ -140,6 +140,7 @@ namespace DungeonCode {
             bool buttonInteractPressed = false;
             bool buttonFirePressed = false;
             bool buttonReloadPressed = false;
+            bool buttonHealPressed = false;
 
             // movement vars
             const float ADDITIONAL_VELOCITY_DECAY_SPEED = 0.3f;
@@ -193,6 +194,9 @@ namespace DungeonCode {
 
             // door stuff
             DungeonDoor* nearbyDoor = nullptr;
+
+            // healing stuff
+            Utils::GenericTimer healthTimer = Utils::GenericTimer(30);
             
 
 
@@ -207,6 +211,7 @@ namespace DungeonCode {
             void updateDoorInteraction();
             void drawSprite();
             void updateGun();
+            void updateHealing();
             void drawGun();
 
         public:

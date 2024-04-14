@@ -42,6 +42,7 @@ namespace UICode{
         void drawUi(float& hudY);
         void drawShells(float& hudY);
         void drawHealth(float& hudY);
+        void drawPotions(float& hudY);
         void drawItems(float& hudY);
 
 

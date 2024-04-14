@@ -16,7 +16,9 @@ namespace PlayerStats {
         PROJECTILE_DAMAGE,
         HEALTH,
         MAX_HEALTH,
+        HEALING_POTION_COUNT,
         STAT_COUNT,
+
 
 
     };
@@ -42,6 +44,7 @@ namespace PlayerStats {
             virtual float getF();
             std::string& getTextName();
             virtual bool isUpgradable();
+            void set(int value);
     };
 
 }

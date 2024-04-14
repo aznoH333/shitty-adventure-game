@@ -73,7 +73,17 @@ namespace Utils{
     template<typename T, typename A>
     bool isInVec(std::vector<T, A>& vec, T element);
 
+    // timers
+    class GenericTimer{
+        public:
+            int value;
+            int maxValue;
+            GenericTimer(int max);
 
+            void progress();
+            bool isReady();
+            void reset();
+    };
 }
 
 

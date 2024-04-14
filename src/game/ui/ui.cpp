@@ -32,12 +32,18 @@ namespace UICode{
         drawShells(hudY);
         drawHealth(hudY);
         drawItems(hudY);
+        drawPotions(hudY);
     }
 
 
     void Hud::drawShells(float& hudY){
         Vector2 vec = {SHELL_START.x, SHELL_START.y + hudY};
         drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats->get(AMMO_COUNT), playerStats->get(MAX_AMMO_COUNT));
+    }
+
+    void Hud::drawPotions(float &hudY){
+        Vector2 vec = {4.0f, 60.0f + hudY};
+        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats->get(HEALING_POTION_COUNT), 4);
     }
 
 

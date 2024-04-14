@@ -10,7 +10,19 @@ namespace PlayerStats {
 
     void Item::equipItem(){
         for (std::pair<int, int> a : modifiers){
+            Stat& s = playerStats->getStat(a.first);
+            
             playerStats->getStat(a.first).addToValue(a.second);
+
+            // exceptions
+            switch (a.first) {
+                case MAX_AMMO_COUNT:
+                    playerStats->getStat(AMMO_COUNT).set(s.get());
+                    break;
+                case MAX_HEALTH:
+                    playerStats->getStat(HEALTH).set(s.get());
+                    break;
+            }
         }
     }
 

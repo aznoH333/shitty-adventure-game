@@ -28,6 +28,7 @@ void DungeonPlayer::update(){
     updateMovementValues();
     updateBoxInteraction();
     updateGun();
+    updateHealing();
     drawGun();
     postHitInvincibility -= postHitInvincibility > 0;
 
@@ -75,6 +76,7 @@ void DungeonPlayer::readPlayerInput(){
     buttonInteractPressed = IsKeyPressed(KEY_E);
     buttonFirePressed = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
     buttonReloadPressed = IsKeyPressed(KEY_R);
+    buttonHealPressed = IsKeyPressed(KEY_F);
     
 
     // no button or both buttons pressed
@@ -116,6 +118,19 @@ void DungeonPlayer::tryMove(){
 
 
 }
+#include <iostream>
+// --== healing ==--
+void DungeonPlayer::updateHealing(){
+    healthTimer.progress();
+    if (buttonHealPressed && healthTimer.isReady() && playerStats->get(HEALING_POTION_COUNT) > 0 && playerStats->get(HEALTH) < playerStats->get(MAX_HEALTH)){
+        healthTimer.reset();
+        playerStats->getStat(HEALTH).set(playerStats->get(MAX_HEALTH));
+        playerStats->getStat(HEALING_POTION_COUNT).addToValue(-1);
+
+        // todo animations
+    }
+}
+
 
 // --== jumping and climbing ==--
 void DungeonPlayer::tryJump(){

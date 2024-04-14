@@ -220,4 +220,21 @@ namespace Utils {
     template bool isInVec<int, std::allocator<int>>(std::vector<int, std::allocator<int>>&, int);
 
 
+    // generic timer
+    GenericTimer::GenericTimer(int maxValue){
+        this->value = 0;
+        this->maxValue = maxValue;
+    }
+
+    void GenericTimer::progress(){
+        value -= value > 0;
+    }
+
+    bool GenericTimer::isReady(){
+        return value == 0;
+    }
+
+    void GenericTimer::reset(){
+        this->value = maxValue;
+    }
 }

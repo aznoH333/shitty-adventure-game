@@ -28,6 +28,7 @@ namespace PlayerStats{
         stats.insert({PROJECTILE_DAMAGE, new Stat(5, 15, 5, 0.7, "damage")});
         stats.insert({HEALTH, new StatVariable(100, "health")});
         stats.insert({MAX_HEALTH, new Stat(5, 15, 50, 10.0f, "max health")});
+        stats.insert({HEALING_POTION_COUNT, new StatVariable(4, "potions")});
     }
 
     StatManager::~StatManager(){

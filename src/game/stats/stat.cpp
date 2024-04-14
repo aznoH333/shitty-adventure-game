@@ -41,5 +41,9 @@ namespace PlayerStats {
         return true;
     }
 
+    void Stat::set(int value){
+        this->value = value;
+    }
+
 
 }
