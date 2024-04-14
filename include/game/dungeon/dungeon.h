@@ -263,7 +263,8 @@ namespace DungeonCode {
 
             const float CAMERA_Y = 109.0f;
             const float MIN_CAMERA_X = 256.0f; 
-            const Vector2 PLATFORM_SIZE = {48.0f, 10.0f};       
+            const Vector2 PLATFORM_SIZE = {48.0f, 10.0f};
+            DungeonDoor* mojeNoha = nullptr;   
 
             
             int nextDungeonId = 1;
@@ -314,6 +315,8 @@ namespace DungeonCode {
             const float MAX_DISTANCE_TO_BOX = 32.0f;
 
             std::map<int, std::vector<int>> dynamicConnectorLookupTable;
+
+            
 
             // generation
             void unloadDungeon();

@@ -31,6 +31,21 @@ namespace DungeonCode {
     // --== update ==--
 
     void Dungeon::update(){
+        if (mojeNoha != nullptr){
+            if (mojeNoha->target == -1){
+                exitDungeon();
+                mojeNoha = nullptr;
+                return;
+            }
+            delete player;
+
+            clearTemporaryObjects();
+            currentLoadedLevel.currentSection = mojeNoha->target;
+            Vector2 position = mojeNoha->useDefaultEntry ? currentLoadedLevel.sections.at(currentLoadedLevel.currentSection).defaultEntry : mojeNoha->exitLocation;
+            player = new DungeonPlayer(position);
+            mojeNoha = nullptr;
+            return;
+        }
         
         DungeonSection& section = currentLoadedLevel.sections.at(currentLoadedLevel.currentSection);
         draw(section);
@@ -721,18 +736,11 @@ namespace DungeonCode {
         }
     }
 
+    // holy shit
+    // uz vim proc se rika ze si ustrelis nohu
     void Dungeon::enterDoor(DungeonDoor* door){
+        mojeNoha = door;
         
-        if (door->target == -1){
-            exitDungeon();
-            return;
-        }
-        delete player;
-
-        clearTemporaryObjects();
-        currentLoadedLevel.currentSection = door->target;
-        Vector2 position = door->useDefaultEntry ? currentLoadedLevel.sections.at(currentLoadedLevel.currentSection).defaultEntry : door->exitLocation;
-        player = new DungeonPlayer(position);
 
 
     }
