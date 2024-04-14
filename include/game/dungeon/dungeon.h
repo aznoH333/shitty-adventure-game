@@ -199,6 +199,9 @@ namespace DungeonCode {
             // healing stuff
             Utils::GenericTimer healthTimer = Utils::GenericTimer(30);
             
+            // death
+            bool isDead = false;
+            Utils::GenericTimer deathTimer = Utils::GenericTimer(60);
 
 
 
@@ -215,6 +218,8 @@ namespace DungeonCode {
             void updateHealing();
             void updateSpikeDamage();
             void drawGun();
+            void deathUpdate();
+            void died();
 
         public:
             static constexpr Vector2 SIZE = {16.0f, 25.0f};

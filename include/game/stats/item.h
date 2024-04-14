@@ -5,6 +5,37 @@
 #include <vector>
 #include <string>
 namespace PlayerStats{
+    
+    const std::vector<std::string> ITEM_NAMES_1 = {
+        "powerfull",
+        "funky",
+        "smelly",
+        "fast",
+        "guilded",
+        "armored",
+        "deadly",
+        "mythical",
+        "goofy",
+        "legendary",
+        "poor",
+        "strange",
+    };
+
+    const std::vector<std::string> ITEM_NAMES_2 = {
+        "shells",
+        "buck shot",
+        "receiver",
+        "bullets",
+        "pellets",
+        "argus premium",
+        "plating",
+        "medicine",
+        "triger",
+        "muzzle",
+        "iron sights",
+
+    };
+    
     class Item{
         private:
             std::map<int, int> modifiers;

@@ -40,7 +40,7 @@ namespace PlayerStats {
         int seedCopy = itemSeed;
         std::vector<int> usedIds = std::vector<int>();
         // item power
-        int modifierValue = 1 + (targetItemScore * 1.8f);
+        int modifierValue = 1 + (targetItemScore * 0.8f);
 
 
         {
@@ -57,7 +57,10 @@ namespace PlayerStats {
         // generate name and sprite
         {
             // name
-            name = concatSprite("item id : ", itemId);
+            name = "";
+            name += ITEM_NAMES_1.at(getPseudoRandomInt(0, ITEM_NAMES_1.size() - 1, seedCopy++));
+            name += " ";
+            name += ITEM_NAMES_2.at(getPseudoRandomInt(0, ITEM_NAMES_2.size() - 1, seedCopy++));
 
             // sprite
             int randomSpriteIndex = getPseudoRandomInt(1, MAX_SPRITE_INDEX, seedCopy++);

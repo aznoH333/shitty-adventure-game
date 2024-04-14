@@ -18,12 +18,16 @@ DungeonPlayer::DungeonPlayer(Vector2 position){
 }
 
 void DungeonPlayer::update(){
+    deathUpdate();
     
+    if (isDead){
+        return;
+    }
+
     readPlayerInput();
     
     // set platform ptr
     platformPtr = nullptr;
-    
     tryMove();
     updateMovementValues();
     updateBoxInteraction();
@@ -66,7 +70,22 @@ void DungeonPlayer::drawSprite(){
     
     Drawing::get()->drawTexture(sprite, position, flipSprite, 1, 0, WHITE, DrawingLayers::LAYER_PLAYER);
 }
+// --== Death ==--
+void DungeonPlayer::deathUpdate(){
+    if (!isDead){
+        return;
+    }
 
+    deathTimer.progress();
+
+    if (deathTimer.isReady()){
+        died();
+    }
+}
+
+void DungeonPlayer::died(){
+    exit(0); // TODO death animation
+}
 
 // --== Movement ==--
 void DungeonPlayer::readPlayerInput(){
@@ -367,6 +386,12 @@ void DungeonPlayer::takeDamage(int damage){
     if (postHitInvincibility == 0){
         playerStats->getStat(HEALTH).addToValue(-damage);
         postHitInvincibility = MAX_POST_HIT_INVINCIBILITY;
+
+        // death 
+        if (playerStats->get(HEALTH) < 0){
+            isDead = true;
+            deathTimer.reset();
+        }
     }
 }
 

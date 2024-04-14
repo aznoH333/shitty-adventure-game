@@ -432,7 +432,7 @@ namespace DungeonCode {
                 section.defaultEntry = position;
             }else if (i == size / 2){
                 // spawn box
-                int itemId = PlayerStats::ItemManager::get()->generateNewItem(currentSeed++, 3.0f);
+                int itemId = PlayerStats::ItemManager::get()->generateNewItem(currentSeed++, 1.0f);
                 section.boxes.push_back(ItemBox({position.x - DUNGEON_TILE_SIZE, position.y - DUNGEON_TILE_SIZE}, itemId));
             }
         }
