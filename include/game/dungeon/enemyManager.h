@@ -11,8 +11,8 @@ namespace DungeonCode {
     class EnemyManager{
         private:
             const int MAX_POWER_LEVEL = 10;
-            const float ENEMY_HEALTH_BASELINE = 80.0f;
-            const float ENEMY_HEALTH_POWER_MULTIPLIER = 40.0f;
+            const float ENEMY_HEALTH_BASELINE = 40.0f;
+            const float ENEMY_HEALTH_POWER_MULTIPLIER = 25.0f;
             const float ENEMY_WEIGHT_DEVIATION = 0.2;
             const float MIN_MOVE_SPEED = 0.5f;
             const float MAX_MOVE_SPEED = 1.5f;

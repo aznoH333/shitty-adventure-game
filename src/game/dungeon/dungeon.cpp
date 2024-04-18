@@ -96,12 +96,13 @@ namespace DungeonCode {
     }
 
     // --== loading ==--
-    void Dungeon::enterDungeon(TerrainGeneration::OverworldObject* dungeon){
+    void Dungeon::enterDungeon(TerrainGeneration::OverworldObject* dungeon, float distanceToSpawn){
         // switch state
         State::get()->switchState(GameState::STATE_DUNGEON);
 
         unloadDungeon();
 
+        calculateDificulity(distanceToSpawn);
 
         if (!dungeon->hasAssignedId){
             dungeon->hasAssignedId = true;
@@ -114,6 +115,12 @@ namespace DungeonCode {
         loadDungeon(overworldDungeon->dungeonId, dungeon->position);
 
         UICode::Hud::setHudVisibility(true);
+    }
+
+
+    void Dungeon::calculateDificulity(float distanceToSpawn){
+        dungeonDificulity = std::min(MIN_DIFICULITY + (distanceToSpawn / DIFICULITY_DIVIDER), MAX_DIFICULITY);
+        enemySpawnChance = (dungeonDificulity / MAX_DIFICULITY) * 0.5f + 0.3f;
     }
 
 
@@ -432,7 +439,7 @@ namespace DungeonCode {
                 section.defaultEntry = position;
             }else if (i == size / 2){
                 // spawn box
-                int itemId = PlayerStats::ItemManager::get()->generateNewItem(currentSeed++, 1.0f);
+                int itemId = PlayerStats::ItemManager::get()->generateNewItem(currentSeed++, dungeonDificulity);
                 section.boxes.push_back(ItemBox({position.x - DUNGEON_TILE_SIZE, position.y - DUNGEON_TILE_SIZE}, itemId));
             }
         }
@@ -586,8 +593,9 @@ namespace DungeonCode {
 
     // --== enemies ==--
     void Dungeon::addEnemy(Vector2 position, DungeonSection& section){
-        // TODO
-        section.enemies.push_back(EnemyManager::get()->initEnemy(position, 1, currentSeed));
+        if (getPseudoRandomFloat(currentSeed++) < enemySpawnChance){
+            section.enemies.push_back(EnemyManager::get()->initEnemy(position, std::ceil(dungeonDificulity), currentSeed));
+        }
     }
 
     void Dungeon::updateEnemies(DungeonSection& section){

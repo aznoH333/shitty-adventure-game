@@ -28,7 +28,7 @@ void OverworldPlayer::update(){
         UICode::Boxes::displayDefaultTextPrompt("press e to enter");
 
         if (IsKeyPressed(KEY_E)){
-            DungeonCode::Dungeon::get()->enterDungeon(nearbyDungeon);
+            DungeonCode::Dungeon::get()->enterDungeon(nearbyDungeon, Utils::pythagoras(position.x, position.y, 0, 0));
         }
     }
 

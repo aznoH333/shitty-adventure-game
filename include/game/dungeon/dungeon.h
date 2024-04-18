@@ -125,11 +125,12 @@ namespace DungeonCode {
             Vector2 position;
             Vector2 velocity = {0,0};
 
-            const float GRAVITY = 0.3f;
-            const float JUMP_FORCE = 3.0f;
-            const float WALK_ACCELERATION = 0.1f;
-            const float WALK_SPEED = 2.0f;
-            const int JUMP_HEIGHT_BUFFER_LENGTH = 10;
+            const float GRAVITY = 0.4f;
+
+            const float JUMP_FORCE = 3.5f;
+            const float WALK_ACCELERATION = 0.05f;
+            const float WALK_SPEED = 3.0f;
+            const int JUMP_HEIGHT_BUFFER_LENGTH = 40;
             bool flipSprite = false;
 
             
@@ -147,7 +148,7 @@ namespace DungeonCode {
             const float ADDITIONAL_VELOCITY_DECAY_SPEED = 0.3f;
             const int WALK_ANIMATION_START_INDEX = 1;
             const int WALK_ANIMATION_END_INDEX = 3;
-            const int WALK_ANIMATION_FRAME_DURATION = 7;
+            const int WALK_ANIMATION_FRAME_DURATION = 5;
 
             const int JUMP_BUFFER_LENGTH = 10;
             bool isAirborne = false;
@@ -157,7 +158,7 @@ namespace DungeonCode {
             int jumpBuffer = 0;
 
             // wall climbing
-            const float WALL_CLIMB_JUMP_FORCE = 3.2f;
+            const float WALL_CLIMB_JUMP_FORCE = 4.2f;
             const float WALL_CLIMB_PUSH_FORCE = 2.5f;
             const float WALL_CLIMB_DECAY = 0.15f;
             bool canWallClimb = false;
@@ -275,6 +276,13 @@ namespace DungeonCode {
             int nextDungeonId = 1;
             int lastGeneratedDungeonId = 0;
             int currentSeed = 0;
+            
+            // difficulity
+            float dungeonDificulity = 0;
+            float enemySpawnChance = 0.0f;
+            const float MAX_DIFICULITY = 9.9f;
+            const float MIN_DIFICULITY = 0.0f;
+            const float DIFICULITY_DIVIDER = 40;
 
 
             // platforms
@@ -379,7 +387,7 @@ namespace DungeonCode {
             void updateProjectiles();
             void clearAllProjectiles();
 
-            
+            void calculateDificulity(float distanceToSpawn);
 
         public:
             Dungeon();
@@ -387,7 +395,7 @@ namespace DungeonCode {
             void update();
             void draw(DungeonSection& section);
             void dispose();
-            void enterDungeon(TerrainGeneration::OverworldObject* dungeon);
+            void enterDungeon(TerrainGeneration::OverworldObject* dungeon, float distanceToSpawn);
             void setCameraPosition(Vector2 playerPosition);
             bool collidesWithDungeon(Vector2 position, Vector2 size);
             bool collidesWithDungeon(Vector2 position, Vector2 size, bool checkPlatforms);

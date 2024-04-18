@@ -196,7 +196,7 @@ void DungeonPlayer::updateGravity(){
 
     if (isAirborne || (platformPtr != nullptr && velocity.y < -0.1f)){
         // in air
-        velocity.y += GRAVITY * (jumpHeightBuffer == 0);
+        velocity.y += (1.0f - ((float) jumpHeightBuffer / JUMP_HEIGHT_BUFFER_LENGTH)) * GRAVITY;
     }else if (platformPtr != nullptr){
         // on platform
         velocity.y = platformPtr->speed;
