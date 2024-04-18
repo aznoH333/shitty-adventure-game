@@ -28,6 +28,7 @@ namespace DungeonCode {
         this->rangedAttackCooldown = this->rangedAttackCooldownMax;
         this->hasRangedAttack = initializer.hasRangedAttack;
         this->rangedDamage = initializer.rangedDamage;
+        this->size = initializer.size;
     }
 
     std::string DungeonEnemy::getSprite(){
@@ -44,6 +45,8 @@ namespace DungeonCode {
 
     void DungeonEnemy::update(){
         ai->update(this);
+        hitTimer.progress();
+        shootSizeTimer.progress();
         rangedAttackCooldown -= rangedAttackCooldown > 0;
     }
 
@@ -63,6 +66,10 @@ namespace DungeonCode {
 
     Color& DungeonEnemy::getColor(){
         return color;
+    }
+
+    float DungeonEnemy::getSize(){
+        return size + (hitTimer.getAsPercentage() * HIT_SIZE_TIMER_MULTIPLIER) + (shootSizeTimer.getAsPercentage() * SHOOT_SIZE_TIMER_MULTIPLIER);
     }
 
     int DungeonEnemy::getContactDamage(){
@@ -105,9 +112,13 @@ namespace DungeonCode {
         p.alliedWithPlayer = false;
         p.extraUpdates = 1;
         p.damage = rangedDamage;
-
+        shootSizeTimer.reset();
         d->addProjectile(p);
     }
 
+    void DungeonEnemy::takeDamage(float damage){
+        this->health -= damage;
+        hitTimer.reset();
+    }
 
 }

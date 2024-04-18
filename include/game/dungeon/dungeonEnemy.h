@@ -1,6 +1,7 @@
 #ifndef DUNGEON_ENEMY
 #define DUNGEON_ENEMY
 
+#include "engine/utils.h"
 #include "raylib.h"
 #include <string>
 #include <vector>
@@ -19,6 +20,7 @@ namespace DungeonCode {
         bool hasRangedAttack;
         int rangedAttackCooldown;
         int rangedDamage;
+        float size;
     };
     
     class DungeonEnemy{
@@ -37,6 +39,12 @@ namespace DungeonCode {
             int rangedAttackCooldownMax;
             int rangedDamage;
             int rangedAttackCooldown;
+            float size;
+            Utils::GenericTimer hitTimer = Utils::GenericTimer(20);
+            const float HIT_SIZE_TIMER_MULTIPLIER = 0.4f;
+            Utils::GenericTimer shootSizeTimer = Utils::GenericTimer(20);
+            const float SHOOT_SIZE_TIMER_MULTIPLIER = 0.2f;
+
             
         
         public:
@@ -61,6 +69,8 @@ namespace DungeonCode {
             void dispose();
             int getContactDamage();
             void tryShooting();
+            float getSize();
+            void takeDamage(float damage);
 
     };
 

@@ -83,6 +83,7 @@ namespace Utils{
             void progress();
             bool isReady();
             void reset();
+            float getAsPercentage();
     };
 }
 

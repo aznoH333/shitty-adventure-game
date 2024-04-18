@@ -237,4 +237,8 @@ namespace Utils {
     void GenericTimer::reset(){
         this->value = maxValue;
     }
+
+    float GenericTimer::getAsPercentage(){
+        return (float) value / maxValue;
+    }
 }

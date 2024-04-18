@@ -594,7 +594,7 @@ namespace DungeonCode {
     // --== enemies ==--
     void Dungeon::addEnemy(Vector2 position, DungeonSection& section){
         if (getPseudoRandomFloat(currentSeed++) < enemySpawnChance){
-            section.enemies.push_back(EnemyManager::get()->initEnemy(position, std::ceil(dungeonDificulity), currentSeed));
+            section.enemies.push_back(EnemyManager::get()->initEnemy(position, std::ceil(dungeonDificulity) + getPseudoRandomFloat(0,2, currentSeed++), currentSeed));
         }
     }
 
@@ -603,12 +603,16 @@ namespace DungeonCode {
         section.enemies.remove_if([this](DungeonEnemy& enemy){
             enemy.update();
             Vector2 pos = enemy.getPosition();
-            pos.x -= 8.0f;
-            Drawing::get()->drawTexture(enemy.getSprite(), pos, enemy.getFlip(), 1, 0, enemy.getColor(), LAYER_ENEMY);
+            
+            float size = enemy.getSize();
+
+            pos.x -= 8.0f - ((1.0f - size) * 32.0f / 2);
+            pos.y += (1.0f - size) * DungeonEnemy::ENEMY_SIZE.y;
+            Drawing::get()->drawTexture(enemy.getSprite(), pos, enemy.getFlip(), size, 0, enemy.getColor(), LAYER_ENEMY);
 
             projectiles.remove_if([&enemy, this](Projectile& p){
                 if (p.alliedWithPlayer && Utils::squaresCollide(enemy.getPosition(), p.position, DungeonEnemy::ENEMY_SIZE, PROJECTILE_SIZE)){
-                    enemy.health -= p.damage;
+                    enemy.takeDamage(p.damage);
                     enemy.lastHitDirection = p.rotation;
                     enemy.dispose();
                     return true;
