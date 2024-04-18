@@ -797,12 +797,13 @@ namespace DungeonCode {
         projectiles.remove_if([this, d](Projectile& p){
             
             for (int i = 0; i < p.extraUpdates; i++){
-                p.position.x += p.velocity.x;
-                p.position.y += p.velocity.y;
-                if (collidesWithDungeon(p.position, PROJECTILE_SIZE, false)){
+                p.position.x += std::cos(p.rotation) * p.velocity;
+                p.position.y += std::sin(p.rotation) * p.velocity;
+                p.velocity -= p.deceleration;
+                if (p.velocity <= 0){
                     return true;
                 }
-                d->drawTexture(p.sprite, p.position, 0, 1.0f, p.rotation, WHITE, DrawingLayers::LAYER_PROJECTILES);
+                d->drawTexture(p.sprite, p.position, 0, 1.0f, p.rotation * RAD2DEG, WHITE, DrawingLayers::LAYER_PROJECTILES);
 
             }
             

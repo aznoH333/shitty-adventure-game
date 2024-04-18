@@ -51,7 +51,7 @@ namespace PlayerStats {
                 generateStat(itemSeed, usedIds, true, modifierValue);
             }
             // generate negative
-            generateStat(itemSeed, usedIds, false, modifierValue);
+            //generateStat(itemSeed, usedIds, false, modifierValue);
 
         }
         // generate name and sprite

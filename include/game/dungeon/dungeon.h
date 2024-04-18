@@ -246,7 +246,8 @@ namespace DungeonCode {
     struct Projectile{
         std::string sprite;
         Vector2 position;
-        Vector2 velocity;
+        float velocity;
+        float deceleration;
         float rotation;
         int extraUpdates = 1;
         bool alliedWithPlayer;

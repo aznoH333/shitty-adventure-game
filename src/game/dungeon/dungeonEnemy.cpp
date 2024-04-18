@@ -106,8 +106,8 @@ namespace DungeonCode {
         Projectile p;
         p.position = getAttackPosition();
         p.rotation = Utils::directionTowards(getPosition(), d->getPlayer()->getPosition());
-        p.velocity.x = std::cos(p.rotation * DEG2RAD) * 2;
-        p.velocity.y = std::sin(p.rotation * DEG2RAD) * 2;
+        p.velocity = 2.0f;
+        p.deceleration = 0.1f;
         p.sprite = enemyAttackSprites.at(getAttackSpriteIndex());
         p.alliedWithPlayer = false;
         p.extraUpdates = 1;

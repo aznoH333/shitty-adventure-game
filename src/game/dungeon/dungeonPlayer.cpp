@@ -340,12 +340,12 @@ void DungeonPlayer::updateGun(){
             for (int i = 0; i < playerStats->get(PROJECTILE_COUNT); i++){
                 Projectile p;
                 p.position = bulletOrigin;
-                p.rotation = gunState.direction + Utils::getRandomFloat(-playerStats->getF(PROJECTILE_SPREAD), playerStats->getF(PROJECTILE_SPREAD));
-                p.velocity.x = std::cos(p.rotation * DEG2RAD) * playerStats->getF(PROJECTILE_SPEED);
-                p.velocity.y = std::sin(p.rotation * DEG2RAD) * playerStats->getF(PROJECTILE_SPEED);
+                p.rotation = gunState.direction + Utils::getRandomFloat(-playerStats->getF(PROJECTILE_SPREAD), playerStats->getF(PROJECTILE_SPREAD)) * RAD2DEG;
+                p.velocity = playerStats->getF(PROJECTILE_SPEED);
+                p.deceleration = 0.1f;
                 p.sprite = "bullet_1";
                 p.alliedWithPlayer = true;
-                p.extraUpdates = 3;
+                p.extraUpdates = 2;
                 p.damage = playerStats->getF(PROJECTILE_DAMAGE);
                 d->addProjectile(p);
             }
