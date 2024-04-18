@@ -61,7 +61,7 @@ namespace DungeonCode {
     void DungeonEnemy::dispose(){
         // this causes a double free?
         // some memory magic is going on here
-        //delete ai;
+        delete ai;
     }
 
     Color& DungeonEnemy::getColor(){
@@ -101,19 +101,19 @@ namespace DungeonCode {
 
         Dungeon* d = Dungeon::get();
 
-        // this sucks write a propper constructor
         // spawn projectile
-        Projectile p;
-        p.position = getAttackPosition();
-        p.rotation = Utils::directionTowards(getPosition(), d->getPlayer()->getPosition());
-        p.velocity = 2.0f;
-        p.deceleration = 0.1f;
-        p.sprite = enemyAttackSprites.at(getAttackSpriteIndex());
-        p.alliedWithPlayer = false;
-        p.extraUpdates = 1;
-        p.damage = rangedDamage;
-        shootSizeTimer.reset();
+        
+        Projectile p = Projectile(
+            "bullet_1",
+            getAttackPosition(), 
+            Utils::directionTowards(getPosition(), d->getPlayer()->getPosition()) * DEG2RAD, 
+            2.0f, 
+            0.1f, 
+            rangedDamage, 
+            false);
         d->addProjectile(p);
+        
+        shootSizeTimer.reset();
     }
 
     void DungeonEnemy::takeDamage(float damage){

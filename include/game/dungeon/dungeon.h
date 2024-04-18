@@ -18,6 +18,7 @@
 #include "itemBox.h"
 #include "dungeonTheme.h"
 #include "dungeonBackground.h"
+#include "projectile.h"
 #include <functional>
 
 namespace DungeonCode {
@@ -243,16 +244,7 @@ namespace DungeonCode {
         int gibletType;
     };
 
-    struct Projectile{
-        std::string sprite;
-        Vector2 position;
-        float velocity;
-        float deceleration;
-        float rotation;
-        int extraUpdates = 1;
-        bool alliedWithPlayer;
-        float damage;
-    };
+    
 
 
 

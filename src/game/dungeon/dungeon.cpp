@@ -610,15 +610,15 @@ namespace DungeonCode {
             pos.y += (1.0f - size) * DungeonEnemy::ENEMY_SIZE.y;
             Drawing::get()->drawTexture(enemy.getSprite(), pos, enemy.getFlip(), size, 0, enemy.getColor(), LAYER_ENEMY);
 
-            projectiles.remove_if([&enemy, this](Projectile& p){
-                if (p.alliedWithPlayer && Utils::squaresCollide(enemy.getPosition(), p.position, DungeonEnemy::ENEMY_SIZE, PROJECTILE_SIZE)){
-                    enemy.takeDamage(p.damage);
-                    enemy.lastHitDirection = p.rotation;
-                    enemy.dispose();
-                    return true;
+            
+
+            for (Projectile p : projectiles){
+                if (p.isAlliedWithPlayer() && p.canDamage() && Utils::squaresCollide(enemy.getPosition(), p.getPosition(), DungeonEnemy::ENEMY_SIZE, PROJECTILE_SIZE)){
+                    enemy.takeDamage(p.getDamage());
+                    enemy.lastHitDirection = p.getRotation();
+                    p.resetPierceTimer();
                 }
-                return false;
-            });
+            }
 
             // player collisions
             if (squaresCollide(enemy.getPosition(), player->getPosition(), DungeonEnemy::ENEMY_SIZE, DungeonPlayer::SIZE)){
@@ -639,6 +639,8 @@ namespace DungeonCode {
                         0
                     });
                 }
+                enemy.dispose();
+
                 return true;
             }
             return false;
@@ -752,9 +754,6 @@ namespace DungeonCode {
     // uz vim proc se rika ze si ustrelis nohu
     void Dungeon::enterDoor(DungeonDoor* door){
         mojeNoha = door;
-        
-
-
     }
 
 
@@ -796,20 +795,8 @@ namespace DungeonCode {
         
         projectiles.remove_if([this, d](Projectile& p){
             
-            for (int i = 0; i < p.extraUpdates; i++){
-                p.position.x += std::cos(p.rotation) * p.velocity;
-                p.position.y += std::sin(p.rotation) * p.velocity;
-                p.velocity -= p.deceleration;
-                if (p.velocity <= 0){
-                    return true;
-                }
-                d->drawTexture(p.sprite, p.position, 0, 1.0f, p.rotation * RAD2DEG, WHITE, DrawingLayers::LAYER_PROJECTILES);
-
-            }
-            
-            
-
-            return false;
+            p.update();
+            return p.shouldDestroy();
         });
     }
     void Dungeon::clearAllProjectiles(){
@@ -822,7 +809,7 @@ namespace DungeonCode {
             box.update();
 
             for (Projectile& p : projectiles){
-                if (!box.isBoxOpen() && squaresCollide(box.getPosition(), p.position, BOX_SIZE, PROJECTILE_SIZE)){
+                if (!box.isBoxOpen() && squaresCollide(box.getPosition(), p.getPosition(), BOX_SIZE, PROJECTILE_SIZE)){
                     box.openBox();
                 }
             }

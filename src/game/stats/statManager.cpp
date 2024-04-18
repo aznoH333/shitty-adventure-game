@@ -24,7 +24,7 @@ namespace PlayerStats{
         stats.insert({PROJECTILE_COUNT, new Stat(5, 15, 0, 1.0f, "projectiles")});
 
         stats.insert({PROJECTILE_SPREAD, new Stat(5, 15, 20, -1.5, "spread")});
-        stats.insert({PROJECTILE_SPEED, new Stat(5, 10, 5, 0.5f, "bullet speed")});
+        stats.insert({PROJECTILE_SPEED, new Stat(5, 15, 7, 1.0f, "bullet speed")});
         stats.insert({PROJECTILE_DAMAGE, new Stat(5, 15, 5, 0.7, "damage")});
         stats.insert({HEALTH, new StatVariable(100, "health")});
         stats.insert({MAX_HEALTH, new Stat(5, 15, 50, 10.0f, "max health")});
