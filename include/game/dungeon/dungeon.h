@@ -20,6 +20,7 @@
 #include "dungeonBackground.h"
 #include "projectile.h"
 #include <functional>
+#include "particle.h"
 
 namespace DungeonCode {
 
@@ -174,7 +175,7 @@ namespace DungeonCode {
             const float RECOIL_OFFSET = 35.5f;
             const Vector2 SHELL_EJECT_VELOCITY = {4.5f, -4.0f};
             const float SHELL_ROTATION_SPEED = 4.0f;
-            const Color DEFAULT_PROJECTILE_COLOR = {226, 136, 34, 255};
+            const Color DEFAULT_PROJECTILE_COLOR = {234, 155, 65, 255};
             const Color ALT_PROJECTILE_COLOR = {247, 203, 153, 255};
             const float PROJECTILE_FLASH_SPEED = 0.5f;
             
@@ -239,20 +240,6 @@ namespace DungeonCode {
 
     const int DUNGEON_TILE_SIZE = 16;
 
-    struct Giblet{
-        std::string sprite;
-        Vector2 position;
-        Vector2 velocity;
-        float rotationSpeed;
-        float rotation;
-        int gibletType;
-    };
-
-    
-
-
-
-
 
     class Dungeon{
 
@@ -286,9 +273,7 @@ namespace DungeonCode {
             std::list<DungeonPlatform> platforms;
 
             // giblets
-            std::list<Giblet> giblets;
-            const float GIBLET_GRAVITY = 0.3f;
-
+            std::list<Particle> particles;
 
             // projectiles
             std::list<Projectile> projectiles;
@@ -376,9 +361,9 @@ namespace DungeonCode {
             // boxes
             void updateBoxes();
 
-            // giblets
-            void updateGiblets();
-            void clearAllGiblets();
+            // particles
+            void updateParticles();
+            void clearAllParticles();
 
             // projectiles
             void updateProjectiles();
@@ -398,7 +383,7 @@ namespace DungeonCode {
             bool collidesWithDungeon(Vector2 position, Vector2 size, bool checkPlatforms);
             void enterDoor(DungeonDoor* door);
             void exitDungeon();
-            void addGiblet(Giblet giblet);
+            void addParticle(ParticleBuilder* builder);
             void addProjectile(Projectile projectile);
             bool advancedDungeonCollisions(Vector2 position, Vector2 size, Vector2& actualPosition, DungeonPlatform*& platformPointerRef);
             bool collidesWithSpikes(Vector2 position, Vector2 size);

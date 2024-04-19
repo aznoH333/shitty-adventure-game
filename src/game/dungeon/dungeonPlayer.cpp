@@ -280,13 +280,13 @@ void DungeonPlayer::updateGun(){
         if (gunState.shouldSpawnShell == true && loadPercentage > 0.25f){
             Audio::get()->playSound("gunReload");
             gunState.shouldSpawnShell = false;
-            Dungeon::get()->addGiblet(
-                {"shell", 
-                gunState.position, 
-                {SHELL_EJECT_VELOCITY.x * flipRotation, SHELL_EJECT_VELOCITY.y}, 
-                Utils::getRandomFloat(-SHELL_ROTATION_SPEED, SHELL_ROTATION_SPEED), 
-                0.0f, 
-                0});
+            
+            ParticleBuilder* builder = new ParticleBuilder(gunState.position, "shell", 99);
+            builder->setGravity({0, 0.3f});
+            builder->setVelocity({SHELL_EJECT_VELOCITY.x * flipRotation, SHELL_EJECT_VELOCITY.y});
+            builder->setRotation(getRandomFloat(0, 360), getRandomFloat(-SHELL_ROTATION_SPEED, SHELL_ROTATION_SPEED));
+            builder->setGravity({0.0f,0.3f});
+            Dungeon::get()->addParticle(builder);
         }
     }
 

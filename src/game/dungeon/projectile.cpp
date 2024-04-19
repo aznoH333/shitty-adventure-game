@@ -1,7 +1,7 @@
 #include "game/dungeon/projectile.h"
 #include <cmath>
 #include "engine/drawing.h"
-
+#include "game/dungeon/dungeon.h"
 
 using namespace Utils;
 namespace DungeonCode {
@@ -28,6 +28,16 @@ namespace DungeonCode {
 
         // state update
         if (this->velocity <= 0.1f){
+            // spawn particle
+            Vector2 particlePositon = position;
+            particlePositon.x += std::cos(rotation) * 8.0f;
+            particlePositon.y += std::sin(rotation) * 8.0f;
+            particlePositon.x -= 4.0f;
+            particlePositon.y -= 4.0f;
+
+            ParticleBuilder* builder = new ParticleBuilder(particlePositon, "bullet_puff", 10);
+            builder->setColor(defaultColor, altColor);
+            Dungeon::get()->addParticle(builder);
             this->destroy = true;
         }
         pierceTimer.progress();

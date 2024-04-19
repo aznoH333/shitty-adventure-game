@@ -53,7 +53,7 @@ namespace DungeonCode {
         updatePlatforms(section);
         updateEnemies(section);
         updateDoors(section);
-        updateGiblets();
+        updateParticles();
         updateProjectiles();
         updateBoxes();
         player->update();
@@ -62,7 +62,7 @@ namespace DungeonCode {
 
     void Dungeon::clearTemporaryObjects(){
         removeAllPlatforms();
-        clearAllGiblets();
+        clearAllProjectiles();
     }
 
 
@@ -630,14 +630,11 @@ namespace DungeonCode {
                 for (int i = 0; i < 10; i++){
                     float gibletSpeed = Utils::getRandomFloat(1,2.5f);
                     float direction = enemy.lastHitDirection * DEG2RAD + Utils::getRandomFloat(-0.2f, 0.2f);
-                    addGiblet({
-                        concatSprite("giblet_", GetRandomValue(1, 3)),
-                        enemy.getPosition(), 
-                        {std::cos(direction) * gibletSpeed + Utils::getRandomFloat(-2.5,2.2), std::sin(direction) * gibletSpeed + Utils::getRandomFloat(-2.5,2.2)}, 
-                        0.0f, 
-                        0.0f, 
-                        0
-                    });
+                    
+                    ParticleBuilder* builder = new ParticleBuilder(enemy.getPosition(), concatSprite("giblet_", GetRandomValue(1, 3)), GetRandomValue(20, 60));
+                    builder->setGravity({0, 0.3f});
+                    builder->setVelocity({std::cos(direction) * gibletSpeed + Utils::getRandomFloat(-2.5,2.2), std::sin(direction) * gibletSpeed + Utils::getRandomFloat(-2.5,2.2)});
+                    addParticle(builder);
                 }
                 enemy.dispose();
 
@@ -757,30 +754,30 @@ namespace DungeonCode {
     }
 
 
-    // --== giblets ==--
-    void Dungeon::addGiblet(Giblet giblet){
-        giblets.push_back(giblet);
+    // --== particles ==--
+    void Dungeon::addParticle(ParticleBuilder* builder){
+        particles.push_back(Particle(builder));
     }
 
-    void Dungeon::updateGiblets(){
+    void Dungeon::updateParticles(){
         
         Drawing* d = Drawing::get();
         
-        giblets.remove_if([this, d](Giblet& g){
-            g.position.x += g.velocity.x;
-            g.position.y += g.velocity.y;
-            g.velocity.y += GIBLET_GRAVITY;
-            g.rotation += g.rotationSpeed;
+        particles.remove_if([this, d](Particle& p){
+            p.update();
 
-
-            d->drawTexture(g.sprite, g.position, 0, 1.0f, g.rotation, WHITE, DrawingLayers::LAYER_UI);
-
-
-            return g.position.y > TILES_PER_PATTERN * DUNGEON_TILE_SIZE;
+            if (p.shouldBeDestroyed() || p.getPosition().y > TILES_PER_PATTERN * DUNGEON_TILE_SIZE){
+                p.dispose();
+                return true;
+            }
+            return false;
         });
     }
-    void Dungeon::clearAllGiblets(){
-        giblets.clear();
+    void Dungeon::clearAllParticles(){
+        for (Particle p : particles){
+            p.dispose();
+        }
+        particles.clear();
     }
 
 
