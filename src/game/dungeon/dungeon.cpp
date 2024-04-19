@@ -612,11 +612,11 @@ namespace DungeonCode {
 
             
 
-            for (Projectile p : projectiles){
-                if (p.isAlliedWithPlayer() && p.canDamage() && Utils::squaresCollide(enemy.getPosition(), p.getPosition(), DungeonEnemy::ENEMY_SIZE, PROJECTILE_SIZE)){
+            for (Projectile& p : projectiles){
+                if (p.isAlliedWithPlayer() && p.canDamage() == true && Utils::squaresCollide(enemy.getPosition(), p.getPosition(), DungeonEnemy::ENEMY_SIZE, PROJECTILE_SIZE)){
+                    p.resetPierceTimer();
                     enemy.takeDamage(p.getDamage());
                     enemy.lastHitDirection = p.getRotation();
-                    p.resetPierceTimer();
                 }
             }
 
