@@ -2,8 +2,10 @@
 #include <cmath>
 #include "engine/drawing.h"
 
+
+using namespace Utils;
 namespace DungeonCode {
-    Projectile::Projectile(std::string sprite, Vector2 position, float rotation, float velocity, float deceleration, float damage, bool alliedWithPlayer){
+    Projectile::Projectile(std::string sprite, Vector2 position, float rotation, float velocity, float deceleration, float damage, bool alliedWithPlayer, Color defualtColor, Color altColor, float flashSpeed){
         this->sprite = sprite;
         this->position = position;
         this->rotation = rotation;
@@ -12,6 +14,9 @@ namespace DungeonCode {
         this->damage = damage;
         this->alliedWithPlayer = alliedWithPlayer;
         this->destroy = false;
+        this->defaultColor = defualtColor;
+        this->altColor = altColor;
+        this->flashSpeed = flashSpeed;
     }
 
 
@@ -26,9 +31,18 @@ namespace DungeonCode {
             this->destroy = true;
         }
         pierceTimer.progress();
+        lifeTimeCounter++;
 
         // draw
-        Drawing::get()->drawTexture(this->sprite, this->position, 0, 1.0f, this->rotation * RAD2DEG, WHITE, LAYER_PROJECTILES);
+        float colorPercentage = (std::sin(lifeTimeCounter * flashSpeed) + 1) / 2;
+        Color actualColor = {
+            (unsigned char) interpolate(defaultColor.r, altColor.r, colorPercentage),
+            (unsigned char) interpolate(defaultColor.g, altColor.g, colorPercentage),
+            (unsigned char) interpolate(defaultColor.b, altColor.b, colorPercentage),
+            255,
+        };
+
+        Drawing::get()->drawTexture(this->sprite, this->position, 0, 1.0f, this->rotation * RAD2DEG, actualColor, LAYER_PROJECTILES);
     }
 
     bool& Projectile::shouldDestroy(){

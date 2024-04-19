@@ -174,6 +174,10 @@ namespace DungeonCode {
             const float RECOIL_OFFSET = 35.5f;
             const Vector2 SHELL_EJECT_VELOCITY = {4.5f, -4.0f};
             const float SHELL_ROTATION_SPEED = 4.0f;
+            const Color DEFAULT_PROJECTILE_COLOR = {226, 136, 34, 255};
+            const Color ALT_PROJECTILE_COLOR = {247, 203, 153, 255};
+            const float PROJECTILE_FLASH_SPEED = 0.5f;
+            
             
             // reloading
             const int RELOAD_PREP_MAX = 10;

@@ -281,7 +281,7 @@ void DungeonPlayer::updateGun(){
             Audio::get()->playSound("gunReload");
             gunState.shouldSpawnShell = false;
             Dungeon::get()->addGiblet(
-                {"bullet_2", 
+                {"shell", 
                 gunState.position, 
                 {SHELL_EJECT_VELOCITY.x * flipRotation, SHELL_EJECT_VELOCITY.y}, 
                 Utils::getRandomFloat(-SHELL_ROTATION_SPEED, SHELL_ROTATION_SPEED), 
@@ -339,13 +339,16 @@ void DungeonPlayer::updateGun(){
 
             for (int i = 0; i < playerStats->get(PROJECTILE_COUNT); i++){
                 Projectile p = Projectile(
-                    "bullet_1",
+                    "bullet",
                     bulletOrigin, 
                     gunState.direction * DEG2RAD + (Utils::getRandomFloat(-playerStats->getF(PROJECTILE_SPREAD), playerStats->getF(PROJECTILE_SPREAD)) * DEG2RAD), 
                     playerStats->getF(PROJECTILE_SPEED) * getRandomFloat(0.8f, 1.2f), 
                     0.1f, 
                     playerStats->getF(PROJECTILE_DAMAGE), 
-                    true);
+                    true,
+                    DEFAULT_PROJECTILE_COLOR,
+                    ALT_PROJECTILE_COLOR,
+                    PROJECTILE_FLASH_SPEED);
                 d->addProjectile(p);
             }
 

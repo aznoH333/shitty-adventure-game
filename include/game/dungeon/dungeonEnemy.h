@@ -44,6 +44,10 @@ namespace DungeonCode {
             const float HIT_SIZE_TIMER_MULTIPLIER = 0.4f;
             Utils::GenericTimer shootSizeTimer = Utils::GenericTimer(20);
             const float SHOOT_SIZE_TIMER_MULTIPLIER = 0.2f;
+            const Color DEFAULT_PROJECTILE_COLOR = {226, 136, 34, 255};
+            const Color ALT_PROJECTILE_COLOR = {247, 203, 153, 255};
+            const float PROJECTILE_FLASH_SPEED = 0.5f;
+
 
             
         

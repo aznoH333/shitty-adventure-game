@@ -59,8 +59,6 @@ namespace DungeonCode {
     }
 
     void DungeonEnemy::dispose(){
-        // this causes a double free?
-        // some memory magic is going on here
         delete ai;
     }
 
@@ -104,13 +102,16 @@ namespace DungeonCode {
         // spawn projectile
         
         Projectile p = Projectile(
-            "bullet_1",
+            "bullet",
             getAttackPosition(), 
             Utils::directionTowards(getPosition(), d->getPlayer()->getPosition()) * DEG2RAD, 
             2.0f, 
             0.1f, 
             rangedDamage, 
-            false);
+            false,
+            DEFAULT_PROJECTILE_COLOR,
+            ALT_PROJECTILE_COLOR,
+            PROJECTILE_FLASH_SPEED);
         d->addProjectile(p);
         
         shootSizeTimer.reset();
