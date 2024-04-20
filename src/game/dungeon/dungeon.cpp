@@ -791,7 +791,10 @@ namespace DungeonCode {
         Drawing* d = Drawing::get();
         
         projectiles.remove_if([this, d](Projectile& p){
-            
+            if (p.isAlliedWithPlayer() == false && p.canDamage() && squaresCollide(player->getPosition(), p.getPosition(), DungeonPlayer::SIZE, PROJECTILE_SIZE)){
+                player->takeDamage(p.getDamage());
+                p.resetPierceTimer();
+            }
             p.update();
             return p.shouldDestroy();
         });

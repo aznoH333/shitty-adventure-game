@@ -105,12 +105,12 @@ namespace DungeonCode {
             "bullet",
             getAttackPosition(), 
             Utils::directionTowards(getPosition(), d->getPlayer()->getPosition()) * DEG2RAD, 
-            2.0f, 
-            0.1f, 
+            4.0f, 
+            0.03f, 
             rangedDamage, 
             false,
-            DEFAULT_PROJECTILE_COLOR,
-            ALT_PROJECTILE_COLOR,
+            color,
+            WHITE,
             PROJECTILE_FLASH_SPEED);
         d->addProjectile(p);
         

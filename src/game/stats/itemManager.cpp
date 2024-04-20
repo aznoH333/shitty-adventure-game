@@ -47,7 +47,7 @@ namespace PlayerStats {
     }
     void ItemManager::incrementSelectedSlot(){
         currentlySelectedSlot++;
-        if (currentlySelectedSlot > ITEM_CAPACITY){
+        if (currentlySelectedSlot >= ITEM_CAPACITY){
             currentlySelectedSlot = 0;
         }
     }

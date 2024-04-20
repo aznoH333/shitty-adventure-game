@@ -34,7 +34,7 @@ namespace DungeonCode{
         float weight = getPseudoRandomFloat(1.0f - ENEMY_WEIGHT_DEVIATION, 1.0f + ENEMY_WEIGHT_DEVIATION, seed++);
         initializer.aiId = getPseudoRandomInt(0, EnemyAiTypes::ENEMY_AI_COUNT - 1, seed++);
         initializer.attackType = 0; // TODO attack types
-        initializer.health = (ENEMY_HEALTH_BASELINE + (powerLevel * ENEMY_HEALTH_POWER_MULTIPLIER)) * (weight * 3);
+        initializer.health = (ENEMY_HEALTH_BASELINE + (powerLevel * ENEMY_HEALTH_POWER_MULTIPLIER)) * weight;
         initializer.moveSpeed = getPseudoRandomFloat(MIN_MOVE_SPEED, MAX_MOVE_SPEED, seed++) / weight;
         initializer.sprieBase = getPseudoRandomInt(0, enemySprites.size() - 1, seed++);
         initializer.contactDamage = getPseudoRandomInt(MIN_CONTACT_DAMAGE, MAX_CONTACT_DAMAGE, seed++) * (powerLevel * DAMAGE_MULTIPLIER);
