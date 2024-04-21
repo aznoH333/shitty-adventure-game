@@ -17,18 +17,19 @@ namespace PlayerStats{
     }
         
     StatManager::StatManager(){
-        stats.insert({SHELL_RELOAD_TIME, new Stat(4, 10, 30, -2.0f, "reload speed")});
+        stats.insert({SHELL_RELOAD_TIME, (new Stat(30, -2.0f, "reload speed"))->declareMaxValue(10)});
         stats.insert({AMMO_COUNT, new StatVariable(4, "ammo")});
-        stats.insert({MAX_AMMO_COUNT, new Stat(4, 15, 0, 1.0f, "max ammo")});
-        stats.insert({FIRING_SPEED, new Stat(5, 10, 30, -2.0f, "fire rate")});
-        stats.insert({PROJECTILE_COUNT, new Stat(5, 15, 0, 1.0f, "projectiles")});
+        stats.insert({MAX_AMMO_COUNT, new Stat(4, 1.0f, "max ammo")});
+        stats.insert({FIRING_SPEED, (new Stat(30, -2.0f, "firing speed"))->declareMaxValue(10)});
+        stats.insert({PROJECTILE_COUNT, new Stat(5, 1.0f, "projectiles")});
+        stats.insert({PROJECTILE_SPREAD, (new Stat(20, -1.5f, "accuracy"))->declareMaxValue(10)});
+        stats.insert({PROJECTILE_SPEED, new Stat(7, 1.0f, "range")});
+        stats.insert({PROJECTILE_DAMAGE, new Stat(8, 0.7f, "damage")});
+        stats.insert({HEALTH, new StatVariable(100, "h")});
+        stats.insert({MAX_HEALTH, (new Stat(100, 25.0f, "health"))->disableUpgrading()});
+        stats.insert({HEALING_POTION_COUNT, new StatVariable(1, "p")});
+        stats.insert({HEALING_POTION_MAX, (new Stat(1, 1.0f, "potions"))->disableUpgrading()});
 
-        stats.insert({PROJECTILE_SPREAD, new Stat(5, 15, 20, -1.5, "spread")});
-        stats.insert({PROJECTILE_SPEED, new Stat(5, 15, 7, 1.0f, "bullet speed")});
-        stats.insert({PROJECTILE_DAMAGE, new Stat(5, 15, 5, 0.7, "damage")});
-        stats.insert({HEALTH, new StatVariable(100, "health")});
-        stats.insert({MAX_HEALTH, new Stat(5, 15, 50, 10.0f, "max health")});
-        stats.insert({HEALING_POTION_COUNT, new StatVariable(4, "potions")});
     }
 
     StatManager::~StatManager(){

@@ -43,7 +43,7 @@ namespace UICode{
 
     void Hud::drawPotions(float &hudY){
         Vector2 vec = {4.0f, 60.0f + hudY};
-        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats->get(HEALING_POTION_COUNT), 4);
+        drawBar(vec, SHELL_SPRITE, SHELL_MISSING_SPRITE, SHELLS_OFFSET, playerStats->get(HEALING_POTION_COUNT), playerStats->get(HEALING_POTION_MAX));
     }
 
 

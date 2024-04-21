@@ -8,7 +8,7 @@
 namespace PlayerStats {
     class PermanentItem : public Item {
         public:
-        PermanentItem(int itemId, int itemSeed, StatName targetStat);
+        PermanentItem(int itemId, int itemSeed);
     };
 }
 

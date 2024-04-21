@@ -17,7 +17,9 @@ namespace PlayerStats {
         HEALTH,
         MAX_HEALTH,
         HEALING_POTION_COUNT,
+        HEALING_POTION_MAX,
         STAT_COUNT,
+
 
 
 
@@ -27,24 +29,28 @@ namespace PlayerStats {
         protected:
             const int MIN_STAT_VALUE = 1;
 
+            int startingValue;
             int value;
-            int defaultValue;
-            int baseValue;
-            int maxValue;
-            float pointValue;
-            bool isSutractive;
+            float multiplierPerPoint;
+            
+            int maxValue = 0;
+            bool hasMaxValue = false;
+            
             std::string textName;
             int getValueInBounds();
+            bool upgradable = true;
         public:
-            Stat(int defaultValue, int maxValue, int baseValue, float pointValue, std::string textName);
+            Stat(int startingValue, float multiplierPerPoint, std::string textName);
 
-            void resetStat();
+            virtual void resetStat();
             void addToValue(int value);
             virtual int get();
             virtual float getF();
             std::string& getTextName();
             virtual bool isUpgradable();
             void set(int value);
+            Stat* disableUpgrading();
+            Stat* declareMaxValue(int maxValue);
     };
 
 }

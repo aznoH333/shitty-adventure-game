@@ -3,29 +3,32 @@
 #include <iostream>
 
 namespace PlayerStats {
-    Stat::Stat(int defaultValue, int maxValue, int baseValue, float pointValue, std::string textName){
-        this->defaultValue = defaultValue;
-        this->maxValue = maxValue;
-        this->baseValue = baseValue;
-        this->isSutractive = true;
-        this->value = defaultValue;
-        this->pointValue = pointValue;
+    Stat::Stat(int startingValue, float multiplierPerPoint, std::string textName){
+        this->startingValue = startingValue;
+        this->value = 0;
+        this->multiplierPerPoint = multiplierPerPoint;
         this->textName = textName;
+        this->upgradable = true;
     }
 
     void Stat::resetStat(){
-        this->value = this->defaultValue;
+        this->value = 0;
     }
 
     int Stat::getValueInBounds(){
-        return std::max(std::min(value, maxValue), 1);
+        int out = std::max(0, value);
+        if (hasMaxValue){
+            out = std::min(value, maxValue);
+        }
+        return out;
     }
+    
     int Stat::get(){
-        return baseValue + (int)std::ceil(getValueInBounds() * pointValue);
+        return startingValue + (int)std::ceil(getValueInBounds() * multiplierPerPoint);
     }
 
     float Stat::getF(){
-        return baseValue + (getValueInBounds() * pointValue);
+        return startingValue + (getValueInBounds() * multiplierPerPoint);
     }
 
     void Stat::addToValue(int value){
@@ -38,12 +41,24 @@ namespace PlayerStats {
     }
 
     bool Stat::isUpgradable(){
-        return true;
+        return upgradable;
     }
 
     void Stat::set(int value){
         this->value = value;
     }
+
+    Stat* Stat::disableUpgrading(){
+        this->upgradable = false;
+        return this;
+    }
+
+    Stat* Stat::declareMaxValue(int maxValue){
+        this->maxValue = maxValue;
+        this->hasMaxValue = true;
+        return this;
+    }
+
 
 
 }

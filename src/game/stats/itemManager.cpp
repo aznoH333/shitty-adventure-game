@@ -70,7 +70,7 @@ namespace PlayerStats {
         if (getPseudoRandomFloat(itemSeed++) <= 0.6f){
             generatedItem = new Item(nextItemId, itemSeed, targetItemScore);
         }else {
-            generatedItem = new PermanentItem(nextItemId, itemSeed, StatName::MAX_HEALTH);
+            generatedItem = new PermanentItem(nextItemId, itemSeed);
         }
         
         items.insert({nextItemId, generatedItem});
