@@ -37,17 +37,20 @@ namespace PlayerStats{
     };
     
     class Item{
-        private:
-            std::map<int, int> modifiers;
+        protected:
+            bool equipable;
             bool isEmptyItem = false;
+            int itemId;
+            std::string sprite;
             const int MAX_SPRITE_INDEX = 21;
             const int EMPTY_SPRITE_INDEX = 22;
             const char* SPRITE_NAME = "item_icons_";
-            int itemId;
-            std::string sprite;
             std::string name;
-
+            std::map<int, int> modifiers;
             void addStat(int id, int modifierValue, int& statSeed, bool positive);
+
+        
+        private:
             void generateStat(int& seed, std::vector<int>& usedIds, bool shouldBePositive, int modifierValue);
 
         public:
@@ -60,6 +63,7 @@ namespace PlayerStats{
             void unequipItem();
             bool isEmpty();
             bool isPositive();
+            bool isEquipable();
     };
 }
 

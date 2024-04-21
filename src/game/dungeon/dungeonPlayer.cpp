@@ -419,10 +419,18 @@ void DungeonPlayer::updateBoxInteraction(){
     if (buttonInteractPressed){
         ItemManager* m = ItemManager::get();
         
-        int thisId = m->getItemInSlot(m->getCurrentlySelectedSlot());
-        m->equipItemIntoSlot(m->getCurrentlySelectedSlot(), box->getItemId());
-        box->setItemId(thisId);
-        m->incrementSelectedSlot();
+        Item* item = m->getItem(box->getItemId());
+
+        if (item->isEquipable()){
+            int thisId = m->getItemInSlot(m->getCurrentlySelectedSlot());
+            m->equipItemIntoSlot(m->getCurrentlySelectedSlot(), box->getItemId());
+            box->setItemId(thisId);
+            m->incrementSelectedSlot();
+        }else {
+            m->consumeItem(box->getItemId());
+            box->setItemId(0); // set item as empty
+        }
+
     }
 
 }

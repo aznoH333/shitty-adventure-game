@@ -1,4 +1,8 @@
 #include "game/stats/itemManager.h"
+#include "engine/utils.h"
+#include "game/stats/permanentUpgrade.h"
+
+using namespace Utils;
 
 namespace PlayerStats {
     ItemManager* ItemManager::instance = 0;
@@ -10,7 +14,7 @@ namespace PlayerStats {
         }
         
         // insert empty item
-        items.insert({0, Item(0)});
+        items.insert({0, new Item(0)});
 
 
         //equipItemIntoSlot(0, 1);
@@ -25,7 +29,7 @@ namespace PlayerStats {
     }
 
     Item* ItemManager::getItem(int itemId){
-        return &items.at(itemId);
+        return items.at(itemId);
     }
     
     int ItemManager::getItemInSlot(int slotId){
@@ -33,12 +37,20 @@ namespace PlayerStats {
     }
 
     void ItemManager::equipItemIntoSlot(int slotId, int itemId){
-        items.at(equipedItems[slotId]).unequipItem();
+        items.at(equipedItems[slotId])->unequipItem();
         equipedItems[slotId] = itemId;
-        items.at(itemId).equipItem();
+        items.at(itemId)->equipItem();
     }
     
+    void ItemManager::consumeItem(int itemId){
+        items.at(itemId)->equipItem();
+    }
+
     void ItemManager::dispose(){
+        for (std::pair<int, Item*> i : items){
+            delete i.second;
+        }
+        items.clear();
         delete instance;
     }
 
@@ -53,10 +65,17 @@ namespace PlayerStats {
     }
 
     int ItemManager::generateNewItem(int itemSeed, float targetItemScore){
-        items.insert({nextItemId, Item(nextItemId, itemSeed, targetItemScore)});
+        Item* generatedItem;
+
+        if (getPseudoRandomFloat(itemSeed++) <= 0.6f){
+            generatedItem = new Item(nextItemId, itemSeed, targetItemScore);
+        }else {
+            generatedItem = new PermanentItem(nextItemId, itemSeed, StatName::MAX_HEALTH);
+        }
+        
+        items.insert({nextItemId, generatedItem});
         int i = nextItemId;
         nextItemId++;
         return i;
-
     }
 }

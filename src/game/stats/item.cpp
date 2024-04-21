@@ -66,6 +66,8 @@ namespace PlayerStats {
             int randomSpriteIndex = getPseudoRandomInt(1, MAX_SPRITE_INDEX, seedCopy++);
             sprite = concatSprite(SPRITE_NAME, randomSpriteIndex);
         }
+
+        equipable = true;
     }
 
 
@@ -74,6 +76,10 @@ namespace PlayerStats {
         sprite = concatSprite(SPRITE_NAME, EMPTY_SPRITE_INDEX);
         name = "nothing";
         this->isEmptyItem = true;
+    }
+
+    bool Item::isEquipable(){
+        return equipable;
     }
 
     
